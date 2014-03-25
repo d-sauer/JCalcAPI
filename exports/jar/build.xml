@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<project name="org.jdice.calc">
+    <property name="project.title" value="JCalc" />
+    <property name="project.name" value="jcalc" />
+    <property name="project.v_major" value="0" />
+    <property name="project.v_minor" value="3b" />
+    <property name="project.version" value="${project.v_major}.${project.v_minor}" />
+    <property name="project.author" value="Davor Sauer" />
+
+    <property name="build.dir" value="build/classes" />
+    <property name="export.dir" value="${project.name}-${project.version}" />
+    <property name="export.jar" value="${project.name}-${project.version}" />
+    <property name="export.javadoc" value="${project.name}-${project.version}-javadoc" />
+    <property name="src.main" value="../../src/main" />
+    <property name="src.test" value="../../src/test" />
+
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="build/classes" />
+        <javac srcdir="${src.main}" 
+               destdir="${build.dir}" 
+               source="1.6" 
+               target="1.6"
+               debug="true"
+               debuglevel="lines,vars,source"
+        />
+    </target>
+
+    <target name="javadoc">
+        <delete dir="${export.dir}/javadoc" />
+        
+        <javadoc 
+                destdir="${export.dir}/javadoc"
+                author="false"
+                version="false"
+                access="protected" 
+                use="true"
+                source="1.6"
+                windowtitle="${project.title} API">
+         
+                <packageset dir="${src.main}" defaultexcludes="yes" />
+         
+                <classpath>
+                    <pathelement location="build/classes" />                    
+                </classpath>
+         
+                <doctitle><![CDATA[<h1>${project.title} API Specification</h1>]]></doctitle>
+                <bottom><![CDATA[<i>${project.title} API 2014 Davor Sauer - Apache 2.0</i>]]></bottom>
+                <group title="JCalc main classes" packages="org.jdice.calc*"/>
+                <group title="JCalc operations" packages="org.jdice.calc.operation*"/>
+                <link offline="true" href="${jdk.docs.api.href}" packagelistLoc="${jdk.docs.api.dir}"/>
+            </javadoc>
+        
+        <mkdir dir="${export.dir}/javadoc/META-INF" />
+        
+        <manifest file="${export.dir}/javadoc/META-INF/MANIFEST.MF">
+            <attribute name="Built-By" value="${project.author}"/>
+            <attribute name="Specification-Title" value="${project.name}"/>
+            <attribute name="Specification-Version" value="${project.version}"/>
+            <attribute name="Implementation-Title" value="common"/>
+            <attribute name="Implementation-Version" value="${project.version} ${TODAY}"/> 
+          </manifest>
+    </target>
+	
+	<target name="compiled_jar" depends="compile">
+		<!-- jar -->
+        <jar destfile="${export.dir}/${export.jar}.jar" basedir="build/classes" level="9" compress="true">
+            <manifest>
+                <attribute name="Specification-Title" value="${project.name}" />
+                <attribute name="Specification-Version" value="${project.version}" />
+                <attribute name="Implementation-Version" value="${project.version} ${TODAY}" />
+                <attribute name="Implementation-Title" value="common"/>
+            </manifest>
+        </jar>
+	</target>
+		
+	
+	<target name="source_jar">
+		<jar destfile="${export.dir}/${export.jar}-source.jar" compress="true">
+            <manifest>
+                <attribute name="Specification-Title" value="${project.name}" />
+                <attribute name="Specification-Version" value="${project.version}" />
+                <attribute name="Implementation-Version" value="${project.version} ${TODAY}" />
+                <attribute name="Implementation-Title" value="common"/>
+            </manifest>
+		    <fileset dir="${src.main}" includes="**/*.java"/>
+		</jar>
+	</target>
+	
+	<target name="run" >
+	        <mkdir dir="${export.dir}" />
+		    
+		    <!-- JAR -->
+	        <antcall target="compiled_jar"></antcall>
+	        
+		    <!-- JavaDoc -->
+	        <antcall target="javadoc"></antcall>
+	        <zip basedir="${export.dir}/javadoc" includes="**" destfile="${export.dir}/${export.javadoc}.jar" compress="true"/>
+	        <delete dir="${export.dir}/javadoc" />
+
+	         <!-- Source -->
+	        <antcall target="source_jar"></antcall>
+	        
+		
+		
+	        <!-- clean bild classes-->
+	        <delete dir="${build.dir}" />
+    </target>
+	
+</project>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<project name="org.jdice.calc">
+    <target name="replace_headers">
+        <echo message="Replace java file headers with license text"/>
+        <loadfile property="javaheader" srcFile="licenseHeader.txt"/>
+        <echo message="${javaheader}"/>
+
+        <replaceregexp match="(/\*.*\*/.*)??^package " flags="sm"
+            replace="${javaheader}${line.separator}package ">
+            <fileset dir="../../src" includes="**/*.java">
+            </fileset>
+        </replaceregexp>
+    </target>
+</project>

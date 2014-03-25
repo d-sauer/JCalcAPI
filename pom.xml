@@ -1,0 +1,72 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jdice.calc</groupId>
+	<artifactId>jcalc</artifactId>
+	<version>0.1b</version>
+	<packaging>jar</packaging>
+
+	<name>JCalc API</name>
+	<description>Fluent Java API for easier work with numbers, writing formula and calculations in Java.</description>
+	<url>http://www.jdice.org</url>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<properties>
+		<jdk.version>1.6</jdk.version>
+	</properties>
+
+    <scm>
+		<connection>scm:git:git@github.com:d-sauer/jdice.calc.git</connection>
+		<developerConnection>scm:git:git@github.com:d-sauer/jdice.calc.git</developerConnection>
+		<url>git@github.com:d-sauer/jdice.calc.git</url>
+    </scm>
+  
+	<developers>
+		<developer>
+			<id>d-sauer</id>
+			<name>Davor Sauer</name>
+			<email>davor.sauer@gmail.com</email>
+		</developer>
+	</developers>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>JCalcAPI</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<compilerVersion>${jdk.version}</compilerVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
