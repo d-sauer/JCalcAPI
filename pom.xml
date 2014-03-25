@@ -22,9 +22,9 @@
 	</properties>
 
     <scm>
-		<connection>scm:git:git@github.com:d-sauer/jdice.calc.git</connection>
-		<developerConnection>scm:git:git@github.com:d-sauer/jdice.calc.git</developerConnection>
-		<url>git@github.com:d-sauer/jdice.calc.git</url>
+		<connection>scm:git:git@github.com:d-sauer/JCalcAPI.git</connection>
+		<developerConnection>scm:git:git@github.com:d-sauer/JCalcAPI.git</developerConnection>
+		<url>git@github.com:d-sauer/JCalcAPI.git</url>
     </scm>
   
 	<developers>
