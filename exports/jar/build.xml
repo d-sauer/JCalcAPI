@@ -3,7 +3,7 @@
     <property name="project.title" value="JCalc" />
     <property name="project.name" value="jcalc" />
     <property name="project.v_major" value="0" />
-    <property name="project.v_minor" value="3b" />
+    <property name="project.v_minor" value="1b" />
     <property name="project.version" value="${project.v_major}.${project.v_minor}" />
     <property name="project.author" value="Davor Sauer" />
 
@@ -80,7 +80,7 @@
 		
 	
 	<target name="source_jar">
-		<jar destfile="${export.dir}/${export.jar}-source.jar" compress="true">
+		<jar destfile="${export.dir}/${export.jar}-sources.jar" compress="true">
             <manifest>
                 <attribute name="Specification-Title" value="${project.name}" />
                 <attribute name="Specification-Version" value="${project.version}" />
