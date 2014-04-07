@@ -1,0 +1,38 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jdice</groupId>
+	<artifactId>jcalc</artifactId>
+	<version>0.1b</version>
+	<packaging>jar</packaging>
+
+	<name>JCalc API</name>
+	<description>Fluent Java API for easier work with numbers, writing formula and calculations in Java.</description>
+	<url>http://www.jdice.org</url>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<properties>
+		<jdk.version>1.6</jdk.version>
+	</properties>
+
+    <scm>
+		<connection>scm:git:git@github.com:d-sauer/JCalcAPI.git</connection>
+		<developerConnection>scm:git:git@github.com:d-sauer/JCalcAPI.git</developerConnection>
+		<url>git@github.com:d-sauer/JCalcAPI.git</url>
+    </scm>
+  
+	<developers>
+		<developer>
+			<id>d-sauer</id>
+			<name>Davor Sauer</name>
+			<email>davor.sauer@gmail.com</email>
+		</developer>
+	</developers>
+	
+</project>
