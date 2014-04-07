@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio = TanFunction.class)
 public interface Tan<CALC> {
 
-	public CALC tan(AbstractCalculator equation);
+	public CALC tan(AbstractCalculator expression);
 
 	public CALC tan(Object value);
 

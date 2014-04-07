@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio = TanhFunction.class)
 public interface Tanh<CALC> {
 
-	public CALC tanh(AbstractCalculator equation);
+	public CALC tanh(AbstractCalculator expression);
 
 	public CALC tanh(Object value);
 

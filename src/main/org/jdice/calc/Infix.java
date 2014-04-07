@@ -114,18 +114,18 @@ class Infix {
                         op = Cache.getFunction(function);
 
                     if (op == null)
-                        throw new CalculatorException("Can't find '" + function + "' function implementation class used in equation " + infix);
+                        throw new CalculatorException("Can't find '" + function + "' function implementation class used in expression " + infix);
 
                     Function f = (Function) op;
-                    String _equation = group.substring(group.indexOf("(") + 1, group.length() - 1);
-                    String[] equations = _equation.split(",");
-                    Object[] values = new Object[equations.length];
+                    String _expression = group.substring(group.indexOf("(") + 1, group.length() - 1);
+                    String[] expressions = _expression.split(",");
+                    Object[] values = new Object[expressions.length];
 
-                    for (int e = 0; e < equations.length; e++) {
-                        String equation = equations[e];
+                    for (int e = 0; e < expressions.length; e++) {
+                        String expression = expressions[e];
 
                         Infix tmp = new Infix(properties);
-                        CList fInfix = tmp.parse(equation, vNames);
+                        CList fInfix = tmp.parse(expression, vNames);
                         if (fInfix.size() == 1 && fInfix.get(0) instanceof Num) {
                             Num n = (Num) fInfix.get(0);
                             values[e] = n;
@@ -184,7 +184,7 @@ class Infix {
                 else
                     regex.append("|(" + symbol + ")");
             }
-            regex.append("|([a-zA-Z]+)"); // for equation with variable name
+            regex.append("|([a-zA-Z]+)"); // for expression with variable name
 
             pOperations = Pattern.compile(regex.toString());
         }
@@ -239,7 +239,7 @@ class Infix {
     }
 
     /**
-     * Infix (linear, human readable) representation of equation
+     * Infix (linear, human readable) representation of expression
      * e.g. 5 + 10 / (5 * 2)
      * 
      * @param calc
@@ -317,7 +317,7 @@ class Infix {
     }
 
     /**
-     * map variable names from equation with values
+     * map variable names from expression with values
      * 
      * @param infix
      * @param values
@@ -383,7 +383,7 @@ class Infix {
                 }
             }
 
-            throw new CalculatorException("Undefined values for equation (" + infix + ") variables: " + sb.toString());
+            throw new CalculatorException("Undefined values for expression (" + infix + ") variables: " + sb.toString());
         }
 
         return vNames;

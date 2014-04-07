@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio = SinhFunction.class)
 public interface Sinh<CALC> {
 
-	public CALC sinh(AbstractCalculator equation);
+	public CALC sinh(AbstractCalculator expression);
 
 	public CALC sinh(Object value);
 

@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio = SqrtFunction.class)
 public interface Sqrt<CALC> {
 
-	public CALC sqrt(AbstractCalculator equation);
+	public CALC sqrt(AbstractCalculator expression);
 
 	public CALC sqrt(Object value);
 

@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio=AbsFunction.class)
 public interface Abs<CALC> {
     
-    public CALC abs(AbstractCalculator equation) ;
+    public CALC abs(AbstractCalculator expression) ;
     
     public CALC abs(Object value) ;
 

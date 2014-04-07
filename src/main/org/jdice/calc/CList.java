@@ -23,7 +23,7 @@ import java.util.ListIterator;
 
 /**
  * List based on LinkedList that can hold object used by JCalc API.
- * Used for holding infix and postfix equations 
+ * Used for holding infix and postfix expressions 
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *

@@ -17,9 +17,9 @@
 package org.jdice.calc;
 
 /**
- * Listener used to detect changes of equation.
+ * Listener used to detect changes of expression.
  * If changes are detected then JCalc API will automatically do conversion from infix to postfix. 
- * Otherwise infix to postfix are made only first time on equation instance ({@link Calc}, {@link CalcTrig}). 
+ * Otherwise infix to postfix are made only first time on expression instance ({@link Calc}, {@link CalcTrig}). 
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *

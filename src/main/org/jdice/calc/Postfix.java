@@ -147,7 +147,7 @@ class Postfix {
                 sb.append(es + "  <--- Error: " + e.getMessage());
             }
 
-            throw new CalculatorException("Error during calculation. Check if equation is correct: " + calc.getInfix() + "\n" + sb.toString(), e);
+            throw new CalculatorException("Error during calculation. Check if expression is correct: " + calc.getInfix() + "\n" + sb.toString(), e);
         }
     }
 

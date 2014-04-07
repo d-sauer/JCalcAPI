@@ -39,12 +39,12 @@ public class CalculatorException extends RuntimeException {
     }
 
     public CalculatorException(AbstractCalculator calc, String message)  {
-        this(message + (calc != null && (calc.getInfix()) != null ? "  Equation:" + calc.getInfix() : ""));
+        this(message + (calc != null && (calc.getInfix()) != null ? "  expression:" + calc.getInfix() : ""));
     }
     
     
     public CalculatorException(AbstractCalculator calc, String message, Throwable throwable)  {
-        this(message + (calc != null && calc.getInfix() != null ? "  Equation:" + calc.getInfix() : ""), throwable);
+        this(message + (calc != null && calc.getInfix() != null ? "  expression:" + calc.getInfix() : ""), throwable);
     }
     
 }

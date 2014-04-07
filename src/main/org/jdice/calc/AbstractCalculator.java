@@ -30,7 +30,7 @@ import java.util.LinkedList;
 public abstract class AbstractCalculator<CALC> {
 
     /**
-     * Detect changes in equation
+     * Detect changes in expression
      */
     private CList infix = new CList(new CListListener() {
         @Override
@@ -136,7 +136,7 @@ public abstract class AbstractCalculator<CALC> {
 
 
     /**
-     * Provide custom {@link Operator} or {@link Function} inside scope of this instance, that can be used during equation parsing.
+     * Provide custom {@link Operator} or {@link Function} inside scope of this instance, that can be used during expression parsing.
      * With registration of custom operation it's possible to override existing default operation implementation.
      * Because during calculation API first scan scoped (registered) operation and after that default operation implementation inside {@link Cache}
      * 
@@ -169,7 +169,7 @@ public abstract class AbstractCalculator<CALC> {
     //
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value
      * @return
@@ -180,7 +180,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value
      * @return
@@ -191,7 +191,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value
      * @return
@@ -202,7 +202,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value
      * @return
@@ -213,7 +213,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value
      * @return
@@ -224,7 +224,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value
      * @return
@@ -235,7 +235,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value custom type value
      * @param converter class for convert custom type to {@link Num}
@@ -247,7 +247,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append String value to equation that will be parsed to {@link Num}
+     * Append String value to expression that will be parsed to {@link Num}
      * 
      * @param value
      * @return
@@ -258,7 +258,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append String value to equation that will be parsed to {@link Num} with defined decimal separator 
+     * Append String value to expression that will be parsed to {@link Num} with defined decimal separator 
      * 
      * 
      * @param value String representation of number
@@ -271,7 +271,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to equation
+     * Append value to expression
      * 
      * @param value
      * @return
@@ -282,32 +282,32 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Copy calculator equation into this equation within brackets
+     * Copy calculator expression into this expression within brackets
      * 
-     * @param equation
+     * @param expression
      * @return
      *         @
      */
-    public CALC append(AbstractCalculator equation) {
-        return append(equation, true);
+    public CALC append(AbstractCalculator expression) {
+        return append(expression, true);
     }
 
     /**
      * 
-     * Copy equation from given calculator into this equation within or without brackets
+     * Copy expression from given calculator into this expression within or without brackets
      * 
-     * @param equation
+     * @param expression
      * @param withinBrackets
      * @return
      */
-    public CALC append(AbstractCalculator equation, boolean withinBrackets) {
-        append(equation.infix, withinBrackets);
+    public CALC append(AbstractCalculator expression, boolean withinBrackets) {
+        append(expression.infix, withinBrackets);
         return getThis();
     }
 
     /**
      * 
-     * Copy infix equation into this equation within or without brackets
+     * Copy infix expression into this expression within or without brackets
      * 
      * @param infix
      * @param withinBrackets
@@ -344,7 +344,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append operator to equation
+     * Append operator to expression
      * @param operator
      * @return
      */
@@ -354,7 +354,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append operator and number to equation 
+     * Append operator and number to expression 
      * @param operator
      * @param value
      * @return
@@ -375,7 +375,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append operator and number to equation
+     * Append operator and number to expression
      * @param operator
      * @param value
      * @return
@@ -387,7 +387,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append function with value to equation.
+     * Append function with value to expression.
      * 
      * <br/>
      * e.g. Abs.class, -5 => abs(-5)
@@ -406,29 +406,29 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Parse and append given equation to existing equation
+     * Parse and append given expression to existing expression
      * 
-     * @param equation
+     * @param expression
      * @return
      * @throws ParseException
      */
-    public CALC parse(String equation) throws ParseException {
+    public CALC parse(String expression) throws ParseException {
         registerImplmentedOperation();
-        append(Infix.parseInfix(scopeOperationRegister, getProperties(), equation), false);
+        append(Infix.parseInfix(scopeOperationRegister, getProperties(), expression), false);
         return getThis();
     }
 
     /**
-     * Parse and append given equation to existing equation
+     * Parse and append given expression to existing expression
      * 
-     * @param equation
+     * @param expression
      * @return
      * @throws ParseException
      *             @
      */
-    public CALC parse(String equation, Object... values) throws ParseException {
+    public CALC parse(String expression, Object... values) throws ParseException {
         registerImplmentedOperation();
-        append(Infix.parseInfix(scopeOperationRegister, getProperties(), equation, values), false);
+        append(Infix.parseInfix(scopeOperationRegister, getProperties(), expression, values), false);
         return getThis();
     }
 
@@ -596,7 +596,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Set scale for entire equation
+     * Set scale for entire expression
      * @param scale
      * @return
      */
@@ -606,7 +606,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Get scale mode used throughout equation
+     * Get scale mode used throughout expression
      * @return
      */
     public Integer getScale() {
@@ -614,7 +614,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Set rounding mode for entire equation
+     * Set rounding mode for entire expression
      * @param roundingMode
      * @return
      */
@@ -624,7 +624,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Get rounding mode used throughout equation
+     * Get rounding mode used throughout expression
      * @return
      */
     public Rounding getRoundingMode() {
@@ -632,7 +632,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Set decimal separator for entire equation
+     * Set decimal separator for entire expression
      * @param decimalSeparator
      * @return
      */
@@ -643,7 +643,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Get decimal separator used throughout equation
+     * Get decimal separator used throughout expression
      * @return
      */
     public char getDecimalSeparator() {
@@ -651,7 +651,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Set number grouping separator for entire equation
+     * Set number grouping separator for entire expression
      * @param decimalSeparator
      * @return
      */
@@ -661,7 +661,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Get grouping separator used throughout equation
+     * Get grouping separator used throughout expression
      * @return
      */
     public char getGroupingSeparator() {
@@ -673,37 +673,37 @@ public abstract class AbstractCalculator<CALC> {
     //
 
     /**
-     * String representation of equation that will be parsed
-     * @param equation
+     * String representation of expression that will be parsed
+     * @param expression
      * @return
      * @throws ParseException
      * @see {@link #parse(String)}
      */
-    public CALC equation(String equation) throws ParseException {
-        infix = Infix.parseInfix(scopeOperationRegister, getProperties(), equation);
+    public CALC expression(String expression) throws ParseException {
+        infix = Infix.parseInfix(scopeOperationRegister, getProperties(), expression);
         return getThis();
     }
 
     /**
-     * String representation of equation that will be parsed with unknown variables.
+     * String representation of expression that will be parsed with unknown variables.
      * It is possible to define name of <tt>Num</tt> with {@link Num#setName(String)} then name will be matched with name of unknown variable.
      * Otherwise unknown variable will be matched by declared order.
      *   
      * <br/>
      * e.g. X + 5 - (2 * X - Y)
      * 
-     * @param equation
+     * @param expression
      * @param values for unknown variables
      * @return
      * @throws ParseException
      */
-    public CALC equation(String equation, Num... values) throws ParseException {
-        infix = Infix.parseInfix(scopeOperationRegister, getProperties(), equation, values);
+    public CALC expression(String expression, Num... values) throws ParseException {
+        infix = Infix.parseInfix(scopeOperationRegister, getProperties(), expression, values);
         return getThis();
     }
 
     /**
-     * Calculate prepared equation
+     * Calculate prepared expression
      * 
      * @return
      * @see {@link #calculate()}
@@ -715,7 +715,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Calculate prepared equation and convert to object of given class
+     * Calculate prepared expression and convert to object of given class
      * 
      * @return
      * @see {@link #calculate()}
@@ -729,7 +729,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Calculate prepared equation
+     * Calculate prepared expression
      * 
      * @return
      * @see {@link #calc()}
@@ -741,7 +741,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Calculate equation and track calculation steps accessible with {@link getCalculationSteps()}
+     * Calculate expression and track calculation steps accessible with {@link getCalculationSteps()}
      * 
      * @return
      */
@@ -750,7 +750,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Calculate equation
+     * Calculate expression
      * @param trackSteps
      * @param showDetails
      * @return
@@ -767,7 +767,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Bind another Calculator class functionalities to equation.
+     * Bind another Calculator class functionalities to expression.
      * 
      * Way to combine two different implementation of calculators
      * 
@@ -864,7 +864,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Convert defined equation to postfix <tt>String</tt>
+     * Convert defined expression to postfix <tt>String</tt>
      * 
      * @return
      */
@@ -876,7 +876,7 @@ public abstract class AbstractCalculator<CALC> {
 
     /**
      * Convert infix to postfix
-     * Conversion is made only first time or after any change in structure of infix equation
+     * Conversion is made only first time or after any change in structure of infix expression
      * @return
      */
     private Postfix convertToPostfix() {
@@ -891,7 +891,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Get infix (common arithmetic and logical formula notation) representation of given equation
+     * Get infix (common arithmetic and logical formula notation) representation of given expression
      * 
      * @return
      * @see {@link getPostfix()}
@@ -928,7 +928,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Return result copy of last calculated equation
+     * Return result copy of last calculated expression
      * 
      * @return
      * @see {@link isCalculated()}

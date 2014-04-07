@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio=ArcTanFunction.class)
 public interface ArcTan<CALC> {
     
-    public CALC atan(AbstractCalculator equation) ;
+    public CALC atan(AbstractCalculator expression) ;
     
 
     // 6

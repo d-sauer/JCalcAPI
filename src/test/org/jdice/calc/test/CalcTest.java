@@ -54,7 +54,7 @@ public class CalcTest {
     }
 
     @Test
-    public void testEquations() throws Exception {
+    public void testexpressions() throws Exception {
         Calc calc1b = Calc.builder("5+9/6").mul(3).div(2);
         Num cvb = calc1b.calcWithSteps(true);
         assertEquals("5 + 9 / 6 * 3 / 2", 7, cvb.intValue());
@@ -68,7 +68,7 @@ public class CalcTest {
 
         Num x = new Num("x", 10);
         Num y = new Num("y", 3);
-        Calc calc2 = Calc.builder().equation("5 + x - y", x, y).add(2);
+        Calc calc2 = Calc.builder().expression("5 + x - y", x, y).add(2);
         Num cv2 = calc2.calc();
         assertEquals("5 + 10 - 3 + 2", 14, cv2.intValue());
 
@@ -90,7 +90,7 @@ public class CalcTest {
 
         Num x = new Num("x", 10);
         Num y = new Num("y", 3);
-        Calc calc2 = Calc.builder().equation("5 + x - y", x, y);
+        Calc calc2 = Calc.builder().expression("5 + x - y", x, y);
         Calc calc3 = Calc.builder().append(calc1).divide().append(calc2);
         calc3.setScale(9).setDecimalSeparator(',');
 
@@ -156,7 +156,7 @@ public class CalcTest {
     }
 
     @Test
-    public void testEquations2() throws Exception {
+    public void testexpressions2() throws Exception {
         calculateTest(79.71d, 8310.00d);
         calculateTest(48.34d, 8310.00d);
         calculateTest(70.98d, 8310.00d);

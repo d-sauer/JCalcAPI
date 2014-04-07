@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio=CosFunction.class)
 public interface Cos<CALC> {
     
-    public CALC cos(AbstractCalculator equation) ;
+    public CALC cos(AbstractCalculator expression) ;
     
 
     // 6

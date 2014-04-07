@@ -76,7 +76,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * Create Num instance with specific name and value of given Object
 	 * 
 	 * @param name
-	 *            used in equation with unknown value
+	 *            used in expression with unknown value
 	 * @param value
 	 *            that can be short, int, long, float, double, Short, Integer,
 	 *            Long, Float, Double, BigInteger, BigDecimal, String or custom
@@ -106,7 +106,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * Create Num instance with specific name and value of given Object
 	 * 
 	 * @param name
-	 *            used in equation with unknown value
+	 *            used in expression with unknown value
 	 * 
 	 * @param value
 	 *            that can be short, int, long, float, double, Short, Integer,
@@ -148,7 +148,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * defined decimal separator
 	 * 
 	 * @param name
-	 *            used in equation with unknown value
+	 *            used in expression with unknown value
 	 * @param value
 	 * @param decimalSeparator
 	 *            used in String value
@@ -214,9 +214,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 
 				strValue = Num.stripNumber(strValue, decimalSeparator);
 				strValue = strValue.replace(decimalSeparator + "",
-						Properties.DEFAULT_DECIMAL_SEPARATOR + ""); // use default
-																	// decimal
-																	// separator
+						Properties.DEFAULT_DECIMAL_SEPARATOR + ""); // use default decimal separator
 
 				DecimalFormatSymbols dfs = new DecimalFormatSymbols();
 				dfs.setDecimalSeparator(Properties.DEFAULT_DECIMAL_SEPARATOR);
@@ -278,7 +276,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	/**
-	 * Get name of this variable. Used for equation with unknown variables e.g.
+	 * Get name of this variable. Used for expression with unknown variables e.g.
 	 * 5 + X
 	 * 
 	 * @return

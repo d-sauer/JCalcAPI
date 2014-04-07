@@ -79,16 +79,16 @@ public class Calc extends AbstractCalculator<Calc> implements Add<Calc>,
 		return calc;
 	}
 
-	public static Calc builder(String equation) throws ParseException {
+	public static Calc builder(String expression) throws ParseException {
 		Calc calc = new Calc();
-		calc.parse(equation);
+		calc.parse(expression);
 		return calc;
 	}
 
-	public static Calc builder(String equation, Object... values)
+	public static Calc builder(String expression, Object... values)
 			throws ParseException {
 		Calc calc = new Calc();
-		calc.parse(equation, values);
+		calc.parse(expression, values);
 		return calc;
 	}
 
@@ -227,8 +227,8 @@ public class Calc extends AbstractCalculator<Calc> implements Add<Calc>,
 	}
 
 	@Override
-	public Calc abs(AbstractCalculator equation) {
-		return append(AbsFunction.class, equation);
+	public Calc abs(AbstractCalculator expression) {
+		return append(AbsFunction.class, expression);
 	}
 
 	@Override
@@ -252,8 +252,8 @@ public class Calc extends AbstractCalculator<Calc> implements Add<Calc>,
 	}
 
 	@Override
-	public Calc sqrt(AbstractCalculator equation) {
-		return append(SqrtFunction.class, equation);
+	public Calc sqrt(AbstractCalculator expression) {
+		return append(SqrtFunction.class, expression);
 	}
 
 	@Override
@@ -302,8 +302,8 @@ public class Calc extends AbstractCalculator<Calc> implements Add<Calc>,
 	}
 
 	@Override
-	public Calc log(AbstractCalculator equation) {
-		return append(LogFunction.class, equation);
+	public Calc log(AbstractCalculator expression) {
+		return append(LogFunction.class, expression);
 	}
 
 	@Override

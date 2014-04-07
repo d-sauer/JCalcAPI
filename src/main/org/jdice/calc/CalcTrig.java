@@ -130,16 +130,16 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 		return calc;
 	}
 
-	public static CalcTrig builder(String equation) throws ParseException {
+	public static CalcTrig builder(String expression) throws ParseException {
 		CalcTrig calc = new CalcTrig();
-		calc.parse(equation);
+		calc.parse(expression);
 		return calc;
 	}
 
-	public static CalcTrig builder(String equation, Object... values)
+	public static CalcTrig builder(String expression, Object... values)
 			throws ParseException {
 		CalcTrig calc = new CalcTrig();
-		calc.parse(equation, values);
+		calc.parse(expression, values);
 		return calc;
 	}
 
@@ -400,7 +400,7 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 		return append(PowOperator.class, value);
 	}
 
-	public CalcTrig abs(AbstractCalculator equation) {
+	public CalcTrig abs(AbstractCalculator expression) {
 		return append(AbsFunction.class);
 	}
 
@@ -441,8 +441,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig sqrt(AbstractCalculator equation) {
-		return append(SqrtFunction.class, equation);
+	public CalcTrig sqrt(AbstractCalculator expression) {
+		return append(SqrtFunction.class, expression);
 	}
 
 	public CalcTrig sqrt(short value) {
@@ -525,8 +525,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	// OPERATIONS
 	//
 	@Override
-	public CalcTrig sin(AbstractCalculator equation) {
-		return append(SinFunction.class, equation);
+	public CalcTrig sin(AbstractCalculator expression) {
+		return append(SinFunction.class, expression);
 	}
 
 	@Override
@@ -550,8 +550,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig cos(AbstractCalculator equation) {
-		return append(CosFunction.class, equation);
+	public CalcTrig cos(AbstractCalculator expression) {
+		return append(CosFunction.class, expression);
 	}
 
 	@Override
@@ -575,8 +575,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig tan(AbstractCalculator equation) {
-		return append(TanFunction.class, equation);
+	public CalcTrig tan(AbstractCalculator expression) {
+		return append(TanFunction.class, expression);
 	}
 
 	@Override
@@ -600,8 +600,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig atan(AbstractCalculator equation) {
-		return append(ArcTanFunction.class, equation);
+	public CalcTrig atan(AbstractCalculator expression) {
+		return append(ArcTanFunction.class, expression);
 	}
 
 	@Override
@@ -625,8 +625,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig acos(AbstractCalculator equation) {
-		return append(ArcCosFunction.class, equation);
+	public CalcTrig acos(AbstractCalculator expression) {
+		return append(ArcCosFunction.class, expression);
 	}
 
 	@Override
@@ -650,8 +650,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig asin(AbstractCalculator equation) {
-		return append(ArcSinFunction.class, equation);
+	public CalcTrig asin(AbstractCalculator expression) {
+		return append(ArcSinFunction.class, expression);
 	}
 
 	@Override
@@ -675,8 +675,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig tanh(AbstractCalculator equation) {
-		return append(TanhFunction.class, equation);
+	public CalcTrig tanh(AbstractCalculator expression) {
+		return append(TanhFunction.class, expression);
 	}
 
 	@Override
@@ -700,8 +700,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig cosh(AbstractCalculator equation) {
-		return append(CoshFunction.class, equation);
+	public CalcTrig cosh(AbstractCalculator expression) {
+		return append(CoshFunction.class, expression);
 	}
 
 	@Override
@@ -725,8 +725,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig sinh(AbstractCalculator equation) {
-		return append(SinhFunction.class, equation);
+	public CalcTrig sinh(AbstractCalculator expression) {
+		return append(SinhFunction.class, expression);
 	}
 
 	@Override
@@ -750,8 +750,8 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 	}
 
 	@Override
-	public CalcTrig log(AbstractCalculator equation) {
-		return append(LogFunction.class, equation);
+	public CalcTrig log(AbstractCalculator expression) {
+		return append(LogFunction.class, expression);
 	}
 
 	@Override

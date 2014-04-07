@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio=LogFunction.class)
 public interface Log<CALC> {
     
-    public CALC log(AbstractCalculator equation) ;
+    public CALC log(AbstractCalculator expression) ;
     
 
     // 6

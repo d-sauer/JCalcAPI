@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio = SinFunction.class)
 public interface Sin<CALC> {
 
-	public CALC sin(AbstractCalculator equation);
+	public CALC sin(AbstractCalculator expression);
 
 	public CALC sin(Object value);
 

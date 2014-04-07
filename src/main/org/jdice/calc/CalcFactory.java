@@ -17,7 +17,7 @@
 package org.jdice.calc;
 
 /**
- * Common used equations
+ * Common used expressions
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  */

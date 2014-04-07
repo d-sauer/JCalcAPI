@@ -29,7 +29,7 @@ import org.jdice.calc.Num;
 @Implementation(implementatio=CoshFunction.class)
 public interface Cosh<CALC> {
     
-    public CALC cosh(AbstractCalculator equation) ;
+    public CALC cosh(AbstractCalculator expression) ;
     
 
     // 6
