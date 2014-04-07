@@ -650,8 +650,8 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @return
 	 * @see #compareTo(Num)
 	 */
-	public boolean sameAs(String value) {
-		return sameAs(new Num(value));
+	public boolean isEqual(String value) {
+		return isEqual(new Num(value));
 	}
 
 	/**
@@ -661,8 +661,8 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @return
 	 * @see #compareTo(Num)
 	 */
-	public boolean sameAs(String value, char decimalSeparator) {
-		return sameAs(new Num(value, decimalSeparator));
+	public boolean isEqual(String value, char decimalSeparator) {
+		return isEqual(new Num(value, decimalSeparator));
 	}
 
 	/**
@@ -678,7 +678,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @return
 	 * @see #compareTo(Num)
 	 */
-	public boolean sameAs(Num value) {
+	public boolean isEqual(Num value) {
 		if (value == null)
 			return false;
 		else if (this == value)
@@ -699,12 +699,12 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @param value
 	 * @return
 	 */
-	public boolean sameAs(Object value) {
+	public boolean isEqual(Object value) {
 		if (!(value instanceof Num)) {
 			Num num = new Num(value);
-			return sameAs(num);
+			return isEqual(num);
 		} else {
-			return sameAs((Num) value);
+			return isEqual((Num) value);
 		}
 	}
 
@@ -714,11 +714,11 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @param value
 	 * @return
 	 */
-	public boolean sameAs(Object value, int scale) {
-		return sameAs(value, scale, null);
+	public boolean isEqual(Object value, int scale) {
+		return isEqual(value, scale, null);
 	}
 
-	public boolean sameAs(Object value, boolean autoscale) {
+	public boolean isEqual(Object value, boolean autoscale) {
 		Num numA = this;
 		Num numB = null;
 		if (value instanceof Num)
@@ -731,7 +731,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		if (bScale < minScale)
 			minScale = bScale;
 		
-		return sameAs(value, minScale);
+		return isEqual(value, minScale);
 	}
 
 	/**
@@ -741,7 +741,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @param value
 	 * @return
 	 */
-	public boolean sameAs(Object value, int scale, Rounding rounding) {
+	public boolean isEqual(Object value, int scale, Rounding rounding) {
 		Num numA = this;
 		Num numB = null;
 		if (value instanceof Num)
@@ -763,12 +763,12 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		return a.equals(b);
 	}
 
-	public boolean sameAs(Object value, Class<? extends NumConverter> converter) {
+	public boolean isEqual(Object value, Class<? extends NumConverter> converter) {
 		if (!(value instanceof Num)) {
 			Num tmp = new Num(value, converter);
-			return sameAs(tmp);
+			return isEqual(tmp);
 		} else {
-			return sameAs((Num) value);
+			return isEqual((Num) value);
 		}
 	}
 

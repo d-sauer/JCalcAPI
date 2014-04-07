@@ -35,53 +35,53 @@ public class NumTest {
     public void testSameAs() throws Exception {
         Num A = new Num(5);
         Num B = new Num(5);
-        assertTrue(A.sameAs(B));
+        assertTrue(A.isEqual(B));
 
         A = new Num("5");
         B = new Num("5.0");
-        assertTrue(A.sameAs(B));
+        assertTrue(A.isEqual(B));
 
         A = new Num(5.5295d);
         B = new Num(5.5295);
-        assertTrue(A.sameAs(B));
+        assertTrue(A.isEqual(B));
 
         A = new Num("5.529500");
         B = new Num(5.5295);
-        assertTrue(A.sameAs(B));
+        assertTrue(A.isEqual(B));
 
         A = new Num("5.529500");
         B = new Num(5.529500d);
-        assertTrue(A.sameAs(B));
+        assertTrue(A.isEqual(B));
 
         A = new Num("5.529500");
         B = new Num(5.5295001d);
-        assertTrue("Not equal", !A.sameAs(B));
+        assertTrue("Not equal", !A.isEqual(B));
 
         A = new Num("5.529500");
         B.set(5.529500d);
-        assertTrue(A.sameAs(B));
+        assertTrue(A.isEqual(B));
 
         A = new Num("5.529500");
         B.set(5.529500d);
-        assertTrue(A.sameAs("5.5295"));
+        assertTrue(A.isEqual("5.5295"));
         
         
         A = new Num("5.529500");
         B = new Num("5.52951258");
 
-        assertTrue(A.sameAs(B, 2));
+        assertTrue(A.isEqual(B, 2));
         
-        assertTrue(!A.sameAs(B, 20));	// not same: 5.529512|58| 
+        assertTrue(!A.isEqual(B, 20));	// not same: 5.529512|58| 
         
-        assertTrue(A.sameAs(B, 4, Rounding.HALF_DOWN));
+        assertTrue(A.isEqual(B, 4, Rounding.HALF_DOWN));
         
         
         A = new Num("1254.5848");
         B = new Num("1254.58");
-        assertTrue(!A.sameAs(B));
-		assertTrue(A.sameAs(B, 2));
+        assertTrue(!A.isEqual(B));
+		assertTrue(A.isEqual(B, 2));
 
-		assertTrue(A.sameAs(B, true));
+		assertTrue(A.isEqual(B, true));
     }
 
     @Test

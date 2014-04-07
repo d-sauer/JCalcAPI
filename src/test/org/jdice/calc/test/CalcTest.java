@@ -117,16 +117,16 @@ public class CalcTest {
 
         for (int i = 0; i < 20; i++) {
             Num cv = calc1.calc();
-            assertTrue("5 + 9 / 6 * 3 / 2", cv.sameAs("7.25"));
+            assertTrue("5 + 9 / 6 * 3 / 2", cv.isEqual("7.25"));
 
             x.set(5 + i);
             y.set(2 * i);
             Num cv2 = calc2.calc();
 
             int c2 = 5 + (5 + i) - (2 * i);
-            assertTrue("5 + (" + (5 + i) + ") - (" + (2 * i) + ")=" + c2 + "  == " + calc2.getInfix() + "=" + cv2.toString(), cv2.sameAs(c2));
+            assertTrue("5 + (" + (5 + i) + ") - (" + (2 * i) + ")=" + c2 + "  == " + calc2.getInfix() + "=" + cv2.toString(), cv2.isEqual(c2));
 
-            if (cv2.sameAs(0))
+            if (cv2.isEqual(0))
                 continue;
             Num cv3 = calc3.calc();
             assertEquals(excelResult.get(calc3.getInfix()), cv3.toString(','));
@@ -204,7 +204,7 @@ public class CalcTest {
         calc.bind(CalcTrig.class).add().sin(5);
         calc.calc();
         assertEquals("10 + 20 - 5 + sin(10) + 2 + sin(5)", calc.getInfix());
-        assertTrue(calc.getCalculated().setScale(3).sameAs("25.497"));
+        assertTrue(calc.getCalculated().setScale(3).isEqual("25.497"));
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
         Calc calc2 = Calc.builder("1+2+ A +abs(-2 - (abs(A-10)))", 5);
