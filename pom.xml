@@ -1,8 +1,8 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jdice.calc</groupId>
+	<groupId>org.jdice</groupId>
 	<artifactId>jcalc</artifactId>
-	<version>0.1b</version>
+	<version>0.2b</version>
 	<packaging>jar</packaging>
 
 	<name>JCalc API</name>
