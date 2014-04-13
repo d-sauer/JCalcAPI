@@ -412,7 +412,7 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      * @throws ParseException
      */
-    public CALC parse(String expression) throws ParseException {
+    public CALC expression(String expression) throws ParseException {
         registerImplmentedOperation();
         append(Infix.parseInfix(scopeOperationRegister, getProperties(), expression), false);
         return getThis();
@@ -420,13 +420,19 @@ public abstract class AbstractCalculator<CALC> {
 
     /**
      * Parse and append given expression to existing expression
+     * String representation of expression that will be parsed with unknown variables.
+     * It is possible to define name of <tt>Num</tt> with {@link Num#setName(String)} then name will be matched with name of unknown variable.
+     * Otherwise unknown variable will be matched by declared order.
+     *   
+     * <br/>
+     * e.g. X + 5 - (2 * X - Y)
      * 
      * @param expression
      * @return
      * @throws ParseException
      *             @
      */
-    public CALC parse(String expression, Object... values) throws ParseException {
+    public CALC expression(String expression, Object... values) throws ParseException {
         registerImplmentedOperation();
         append(Infix.parseInfix(scopeOperationRegister, getProperties(), expression, values), false);
         return getThis();
@@ -672,35 +678,6 @@ public abstract class AbstractCalculator<CALC> {
     // LOGIC
     //
 
-    /**
-     * String representation of expression that will be parsed
-     * @param expression
-     * @return
-     * @throws ParseException
-     * @see {@link #parse(String)}
-     */
-    public CALC expression(String expression) throws ParseException {
-        infix = Infix.parseInfix(scopeOperationRegister, getProperties(), expression);
-        return getThis();
-    }
-
-    /**
-     * String representation of expression that will be parsed with unknown variables.
-     * It is possible to define name of <tt>Num</tt> with {@link Num#setName(String)} then name will be matched with name of unknown variable.
-     * Otherwise unknown variable will be matched by declared order.
-     *   
-     * <br/>
-     * e.g. X + 5 - (2 * X - Y)
-     * 
-     * @param expression
-     * @param values for unknown variables
-     * @return
-     * @throws ParseException
-     */
-    public CALC expression(String expression, Num... values) throws ParseException {
-        infix = Infix.parseInfix(scopeOperationRegister, getProperties(), expression, values);
-        return getThis();
-    }
 
     /**
      * Calculate prepared expression

@@ -132,14 +132,13 @@ public class CalcTrig extends AbstractCalculator<CalcTrig> implements
 
 	public static CalcTrig builder(String expression) throws ParseException {
 		CalcTrig calc = new CalcTrig();
-		calc.parse(expression);
+		calc.expression(expression);
 		return calc;
 	}
 
-	public static CalcTrig builder(String expression, Object... values)
-			throws ParseException {
+	public static CalcTrig builder(String expression, Object... values) throws ParseException {
 		CalcTrig calc = new CalcTrig();
-		calc.parse(expression, values);
+		calc.expression(expression, values);
 		return calc;
 	}
 

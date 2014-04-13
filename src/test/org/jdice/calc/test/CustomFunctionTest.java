@@ -50,7 +50,7 @@ public class CustomFunctionTest {
         String e = "test(1-2-5-2, 3)";
         Calc c = new Calc();
         c.register(test.class);
-        c.parse(e);
+        c.expression(e);
         Num n = c.calc();
 
         assertEquals("-24", n.toString());

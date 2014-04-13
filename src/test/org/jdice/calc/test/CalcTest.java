@@ -54,7 +54,7 @@ public class CalcTest {
     }
 
     @Test
-    public void testexpressions() throws Exception {
+    public void testExpressions() throws Exception {
         Calc calc1b = Calc.builder("5+9/6").mul(3).div(2);
         Num cvb = calc1b.calcWithSteps(true);
         assertEquals("5 + 9 / 6 * 3 / 2", 7, cvb.intValue());
@@ -82,6 +82,15 @@ public class CalcTest {
         Calc calc5 = Calc.builder(" 2 % 5");
         Num cv4 = calc5.calc();
         assertEquals("2 % 5", 2, cv4.intValue());
+    }
+    
+    @Test
+    public void testExpressions2() throws Exception {
+        Calc calc1 = Calc.builder("5 / 9 * 12");
+        assertEquals("5 / 9 * 12", calc1.toString());
+
+        Calc calc2 = Calc.builder().val(10).add().expression("5 / 9 * 12");
+        assertEquals("10 + 5 / 9 * 12", calc2.toString());
     }
 
     @Test

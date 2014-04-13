@@ -81,14 +81,13 @@ public class Calc extends AbstractCalculator<Calc> implements Add<Calc>,
 
 	public static Calc builder(String expression) throws ParseException {
 		Calc calc = new Calc();
-		calc.parse(expression);
+		calc.expression(expression);
 		return calc;
 	}
 
-	public static Calc builder(String expression, Object... values)
-			throws ParseException {
+	public static Calc builder(String expression, Object... values) throws ParseException {
 		Calc calc = new Calc();
-		calc.parse(expression, values);
+		calc.expression(expression, values);
 		return calc;
 	}
 
