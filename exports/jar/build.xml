@@ -3,7 +3,7 @@
     <property name="project.title" value="JCalc" />
     <property name="project.name" value="jcalc" />
     <property name="project.v_major" value="0" />
-    <property name="project.v_minor" value="2b" />
+    <property name="project.v_minor" value="3b" />
     <property name="project.version" value="${project.v_major}.${project.v_minor}" />
     <property name="project.author" value="Davor Sauer" />
 
@@ -11,6 +11,8 @@
     <property name="export.dir" value="${project.name}-${project.version}" />
     <property name="export.jar" value="${project.name}-${project.version}" />
     <property name="export.javadoc" value="${project.name}-${project.version}-javadoc" />
+    <property name="export.sources" value="${project.name}-${project.version}-sources" />
+    <property name="export.pom" value="${project.name}-${project.version}" />
     <property name="src.main" value="../../src/main" />
     <property name="src.test" value="../../src/test" />
 
@@ -80,7 +82,7 @@
 		
 	
 	<target name="source_jar">
-		<jar destfile="${export.dir}/${export.jar}-sources.jar" compress="true">
+		<jar destfile="${export.dir}/${export.sources}.jar" compress="true">
             <manifest>
                 <attribute name="Specification-Title" value="${project.name}" />
                 <attribute name="Specification-Version" value="${project.version}" />
@@ -90,6 +92,15 @@
 		    <fileset dir="${src.main}" includes="**/*.java"/>
 		</jar>
 	</target>
+	
+	<target name="prepare_pom">
+		<copyfile src="../jcalc.pom" dest="${export.dir}/${export.pom}.pom"/>
+		<replaceregexp file="${export.dir}/${export.pom}.pom" 
+		               match="&lt;version&gt;(.)+&lt;\/version&gt;" 
+		               replace="&lt;version&gt;${project.version}&lt;/version&gt;" 
+		               byline="true" />
+	</target>
+
 	
 	<target name="run" >
 	        <mkdir dir="${export.dir}" />
@@ -104,9 +115,9 @@
 
 	         <!-- Source -->
 	        <antcall target="source_jar"></antcall>
-	        
-		
-		
+
+	        <antcall target="prepare_pom"></antcall>
+
 	        <!-- clean bild classes-->
 	        <delete dir="${build.dir}" />
     </target>
