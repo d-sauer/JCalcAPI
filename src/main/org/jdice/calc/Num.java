@@ -213,13 +213,11 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 				String strValue = (String) value;
 
 				strValue = Num.stripNumber(strValue, decimalSeparator);
-				strValue = strValue.replace(decimalSeparator + "",
-						Properties.DEFAULT_DECIMAL_SEPARATOR + ""); // use default decimal separator
+				strValue = strValue.replace(decimalSeparator + "", Properties.DEFAULT_DECIMAL_SEPARATOR + ""); // use default decimal separator
 
 				DecimalFormatSymbols dfs = new DecimalFormatSymbols();
 				dfs.setDecimalSeparator(Properties.DEFAULT_DECIMAL_SEPARATOR);
-				DecimalFormat df = new DecimalFormat("#0"
-						+ Properties.DEFAULT_DECIMAL_SEPARATOR + "0#", dfs);
+				DecimalFormat df = new DecimalFormat("#0" + Properties.DEFAULT_DECIMAL_SEPARATOR + "0#", dfs);
 				df.setParseBigDecimal(true);
 
 				in = (BigDecimal) df.parse(strValue);
@@ -399,8 +397,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		out = this.in;
 
 		if (getProperties().getScale() != null)
-			out = out.setScale(getProperties().getScale(), getProperties()
-					.getRoundingMode().getBigDecimalRound());
+			out = out.setScale(getProperties().getScale(), getProperties().getRoundingMode().getBigDecimalRound());
 
 		if (getProperties().hasStripTrailingZeros() && hasFraction())
 			out = out.stripTrailingZeros();
@@ -560,7 +557,9 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * 
 	 * @param format
 	 *            - DecimalFormat e.g. #,###,###,##0.00
-	 * @return
+	 * @return String
+	 * @see #toString(Character groupingSeparator, char decimalSeparator)
+	 * @see #toString(Character, char)
 	 */
 	public String getFormated() {
 		return toString(getProperties().getGroupingSeparator(), getProperties()
@@ -573,24 +572,22 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	/**
+	 * Use properties ({@link getProperties()}) grouping separator and decimal separator and specified format by rules of <tt>DecimalFormat</tt>
 	 * DecimalFormat e.g. #,###,###,##0.00
 	 * 
 	 * @param format
 	 * @return
 	 */
 	public String toString(String format) {
-		return toString(getProperties().getGroupingSeparator(), getProperties()
-				.getOutputDecimalSeparator(), format);
+		return toString(getProperties().getGroupingSeparator(), getProperties().getOutputDecimalSeparator(), format);
 	}
 
 	public String toString(char decimalSeparator) {
-		return toString(getProperties().getGroupingSeparator(),
-				decimalSeparator, null);
+		return toString(null, decimalSeparator, null);
 	}
 
 	public String toString(Character groupingSeparator, char decimalSeparator) {
-		return toString(groupingSeparator, decimalSeparator, getProperties()
-				.getOutputFormat());
+		return toString(groupingSeparator, decimalSeparator, getProperties().getOutputFormat());
 	}
 
 	public String toString(Character groupingSeparator, char decimalSeparator, String format) {
@@ -599,7 +596,12 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		if (groupingSeparator != null)
 			custom.setGroupingSeparator(groupingSeparator);
 
-		DecimalFormat decFormat = new DecimalFormat();
+		DecimalFormat decFormat = null;
+		if (format != null)
+		    decFormat = new DecimalFormat(format);
+		else
+		    decFormat = new DecimalFormat();
+		    
 		decFormat.setDecimalFormatSymbols(custom);
 		if (groupingSeparator == null)
 			decFormat.setGroupingUsed(false);
@@ -610,6 +612,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		else
 			decFormat.setMaximumFractionDigits(Properties.DEFAULT_SCALE);
 
+		
 		return decFormat.format(toBigDecimal());
 	}
 
