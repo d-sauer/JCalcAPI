@@ -24,7 +24,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
     CalcTest.class,
     NumTest.class,
-    NumTestScope.class,
+    NumScopeTest.class,
     PostfixTest.class,
     CustomFunctionTest.class,
     CalcFactoryTest.class

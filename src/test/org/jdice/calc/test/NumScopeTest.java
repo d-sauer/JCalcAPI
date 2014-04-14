@@ -21,7 +21,7 @@ import org.jdice.calc.Num;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class NumTestScope {
+public class NumScopeTest {
     
     
     
@@ -61,8 +61,10 @@ public class NumTestScope {
         Calc calc3 = new Calc();
         calc3.val(num1.setScale(1)).mul(num2.setScale(1));
         
-        Num cn3 = calc2.calc(); 	// calculate with scaled numbers
-        assertEquals("14.79", cn3.toString());
+        Num cn3 = calc2.calcWithSteps(true); 	// calculate with scaled numbers
+//        for(String s : calc2.getCalculationSteps())
+//            System.out.println(s);
+        assertEquals("14.79", cn3.setScale(2).toString());
     }
     
 
