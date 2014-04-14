@@ -33,7 +33,7 @@ import org.junit.Test;
 public class NumTest {
 
     @Test
-    public void testSameAs() throws Exception {
+    public void testIsEqual() throws Exception {
         Num A = new Num(5);
         Num B = new Num(5);
         assertTrue(A.isEqual(B));
@@ -85,6 +85,72 @@ public class NumTest {
 		assertTrue(A.isEqual(B, true));
     }
 
+    @Test
+    public void testEqualsAndIsEqual() throws Exception {
+        Num A = new Num(1);
+        Num B = new Num(1);
+        assertTrue(A.equals(B));
+        assertTrue(A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+
+        A = new Num("2");
+        B = new Num("2.0");
+        assertTrue(!A.equals(B));
+        assertTrue(A.isEqual(B));
+        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+
+        A = new Num(3.5295d);
+        B = new Num(3.5295);
+        assertTrue(A.equals(B));
+        assertTrue(A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+        
+        A = new Num("4.529500");
+        B = new Num(4.5295);
+        assertTrue(!A.equals(B));
+        assertTrue(A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+
+        A = new Num("5.529500");
+        B = new Num(5.52950000d);
+        assertTrue(!A.equals(B));
+        assertTrue(A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+
+        A = new Num("6.529500");
+        B = new Num(6.5295001d);
+        assertTrue(!A.equals(B));
+        assertTrue(!A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+
+        A = new Num("7.5295000");
+        B = new Num(7.529500d);
+        assertTrue(!A.equals(B));
+        assertTrue(A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+
+        A = new Num("8.5295001");
+        B.set(8.5295001d);
+        assertTrue(A.equals(B));
+        assertTrue(A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+        
+        A = new Num("9.529500");
+        B = new Num("9.52951258");
+        assertTrue(!A.equals(B));
+        assertTrue(!A.isEqual(B));
+//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
+//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
+    }
+    
     @Test
     public void testHashCode() throws Exception {
         Num A = new Num(5);
