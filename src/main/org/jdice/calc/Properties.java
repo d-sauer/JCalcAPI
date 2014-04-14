@@ -38,7 +38,7 @@ public class Properties {
 	//
 	// Defaults
 	//
-	public static final boolean DEFAULT_STRIP_TRAILING_ZEROS = true;
+	public static final boolean DEFAULT_STRIP_TRAILING_ZEROS = false;
 	public static final String DEFAULT_OUTPUT_FORMAT = "#,###,###,##0.00";
 	public static final int DEFAULT_SCALE = 64;
 	public static final char DEFAULT_DECIMAL_SEPARATOR = '.';
