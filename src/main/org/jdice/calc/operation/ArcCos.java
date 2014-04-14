@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=ArcCosFunction.class)
+@Implementation(implementation=ArcCosFunction.class)
 public interface ArcCos<CALC> {
     
     public CALC acos(AbstractCalculator expression) ;

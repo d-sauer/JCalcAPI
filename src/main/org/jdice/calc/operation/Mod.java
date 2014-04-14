@@ -25,7 +25,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = ModOperator.class)
+@Implementation(implementation = ModOperator.class)
 public interface Mod<CALC> {
 
 	public CALC modulo();

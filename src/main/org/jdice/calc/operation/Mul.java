@@ -25,7 +25,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = MulOperator.class)
+@Implementation(implementation = MulOperator.class)
 public interface Mul<CALC> {
 	public CALC multiply();
 

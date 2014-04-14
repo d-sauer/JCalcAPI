@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=CoshFunction.class)
+@Implementation(implementation=CoshFunction.class)
 public interface Cosh<CALC> {
     
     public CALC cosh(AbstractCalculator expression) ;

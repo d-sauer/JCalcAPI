@@ -92,7 +92,7 @@ public abstract class AbstractCalculator<CALC> {
         if (c == null && declare.isAnnotationPresent(Implementation.class)) {
             Implementation impl = (Implementation) declare.getAnnotation(Implementation.class);
             if (impl != null)
-                c = impl.implementatio();
+                c = impl.implementation();
             LinkOperation.link(declare, c);
         }
 

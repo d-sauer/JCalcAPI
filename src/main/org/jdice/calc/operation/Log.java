@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=LogFunction.class)
+@Implementation(implementation=LogFunction.class)
 public interface Log<CALC> {
     
     public CALC log(AbstractCalculator expression) ;

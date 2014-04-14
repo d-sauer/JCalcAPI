@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = SinFunction.class)
+@Implementation(implementation = SinFunction.class)
 public interface Sin<CALC> {
 
 	public CALC sin(AbstractCalculator expression);

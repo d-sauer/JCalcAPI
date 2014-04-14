@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = SqrtFunction.class)
+@Implementation(implementation = SqrtFunction.class)
 public interface Sqrt<CALC> {
 
 	public CALC sqrt(AbstractCalculator expression);

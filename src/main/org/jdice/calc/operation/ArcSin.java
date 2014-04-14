@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=ArcSinFunction.class)
+@Implementation(implementation=ArcSinFunction.class)
 public interface ArcSin<CALC> {
     
     public CALC asin(AbstractCalculator expression) ;

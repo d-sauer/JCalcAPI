@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = SinhFunction.class)
+@Implementation(implementation = SinhFunction.class)
 public interface Sinh<CALC> {
 
 	public CALC sinh(AbstractCalculator expression);

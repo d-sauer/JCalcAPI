@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=AbsFunction.class)
+@Implementation(implementation=AbsFunction.class)
 public interface Abs<CALC> {
     
     public CALC abs(AbstractCalculator expression) ;

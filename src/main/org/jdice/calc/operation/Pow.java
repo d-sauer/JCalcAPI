@@ -25,7 +25,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = PowOperator.class)
+@Implementation(implementation = PowOperator.class)
 public interface Pow<CALC> {
 
 	public CALC power();

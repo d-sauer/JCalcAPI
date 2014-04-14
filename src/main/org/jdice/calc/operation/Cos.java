@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=CosFunction.class)
+@Implementation(implementation=CosFunction.class)
 public interface Cos<CALC> {
     
     public CALC cos(AbstractCalculator expression) ;

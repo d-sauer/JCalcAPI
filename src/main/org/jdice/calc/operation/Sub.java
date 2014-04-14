@@ -25,7 +25,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = SubOperator.class)
+@Implementation(implementation = SubOperator.class)
 public interface Sub<CALC> {
 
 	public CALC subtract();

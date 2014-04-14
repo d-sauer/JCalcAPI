@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  * 
  * @param <CALC>
  */
-@Implementation(implementatio = TanFunction.class)
+@Implementation(implementation = TanFunction.class)
 public interface Tan<CALC> {
 
 	public CALC tan(AbstractCalculator expression);

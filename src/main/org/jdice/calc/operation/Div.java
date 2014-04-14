@@ -25,7 +25,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=DivOperator.class)
+@Implementation(implementation=DivOperator.class)
 public interface Div<CALC> {
 
     public CALC divide() ;

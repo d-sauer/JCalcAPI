@@ -32,6 +32,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Implementation {
 
-    Class<? extends Operation> implementatio();
+    Class<? extends Operation> implementation();
     
 }

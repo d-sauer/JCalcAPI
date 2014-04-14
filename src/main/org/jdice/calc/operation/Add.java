@@ -25,7 +25,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementatio=AddOperator.class)
+@Implementation(implementation=AddOperator.class)
 public interface Add<CALC> {
     public CALC add() ;
 
