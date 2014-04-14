@@ -43,11 +43,4 @@ public interface NumConverter<T> {
      */
     public T fromNum(Num value);
     
-    /**
-     * Register NumConverter to global cache on first use
-     * 
-     * @see {@link Cache#registerNumConverter(Class, Class)}
-     * @return
-     */
-    public boolean cache();
 }

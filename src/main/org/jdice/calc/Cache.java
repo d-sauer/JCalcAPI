@@ -75,7 +75,7 @@ public class Cache {
     public static void registerNumConverter(Class customClass, Class<? extends NumConverter> converterClass) {
         NumConverter nc = converterCache.get(customClass);
         if (nc == null) {
-            synchronized (customClass) {
+            synchronized (converterClass) {
                 nc = converterCache.get(customClass);
                 if (nc == null) {
                     try {
@@ -86,7 +86,8 @@ public class Cache {
                     }
                     
                     if (nc != null) {
-                        converterCache.put(customClass, nc);
+                        if (converterClass.isAnnotationPresent(SingletonComponent.class))
+                            converterCache.put(customClass, nc);
                     }
                 }
             }
@@ -117,9 +118,11 @@ public class Cache {
         
         if (nc == null) {
         	try {
-				nc = convertClass.newInstance();
-				if (nc.cache())
-					converterCache.put(customClass, nc);
+        	    synchronized (convertClass) {
+    				nc = convertClass.newInstance();
+    				if (convertClass.isAnnotationPresent(SingletonComponent.class))
+    					converterCache.put(customClass, nc);
+        	    }
 			} catch (Exception e) {
 				throw new CalculatorException(e);
 			}

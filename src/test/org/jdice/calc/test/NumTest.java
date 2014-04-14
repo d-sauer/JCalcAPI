@@ -27,6 +27,7 @@ import org.jdice.calc.Calc;
 import org.jdice.calc.Num;
 import org.jdice.calc.NumConverter;
 import org.jdice.calc.Rounding;
+import org.jdice.calc.SingletonComponent;
 import org.junit.Test;
 
 public class NumTest {
@@ -167,6 +168,7 @@ public class NumTest {
         }
     }
     
+    @SingletonComponent
     public static class CustomObjectNumConverter implements NumConverter<CustomObject> {
 
         @Override
@@ -182,13 +184,6 @@ public class NumTest {
             return co;
         }
 
-		@Override
-		public boolean cache() {
-			return true;
-		}
-
-        
-        
     }
 
 }
