@@ -674,6 +674,15 @@ public abstract class AbstractCalculator<CALC> {
         return getProperties().getGroupingSeparator();
     }
 
+    public boolean hasStripTrailingZeros() {
+        return getProperties().hasStripTrailingZeros();
+    }
+
+    public CALC setStripTrailingZeros(boolean stripTrailingZeros) {
+        getProperties().setStripTrailingZeros(stripTrailingZeros);
+        return getThis();
+    }
+    
     //
     // LOGIC
     //
