@@ -45,8 +45,8 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	private Properties properties;
 	private Object originalValue;
 
-	private BigDecimal in;
-	private BigDecimal out;
+	private BigDecimal in = BigDecimal.ZERO;
+	private BigDecimal out = BigDecimal.ZERO;
 
 	//
 	// Constructors
@@ -55,9 +55,6 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * Create Num instance with zero default value
 	 */
 	public Num() {
-		if (in == null)
-			setValue(0);
-
 	}
 
 	/**
@@ -127,7 +124,6 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @param value
 	 */
 	public Num(String value) {
-		this();
 		setValue(value);
 	}
 
@@ -185,24 +181,23 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		return setValue(value, decimalSeparator, null);
 	}
 
-	private Num setValue(Object value, Character decimalSeparator,
-			Class<? extends NumConverter> converterClass) {
+	private Num setValue(Object value, Character decimalSeparator, Class<? extends NumConverter> converterClass) {
 		try {
 			originalValue = value;
 
-			if (value instanceof Short) { // 6.1
+			if (value instanceof Short) {
 				in = new BigDecimal((Short) originalValue);
-			} else if (value instanceof Integer) { // 6.2
+			} else if (value instanceof Integer) {
 				in = new BigDecimal((Integer) originalValue);
-			} else if (value instanceof Long) { // 6.3
+			} else if (value instanceof Long) { 
 				in = new BigDecimal((Long) originalValue);
-			} else if (value instanceof Float) { // 6.4
+			} else if (value instanceof Float) { 
 				in = new BigDecimal(((Float) originalValue).toString());
-			} else if (value instanceof Double) { // 6.5
+			} else if (value instanceof Double) { 
 				in = new BigDecimal(((Double) originalValue).toString());
-			} else if (value instanceof BigInteger) { // 6.6
+			} else if (value instanceof BigInteger) { 
 				in = new BigDecimal((BigInteger) originalValue);
-			} else if (value instanceof BigDecimal) { // 6.7
+			} else if (value instanceof BigDecimal) {
 				in = (BigDecimal) originalValue;
 			} else if (value instanceof String) {
 				if (decimalSeparator == null)
@@ -251,10 +246,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 				if (nc != null)
 					in = nc.toNum(value);
 				else
-					throw new CalculatorException(
-							"Unsupported type '"
-									+ value.getClass()
-									+ "'! Supported types are: short, int, long, float, double, Short, Integer, Long, Float, Double, BigInteger, BigDecimal, String");
+					throw new CalculatorException("Unsupported type '" + value.getClass() + "'! Supported types are: short, int, long, float, double, Short, Integer, Long, Float, Double, BigInteger, BigDecimal, String");
 			}
 		} catch (ParseException pe) {
 			throw new CalculatorException("Parse exception with '" + value
@@ -376,6 +368,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	//
 	// GET's
 	//
+	
 	/**
 	 * Return BigDecimal, same as {@link get()}
 	 * 
@@ -387,37 +380,49 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	/**
-	 * Get <tt>BigDecimal</tt> without trailing zeros if {@link
-	 * hasStripTrailingZeros()} is TRUE
+	 * Return BigDecimal
 	 * 
 	 * @return
-	 * @see #toBigDecimal()
+	 * @see #get()
 	 */
-	public BigDecimal get() {
-		out = this.in;
-
-		if (getProperties().getScale() != null)
-			out = out.setScale(getProperties().getScale(), getProperties().getRoundingMode().getBigDecimalRound());
-
-		if (getProperties().hasStripTrailingZeros() && hasFraction())
-			out = out.stripTrailingZeros();
-
-		return out;
+	public BigDecimal toBigDecimal(Integer scale, Rounding rounding, boolean stripTrailingZeros) {
+	    out = this.in;
+	    
+	    if (scale != null && rounding != null)
+	        out = out.setScale(scale, rounding.getBigDecimalRound());
+	    else if (scale != null && rounding == null)
+	        out = out.setScale(scale);
+	    
+	    if (stripTrailingZeros)
+	        out = out.stripTrailingZeros();
+	    
+	    return out;
 	}
 
-	/**
-	 * Get BigDecimal in scale
+	//
+    // GET's
+    //
+    
+    /**
+     * Get <tt>BigDecimal</tt> without trailing zeros if {@link hasStripTrailingZeros()} is TRUE
+     * And set scale defined by properties
+     * 
+     * @return
+     * @see #toBigDecimal()
+     * @see #toBigDecimal(Integer, Rounding, boolean)
+     */
+    public BigDecimal get() {
+        return toBigDecimal(getProperties().getScale(), getProperties().getRoundingMode(), getProperties().hasStripTrailingZeros());
+    }
+
+    /**
+	 * Get BigDecimal in defined scale, rounding mode and strip trailing zeros from properties 
 	 * 
 	 * @param scale
 	 * @return
 	 */
 	public BigDecimal get(int scale) {
-		out = in.setScale(scale, this.getRoundingMode().getBigDecimalRound());
-
-		if (getProperties().hasStripTrailingZeros() && hasFraction())
-			out = out.stripTrailingZeros();
-
-		return out;
+	    return toBigDecimal(scale, getProperties().getRoundingMode(), getProperties().hasStripTrailingZeros());
 	}
 
 	/**
@@ -428,23 +433,21 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @return
 	 */
 	public BigDecimal get(int scale, Rounding roundingMode) {
-		out = in.setScale(scale, this.getRoundingMode().getBigDecimalRound());
-
-		if (getProperties().hasStripTrailingZeros() && hasFraction())
-			out = out.stripTrailingZeros();
-
-		return out;
+	    return toBigDecimal(scale, roundingMode, getProperties().hasStripTrailingZeros());
 	}
 
 	public BigDecimal getFraction() {
-		BigDecimal fraction = in.remainder(BigDecimal.ONE);
+	    BigDecimal out = toBigDecimal();
+		BigDecimal fraction = out.remainder(BigDecimal.ONE);
 		return fraction;
 	}
 
 	public int getFractionSize() {
-		String tmp = toString();
-		if (tmp.contains(".") && !tmp.endsWith(".")) {
-			return tmp.substring(tmp.indexOf(".")).length() - 1;
+	    BigDecimal fraction = getFraction();
+		String tmp = fraction.toString();
+		int n = tmp.indexOf(Properties.DEFAULT_DECIMAL_SEPARATOR);
+		if (n != -1) {
+			return tmp.length() - n - 1;
 		} else
 			return 0;
 	}
@@ -546,14 +549,13 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		sb.append("\t" + getRoundingMode());
 		sb.append("\t strip trailing zeros:" + hasStripTrailingZeros());
 
-		sb.append("] : " + get());
+		sb.append("] : " + toString());
 
 		return sb.toString();
 	}
 
 	/**
-	 * Get formated representation of number defined by {@link
-	 * setOutputFormat(String)}
+	 * Get formated representation of number defined by {@link setOutputFormat(String)}
 	 * 
 	 * @param format
 	 *            - DecimalFormat e.g. #,###,###,##0.00
@@ -562,13 +564,12 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @see #toString(Character, char)
 	 */
 	public String getFormated() {
-		return toString(getProperties().getGroupingSeparator(), getProperties()
-				.getOutputDecimalSeparator(), getProperties().getOutputFormat());
+		return toString(getProperties().getGroupingSeparator(), getProperties().getOutputDecimalSeparator(), getProperties().getOutputFormat());
 	}
 
 	@Override
 	public String toString() {
-		return getFormated();
+	    return toString(getProperties().getGroupingSeparator(), getProperties().getOutputDecimalSeparator(), getProperties().getOutputFormat());
 	}
 
 	/**
@@ -591,7 +592,9 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	public String toString(Character groupingSeparator, char decimalSeparator, String format) {
-		DecimalFormatSymbols custom = new DecimalFormatSymbols();
+	    BigDecimal out = toBigDecimal();
+	    
+	    DecimalFormatSymbols custom = new DecimalFormatSymbols();
 		custom.setDecimalSeparator(decimalSeparator);
 		if (groupingSeparator != null)
 			custom.setGroupingSeparator(groupingSeparator);
@@ -607,13 +610,21 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			decFormat.setGroupingUsed(false);
 
 		Integer scale = getScale();
-		if (scale != null)
-			decFormat.setMaximumFractionDigits(scale);
-		else
-			decFormat.setMaximumFractionDigits(Properties.DEFAULT_SCALE);
+		if (scale != null && !hasStripTrailingZeros())
+		    decFormat.setMinimumFractionDigits(scale);
+
+		if (scale == null) {
+		    scale = Properties.DEFAULT_SCALE;
+
+		    if (!hasStripTrailingZeros()) {
+		        int p = getFractionSize();
+		        decFormat.setMinimumFractionDigits(p);
+		    }
+		}
+		decFormat.setMaximumFractionDigits(scale);
 
 		
-		return decFormat.format(toBigDecimal());
+		return decFormat.format(out);
 	}
 
 	public Object getOriginalValue() {

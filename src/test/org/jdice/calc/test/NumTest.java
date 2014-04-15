@@ -91,64 +91,46 @@ public class NumTest {
         Num B = new Num(1);
         assertTrue(A.equals(B));
         assertTrue(A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
 
         A = new Num("2");
         B = new Num("2.0");
         assertTrue(!A.equals(B));
         assertTrue(A.isEqual(B));
-        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
 
         A = new Num(3.5295d);
         B = new Num(3.5295);
         assertTrue(A.equals(B));
         assertTrue(A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
         
         A = new Num("4.529500");
         B = new Num(4.5295);
         assertTrue(!A.equals(B));
         assertTrue(A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
 
         A = new Num("5.529500");
         B = new Num(5.52950000d);
         assertTrue(!A.equals(B));
         assertTrue(A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
 
         A = new Num("6.529500");
         B = new Num(6.5295001d);
         assertTrue(!A.equals(B));
         assertTrue(!A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
 
         A = new Num("7.5295000");
         B = new Num(7.529500d);
         assertTrue(!A.equals(B));
         assertTrue(A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
 
         A = new Num("8.5295001");
         B.set(8.5295001d);
         assertTrue(A.equals(B));
         assertTrue(A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
         
         A = new Num("9.529500");
         B = new Num("9.52951258");
         assertTrue(!A.equals(B));
         assertTrue(!A.isEqual(B));
-//        System.out.println(A.toString() + " equals " + B.toString()  + " : " +  A.equals(B));
-//        System.out.println(A.toString() + " isEqual " + B.toString()  + " : " +  A.isEqual(B));
     }
     
     @Test
@@ -222,13 +204,22 @@ public class NumTest {
         assertEquals("25", co.get());
     }
 
+    @Test
+    public void testScaleStripTrailingZeros() throws Exception {
+        Num n3a = new Num(3.10).setScale(2).setStripTrailingZeros(true);
+        assertEquals("3.1", n3a.toString());
+        
+        Num n3b = new Num(3.10).setScale(2).setStripTrailingZeros(false);
+        assertEquals("3.10", n3b.toString());
+    }
+    
     public static class CustomObject {
         private String no;
-        
+
         public void set(String number) {
             no = number;
         }
-        
+
         public String get() {
             return no;
         }
