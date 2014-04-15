@@ -216,6 +216,17 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 				df.setParseBigDecimal(true);
 
 				in = (BigDecimal) df.parse(strValue);
+				
+				// set auto scale
+		        String tmp = in.toString();
+		        int scale = tmp.indexOf(Properties.DEFAULT_DECIMAL_SEPARATOR);
+		        if (scale != -1) {
+		            setScale(tmp.length() - scale - 1);
+
+		            // default: disable strip trailing zeros if string ends with zero
+		            if (strValue.endsWith("0"))
+		                setStripTrailingZeros(false);
+		        } 
 			} else if (value instanceof AbstractCalculator) {
 				AbstractCalculator ac = (AbstractCalculator) value;
 				originalValue = ac;
@@ -249,14 +260,13 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 					throw new CalculatorException("Unsupported type '" + value.getClass() + "'! Supported types are: short, int, long, float, double, Short, Integer, Long, Float, Double, BigInteger, BigDecimal, String");
 			}
 		} catch (ParseException pe) {
-			throw new CalculatorException("Parse exception with '" + value
-					+ "'", pe);
+			throw new CalculatorException("Parse exception with '" + value + "'", pe);
 		} catch (Exception e) {
 			throw new CalculatorException(e);
 		}
 
 		out = in;
-
+		
 		return this;
 	}
 

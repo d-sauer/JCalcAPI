@@ -206,10 +206,10 @@ public class NumTest {
 
     @Test
     public void testScaleStripTrailingZeros() throws Exception {
-        Num n3a = new Num(3.10).setScale(2).setStripTrailingZeros(true);
+        Num n3a = new Num(3.10);
         assertEquals("3.1", n3a.toString());
         
-        Num n3b = new Num(3.10).setScale(2).setStripTrailingZeros(false);
+        Num n3b = new Num("3.10");
         assertEquals("3.10", n3b.toString());
     }
     
