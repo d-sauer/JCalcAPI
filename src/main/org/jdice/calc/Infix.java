@@ -266,9 +266,9 @@ class Infix {
                         Num fValue = (Num) fObject;
                         String name = fValue.getName();
                         if (showDetails == true && name != null && name.length() != 0)
-                            sb.append(name + "[" + fValue.get() + "] ");
+                            sb.append(name + "[" + fValue.toString() + "] ");
                         else
-                            sb.append(fValue.get());
+                            sb.append(fValue.toString());
                     }
                     else if (fObject instanceof AbstractCalculator) {
                         AbstractCalculator fValue = (AbstractCalculator) fObject;
@@ -287,9 +287,9 @@ class Infix {
                 Num cv = (Num) value;
                 String name = cv.getName();
                 if (showDetails == true && name != null && name.length() != 0)
-                    sb.append(name + "[" + cv.get() + "] ");
+                    sb.append(name + "[" + cv.toString() + "] ");
                 else
-                    sb.append(cv.get() + " ");
+                    sb.append(cv.toString() + " ");
             }
             else if (value instanceof Bracket) {
                 Bracket bracket = (Bracket) value;
