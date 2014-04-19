@@ -27,6 +27,7 @@ import org.junit.runners.Suite.SuiteClasses;
     NumScopeTest.class,
     PostfixTest.class,
     CustomFunctionTest.class,
+    CustomOperatorFunctionTest.class,
     CalcFactoryTest.class
 })
 public class JUnitTestSuite {

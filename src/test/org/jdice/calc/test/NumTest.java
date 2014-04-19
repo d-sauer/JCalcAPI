@@ -131,6 +131,16 @@ public class NumTest {
         B = new Num("9.52951258");
         assertTrue(!A.equals(B));
         assertTrue(!A.isEqual(B));
+        
+        A = new Num(5.1000987);
+        assertTrue(!A.equals("5.1000987")); //because objects are not same data type BigDecimal != String
+        assertTrue(A.isEqual("5.1000987"));
+        
+        A = new Num(6.101);
+        B = new Num(6.101987);  //when scale = 3, new number is 6.102
+        assertTrue(!A.equals(B));
+        assertTrue(!A.isEqual(B, true));
+
     }
     
     @Test

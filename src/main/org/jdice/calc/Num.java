@@ -742,6 +742,12 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		return isEqual(value, scale, null);
 	}
 
+	/**
+	 * Scale both value to scale of number which have minimum scale.
+	 * @param value
+	 * @param autoscale
+	 * @return
+	 */
 	public boolean isEqual(Object value, boolean autoscale) {
 		Num numA = this;
 		Num numB = null;

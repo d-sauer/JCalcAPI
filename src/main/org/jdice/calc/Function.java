@@ -25,7 +25,8 @@ package org.jdice.calc;
 public interface Function extends Operation {
 
     /**
-     * Define maximum number of parameters that implemented function can accept
+     * Define maximum number of parameters that implemented function can accept.
+     * Zero define unlimited number of parameters.
      * 
      * @return
      */

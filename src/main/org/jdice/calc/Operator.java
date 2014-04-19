@@ -16,6 +16,8 @@
  
 package org.jdice.calc;
 
+import org.jdice.calc.operation.SubOperator;
+
 /**
  * Method for implementing operator.
  * 
@@ -26,6 +28,11 @@ public interface Operator extends Operation {
 
     /**
      * Define operator priority during calculation.
+     * <br/>
+     * Current used operator use next priority:
+     * (5) {@link SubOperator}, {@link AddOperator} <br/> 
+     * (10) {@link MulOperator}, {@link DivOperator}, {@link ModOperator} <br/>
+     * (15) {@link PowOperator} <br/>
      * 
      * @return
      */
@@ -38,7 +45,7 @@ public interface Operator extends Operation {
      * @param calc
      * @param operandLeft
      * @param operandRight
-     * @return
+     * @return {@link Num}
      */
     public abstract Num calc(AbstractCalculator calc, Num operandLeft, Num operandRight) throws Exception ;
 }
