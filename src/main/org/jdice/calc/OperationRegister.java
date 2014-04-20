@@ -82,6 +82,10 @@ public class OperationRegister {
         return _operator;
     }
 
+    public HashMap<Class<? extends Operator>, Operator>  getOperators() {
+        return operatorCache;
+    }
+
     public void registerFunction(Class<? extends Function> functionClass) {
         if (!functionSymbols.containsValue(functionClass)) {
             if (Function.class.isAssignableFrom(functionClass)) {
@@ -104,6 +108,10 @@ public class OperationRegister {
         }
 
         return _function;
+    }
+    
+    public HashMap<Class<? extends Function>, Function> getFunctions() {
+        return functionCache;
     }
 
     public Function getFunction(Class<? extends Function> functionClass) {

@@ -67,7 +67,7 @@ public class Properties {
                     prop.load(fis);
 
                     // calc.roundingMode
-                    String propRM = prop.getProperty("calc.roundingMode");
+                    String propRM = prop.getProperty("roundingMode");
                     if (propRM != null && propRM.trim().length() != 0) {
                         Rounding rm = Rounding.getRoundingMode(propRM.trim());
                         if (rm != null)
@@ -75,7 +75,7 @@ public class Properties {
                     }
 
                     // calc.scale
-                    String propS = prop.getProperty("calc.scale");
+                    String propS = prop.getProperty("scale");
                     if (propS != null && propS.trim().length() != 0) {
                         try {
                             Integer sc = Integer.parseInt(propS);
@@ -87,7 +87,7 @@ public class Properties {
                     }
 
                     // calc.stripTrailingZeros
-                    String propSTZ = prop.getProperty("calc.stripTrailingZeros");
+                    String propSTZ = prop.getProperty("stripTrailingZeros");
                     if (propSTZ != null && propSTZ.trim().length() != 0) {
                         Boolean stz = Boolean.parseBoolean(propSTZ.trim());
                         if (stz != null)
@@ -95,37 +95,37 @@ public class Properties {
                     }
 
                     // calc.decimalSeparator = '.' or calc.decimalSeparator = "."
-                    String propDS = prop.getProperty("calc.decimalSeparator");
+                    String propDS = prop.getProperty("decimalSeparator");
                     if (propDS != null && propDS.trim().matches("['\"](.){1}['\"]")) {
                         defDecimalSeparatorIN = propDS.trim().charAt(1);
                     }
 
                     // calc.decimalSeparator.IN = '.' or calc.decimalSeparator.IN = "."
-                    String propDSin = prop.getProperty("calc.decimalSeparator.in");
+                    String propDSin = prop.getProperty("decimalSeparator.in");
                     if (propDSin != null && propDSin.trim().matches("['\"](.){1}['\"]")) {
                         defDecimalSeparatorIN = propDSin.trim().charAt(1);
                     }
 
                     // calc.decimalSeparator.OUT = '.' or calc.decimalSeparator.OUT = "."
-                    String propDSout = prop.getProperty("calc.decimalSeparator.out");
+                    String propDSout = prop.getProperty("decimalSeparator.out");
                     if (propDSout != null && propDSout.trim().matches("['\"](.){1}['\"]")) {
                         defDecimalSeparatorOUT = propDSout.trim().charAt(1);
                     }
 
                     // calc.groupingSeparator = ' ' or calc.groupingSeparator = " "
-                    String propGS = prop.getProperty("calc.groupingSeparator");
+                    String propGS = prop.getProperty("groupingSeparator");
                     if (propGS != null && propGS.trim().matches("['\"](.){1}['\"]")) {
                         defGroupingSeparator = propGS.trim().charAt(1);
                     }
 
                     // calc.outputFormat
-                    String propOF = prop.getProperty("calc.outputFormat");
+                    String propOF = prop.getProperty("outputFormat");
                     if (propOF != null && propOF.trim().length() != 0) {
                         defOutputFormat = propOF.trim();
                     }
 
                     //
-                    // Load custom NumConverters
+                    // Load custom NumConverters, Operators, Functions
                     //
                     Cache.loadProperties(prop);
 
@@ -267,14 +267,13 @@ public class Properties {
      * File location ..\bin\org.jdice.calc.properties
      * 
      * File content:
-     * calc.roundingMode = HALF_UP
-     * calc.scale = 3
-     * calc.stripTrailingZeros = false
-     * calc.decimalSeparator = '.' // IN/OUT
-     * calc.decimalSeparator.IN = '.'
-     * calc.decimalSeparator.OUT = '.'
-     * calc.groupingSeparator= ' '
-     * calc.outputFormat = # ### ### ##0.00
+     *   roundingMode=HALF_UP
+     *   stripTrailingZeros=true
+     *   decimalSeparator.out='.'
+     *   decimalSeparator.in='.'
+     *   numconverter[0]=org.jdice.calc.test.NumTest$CustomObject > org.jdice.calc.test.NumTest$CustomObjectNumConverter
+     *   operator[0]=org.jdice.calc.test.CustomOperatorFunctionTest$QuestionOperator
+     *   function[0]=org.jdice.calc.test.CustomOperatorFunctionTest$SumFunction
      * 
      * @throws IOException
      */
@@ -284,21 +283,21 @@ public class Properties {
             java.util.Properties prop = new java.util.Properties();
 
             if (getRoundingMode() != null)
-                prop.put("calc.roundingMode", getRoundingMode().name());
+                prop.put("roundingMode", getRoundingMode().name());
             if (getScale() != null)
-                prop.put("calc.scale", getScale());
+                prop.put("scale", getScale());
 
-            prop.put("calc.stripTrailingZeros", Boolean.toString(hasStripTrailingZeros()));
+            prop.put("stripTrailingZeros", Boolean.toString(hasStripTrailingZeros()));
 
-            prop.put("calc.decimalSeparator.in", "'" + getInputDecimalSeparator() + "'");
+            prop.put("decimalSeparator.in", "'" + getInputDecimalSeparator() + "'");
 
-            prop.put("calc.decimalSeparator.out", "'" + getOutputDecimalSeparator() + "'");
+            prop.put("decimalSeparator.out", "'" + getOutputDecimalSeparator() + "'");
 
             if (getGroupingSeparator() != null)
-                prop.put("calc.groupingSeparator", getGroupingSeparator());
+                prop.put("groupingSeparator", getGroupingSeparator());
 
             if (getOutputFormat() != null)
-                prop.put("calc.outputFormat", getOutputFormat());
+                prop.put("outputFormat", getOutputFormat());
 
             //
             // Global NumConverter
@@ -306,9 +305,27 @@ public class Properties {
             HashMap<Class, NumConverter> cncs = Cache.getAllNumConverter();
             int count = 0;
             for (Entry<Class, NumConverter> cnc : cncs.entrySet()) {
-                prop.put("calc.numconverter[" + count++ + "]", cnc.getKey().getName() + ":" + cnc.getValue().getClass().getName());
+                prop.put("numconverter[" + count++ + "]", cnc.getKey().getName() + " > " + cnc.getValue().getClass().getName());
+            }
+            
+            //
+            // Global Operator
+            //
+            HashMap<Class<? extends Operator>, Operator> cops = Cache.getOperators();
+            count = 0;
+            for (Entry<Class<? extends Operator>, Operator> cop : cops.entrySet()) {
+                prop.put("operator[" + count++ + "]", cop.getKey().getName());
             }
 
+            //
+            // Global Function
+            //
+            HashMap<Class<? extends Function>, Function> cfns = Cache.getFunctions();
+            count = 0;
+            for (Entry<Class<? extends Function>, Function> cfn : cfns.entrySet()) {
+                prop.put("function[" + count++ + "]", cfn.getKey().getName());
+            }
+            
             FileOutputStream fos = new FileOutputStream(propFile);
             prop.store(fos, "Global properties for jCalc");
 
@@ -363,19 +380,18 @@ public class Properties {
     }
 
     public static String getGlobalPropertiesFile() {
+        final String CONF_PROPERTIES = "jcalc.properties";
+
         String path = null;
         try {
-            URL res = Properties.class.getResource(".");
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader(); 
+            URL res = classLoader.getResource(".");
             String abspath = res.getFile();
-            Package pack = Properties.class.getPackage();
-            final String CONF_PROPERTIES = "jcalc.properties";
-            int c = pack.getName().split("\\.").length;
 
-            // get lib root
-            for (int i = 0; i <= c; i++)
-                abspath = abspath.substring(0, abspath.lastIndexOf('/'));
-
-            path = abspath + File.separatorChar + CONF_PROPERTIES;
+            if (abspath.endsWith(File.separator))
+                path = abspath + CONF_PROPERTIES;
+            else
+                path = abspath + File.separatorChar + CONF_PROPERTIES;
         }
         catch (Exception e) {
 

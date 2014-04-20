@@ -50,6 +50,10 @@ public class Cache {
         return cacheData.getOperator(operator);
     }
 
+    static HashMap<Class<? extends Operator>, Operator> getOperators() {
+        return cacheData.getOperators();
+    }
+
     public static void registerFunction(Class<? extends Function> functionClass) {
         cacheData.registerFunction(functionClass);
     }
@@ -66,6 +70,9 @@ public class Cache {
         return cacheData.getFunction(functionClass);
     }
 
+    static HashMap<Class<? extends Function>, Function> getFunctions() {
+        return cacheData.getFunctions();
+    }
     /**
      * Register custom converter class on global scope.
      * 
@@ -168,14 +175,18 @@ public class Cache {
         for (Entry<Object, Object> kv : prop.entrySet()) {
             if (kv.getKey() instanceof String) {
                 String key = (String) kv.getKey();
-                if (key.startsWith("calc.numconverter[")) {
+                
+                //
+                // NumConverter
+                //
+                if (key.startsWith("numconverter[")) {
                     Object oValue = kv.getValue();
                     if (oValue instanceof String) {
-                        String[] value = ((String) oValue).split(":");
+                        String[] value = ((String) oValue).split(">");
                         if (value.length == 2) {
                             try {
-                                Class customClass = Class.forName(value[0]);
-                                Class converterClass = Class.forName(value[1]);
+                                Class customClass = Class.forName(value[0].trim());
+                                Class converterClass = Class.forName(value[1].trim());
 
                                 if (NumConverter.class.isAssignableFrom(converterClass)) {
                                     Cache.registerNumConverter(customClass, converterClass);
@@ -187,6 +198,45 @@ public class Cache {
                         }
                     }
                 }
+                
+                //
+                // Operator
+                //
+                if (key.startsWith("operator[")) {
+                    Object oValue = kv.getValue();
+                    if (oValue instanceof String) {
+                            try {
+                                Class<?> customOperator = Class.forName(((String)oValue).trim());
+                                
+                                if (Operator.class.isAssignableFrom(customOperator)) {
+                                    Cache.registerOperator(customOperator.asSubclass(Operator.class));
+                                }
+                            }
+                            catch (ClassNotFoundException e) {
+                            }
+                            
+                    }
+                }
+
+                //
+                // Function
+                //
+                if (key.startsWith("function[")) {
+                    Object oValue = kv.getValue();
+                    if (oValue instanceof String) {
+                        try {
+                            Class<?> customFunction = Class.forName(((String)oValue).trim());
+                            
+                            if (Function.class.isAssignableFrom(customFunction)) {
+                                Cache.registerFunction(customFunction.asSubclass(Function.class));
+                            }
+                        }
+                        catch (ClassNotFoundException e) {
+                        }
+                        
+                    }
+                }
+                
             }
         }
     }
