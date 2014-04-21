@@ -56,7 +56,8 @@ import org.jdice.calc.operation.Tanh;
 import org.jdice.calc.operation.TanhFunction;
 
 /**
- * Calculator extension with trigonometric functions
+ * Calculator implementation with trigonometric functions.
+ * Support operation: Sin, Cos, Tan, ArcSin, ArcCos, ArcTan, Sinh, Cosh, Tanh, Add, Sub, Div, Mul, Mod, Pow, Abs, Sqrt, Log
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 

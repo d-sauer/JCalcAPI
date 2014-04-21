@@ -17,6 +17,7 @@
 package org.jdice.calc;
 
 /**
+ * Data model for data forwarded to concrete function. 
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *

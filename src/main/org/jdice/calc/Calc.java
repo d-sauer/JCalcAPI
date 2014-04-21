@@ -38,7 +38,8 @@ import org.jdice.calc.operation.Sub;
 import org.jdice.calc.operation.SubOperator;
 
 /**
- * Calculator extension with basic operations.
+ * Calculator implementation with basic operations.
+ * Support operation: Add, Sub, Div, Mul, Mod, Pow, Abs, Sqrt, Log
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 

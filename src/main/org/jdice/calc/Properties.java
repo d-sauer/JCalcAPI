@@ -31,6 +31,21 @@ import java.util.Map.Entry;
  * With ability to declare global properties on scope of running application by providing properties file in class path.
  * Or by saving properties file with {@link #saveGlobalProperties()} 
  * 
+ * <br/>
+ * It's possible to define default configuration with <b>jcalc.properties</b> file in root of classpath.
+ * <br/>
+ * Example of jcalc.properties file where all properties are optional:
+ * 
+ * <pre>
+ *   roundingMode=HALF_UP
+ *   scale=2
+ *   stripTrailingZeros=true
+ *   decimalSeparator.out='.'
+ *   decimalSeparator.in='.'
+ *   numconverter[0]=org.jdice.calc.test.NumTest$CustomObject > org.jdice.calc.test.NumTest$CustomObjectNumConverter
+ *   operator[0]=org.jdice.calc.test.CustomOperatorFunctionTest$QuestionOperator
+ *   function[0]=org.jdice.calc.test.CustomOperatorFunctionTest$SumFunction
+ * </pre>
  * @author Davor Sauer <davor.sauer@gmail.com>
  */
 public class Properties {

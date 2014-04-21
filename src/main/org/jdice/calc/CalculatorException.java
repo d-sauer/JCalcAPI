@@ -17,6 +17,7 @@
 package org.jdice.calc;
 
 /**
+ * Exception wrapper around RuntimeException.
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *

@@ -18,6 +18,8 @@ package org.jdice.calc;
 
 
 /**
+ * Enum for declaring brackets like objects in infix and postfix notation.
+ * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
  */

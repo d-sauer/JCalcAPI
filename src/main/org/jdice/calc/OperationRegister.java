@@ -19,7 +19,7 @@ package org.jdice.calc;
 import java.util.HashMap;
 
 /**
- * Class used for local scope and global scope (Cache) registered operation methods.
+ * Class used for local scope and global scope (Cache) registered operation methods (operators and functions).
  *  
  * @author Davor Sauer <davor.sauer@gmail.com>
  *

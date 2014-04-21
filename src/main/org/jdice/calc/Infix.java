@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Infix manipulation and parsing.
+ * Utility class for infix parsing and manipulation.
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
@@ -51,11 +51,27 @@ class Infix {
         this.properties = properties;
     }
 
+    /**
+     * Parse infix string expression with additional properties
+     * @param operationRegister
+     * @param properties
+     * @param infix
+     * @param values
+     * @return
+     * @throws ParseException
+     */
     public static CList parseInfix(OperationRegister operationRegister, Properties properties, String infix, Object... values) throws ParseException {
         Infix infx = new Infix(operationRegister, properties);
         return infx.parse(infix, values);
     }
 
+    /**
+     * Parse infix string expression
+     * @param infix
+     * @param values
+     * @return
+     * @throws ParseException
+     */
     public CList parse(String infix, Object... values) throws ParseException {
         // get variable names
         LinkedHashMap<String, Num> vNames = mapValues(infix, values);
@@ -150,6 +166,7 @@ class Infix {
         return infixList;
     }
 
+    
     private CList parseInfixString(String infix, LinkedHashMap<String, Num> vNames) throws ParseException {
     	final String REGEX_NUMBER = getRegexNumber();
     	
@@ -239,7 +256,7 @@ class Infix {
     }
 
     /**
-     * Infix (linear, human readable) representation of expression
+     * Print infix (linear, human readable) representation of expression
      * e.g. 5 + 10 / (5 * 2)
      * 
      * @param calc
@@ -389,6 +406,12 @@ class Infix {
         return vNames;
     }
 
+    /**
+     * Count how many time needle appears in haystack
+     * @param haystack
+     * @param needle
+     * @return
+     */
     private int countOccurrences(String haystack, char needle) {
         int count = 0;
         for (int i = 0; i < haystack.length(); i++) {
@@ -398,6 +421,10 @@ class Infix {
         return count;
     }
 
+    /**
+     * Get regular expression for parsing number from string
+     * @return
+     */
     private String getRegexNumber() {
     	return "([\\d, ]*\\" + properties.getInputDecimalSeparator() + "\\d*)|(\\d+)";
     }

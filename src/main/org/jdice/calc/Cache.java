@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
- * Global cache for operator and function classes and instances
+ * Global cache for operator, function, NumConverter classes and instances
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
