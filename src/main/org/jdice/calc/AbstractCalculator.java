@@ -694,7 +694,7 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      * @see {@link #calculate()}
      * @see {@link #calcWithSteps(boolean)}
-     * @see {@link #getCalculated()}
+     * @see {@link #getResult()}
      */
     public Num calc() {
         return calculate();
@@ -706,7 +706,7 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      * @see {@link #calculate()}
      * @see {@link #calcWithSteps(boolean)}
-     * @see {@link #getCalculated()}
+     * @see {@link #getResult()}
      * @see {@link Num#toObject(Class)}
      */
     public <T> T calc(Class<T> toClass) {
@@ -720,7 +720,7 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      * @see {@link #calc()}
      * @see {@link #calcWithSteps(boolean)}
-     * @see {@link #getCalculated()}
+     * @see {@link #getResult()}
      */
     public Num calculate() {
         return calculate(false, false);
@@ -877,7 +877,7 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Get infix (common arithmetic and logical formula notation) representation of given expression
+     * Get infix (common arithmetic and logical expression notation) representation of given expression
      * 
      * @return
      * @see {@link getPostfix()}
@@ -901,12 +901,12 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * To check whether the calculation is made according to a formula
+     * Check whether the calculation is made according to a expression
      * 
      * @return
-     * @see {@link getCalculated()}
+     * @see {@link getResult()}
      */
-    public boolean isCalculated() {
+    public boolean hasResult() {
         if (lastCalculatedValue != null)
             return true;
         else
@@ -914,12 +914,12 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Return result copy of last calculated expression
+     * Return copy of calculated result
      * 
      * @return
-     * @see {@link isCalculated()}
+     * @see {@link hasResult()}
      */
-    public Num getCalculated() {
+    public Num getResult() {
         if (lastCalculatedValue != null)
             return lastCalculatedValue.clone();
         else

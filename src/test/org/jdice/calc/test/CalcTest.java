@@ -36,8 +36,8 @@ public class CalcTest {
 
         calc = new Calc().val(10).add(20).sub(5).div(2).mul(3).add(8);
         cv = calc.calc();
-        assertEquals("10 + 20 - 5 / 2 * 3 + 8 = 30.5", "30.5", calc.getCalculated().toString());
-        assertTrue(cv != calc.getCalculated()); // check if references are immutable
+        assertEquals("10 + 20 - 5 / 2 * 3 + 8 = 30.5", "30.5", calc.getResult().toString());
+        assertTrue(cv != calc.getResult()); // check if references are immutable
 
         calc = new Calc().openBracket().openBracket(10).add(5).closeBracket().closeBracket();
         cv = calc.calc();
@@ -201,19 +201,19 @@ public class CalcTest {
         Calc calc = new Calc().val(10).add(20).sub(5);
         calc.calc();
         assertEquals("10 + 20 - 5", calc.getInfix());
-        assertEquals("25", calc.getCalculated().toString());
+        assertEquals("25", calc.getResult().toString());
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
         calc.bind(CalcTrig.class).add().sin(10).add(2);
         calc.calc();
         assertEquals("10 + 20 - 5 + sin(10) + 2", calc.getInfix());
-        assertEquals("26.456", calc.getCalculated().setScale(3).toString());
+        assertEquals("26.456", calc.getResult().setScale(3).toString());
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
         calc.bind(CalcTrig.class).add().sin(5);
         calc.calc();
         assertEquals("10 + 20 - 5 + sin(10) + 2 + sin(5)", calc.getInfix());
-        assertTrue(calc.getCalculated().setScale(3).isEqual("25.497"));
+        assertTrue(calc.getResult().setScale(3).isEqual("25.497"));
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
         Calc calc2 = Calc.builder("1+2+ A +abs(-2 - (abs(A-10)))", 5);
