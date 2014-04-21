@@ -1,7 +1,7 @@
 # JCalc API #
 
 Fluent Java API for easier writing formula and calculations in Java.
-
+Webpage: [JCalc](http://www.jdice.org "JCalc API")
 
 ## Feature:
     * Small size (jar < 100KB)
@@ -22,6 +22,10 @@ Fluent Java API for easier writing formula and calculations in Java.
 
 ## Release:
     * 2014.03.24 - First beta release
+    * 2014.04.11 - 0.2 beta
+    * 2014.04.21 - 0.3 beta
 
 
 ## Roadmap:
+    * support for Java 8
+    * Add new functions (like sum, avg, min, max)
