@@ -459,62 +459,6 @@ public abstract class AbstractCalculator<CALC> {
         return getThis();
     }
 
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(short value) {
-        infix.add(Bracket.OPEN, new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(int value) {
-        infix.add(Bracket.OPEN, new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(long value) {
-        infix.add(Bracket.OPEN, new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(float value) {
-        infix.add(Bracket.OPEN, new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(double value) {
-        infix.add(Bracket.OPEN, new Num(value));
-        return getThis();
-    }
-
     /**
      * Open bracket and add value after.
      * e.g. (5 
@@ -522,17 +466,6 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      */
     public CALC openBracket(Object value) {
-        infix.add(Bracket.OPEN, new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(String value) {
         infix.add(Bracket.OPEN, new Num(value));
         return getThis();
     }
