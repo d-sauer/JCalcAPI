@@ -463,7 +463,8 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	public boolean hasFraction() {
-		if (out.toString().contains("."))
+	    String out = toString();
+		if (out.contains("."))
 			return true;
 		else
 			return false;

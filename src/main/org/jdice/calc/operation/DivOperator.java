@@ -46,10 +46,10 @@ public class DivOperator implements Operator {
         int scale = Properties.getInheritedScale(calc, value2);
         Rounding roundingMode = Properties.getInheritedRoundingMode(calc, value2);
 
-        return calc(value1, value2, scale, roundingMode);
+        return calc(calc, value1, value2, scale, roundingMode);
     }
 
-    public Num calc(Num value1, Num value2, Integer scale, Rounding roundingMode)  {
+    public Num calc(AbstractCalculator calc, Num value1, Num value2, Integer scale, Rounding roundingMode)  {
         BigDecimal value = value1.toBigDecimal().divide(value2.toBigDecimal(), scale, roundingMode.getBigDecimalRound());
         Num result = new Num(value);
         return result;

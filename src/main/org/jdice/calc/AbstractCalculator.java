@@ -174,61 +174,6 @@ public abstract class AbstractCalculator<CALC> {
      * @param value
      * @return
      */
-    public CALC val(short value) {
-        infix.add(new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Append value to expression
-     * 
-     * @param value
-     * @return
-     */
-    public CALC val(int value) {
-        infix.add(new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Append value to expression
-     * 
-     * @param value
-     * @return
-     */
-    public CALC val(long value) {
-        infix.add(new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Append value to expression
-     * 
-     * @param value
-     * @return
-     */
-    public CALC val(float value) {
-        infix.add(new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Append value to expression
-     * 
-     * @param value
-     * @return
-     */
-    public CALC val(double value) {
-        infix.add(new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Append value to expression
-     * 
-     * @param value
-     * @return
-     */
     public CALC val(Object value) {
         infix.add(new Num(value));
         return getThis();
@@ -243,17 +188,6 @@ public abstract class AbstractCalculator<CALC> {
      */
     public CALC val(Object value, Class<? extends NumConverter> converter) {
         infix.add(new Num(value, converter));
-        return getThis();
-    }
-
-    /**
-     * Append String value to expression that will be parsed to {@link Num}
-     * 
-     * @param value
-     * @return
-     */
-    public CALC val(String value) {
-        infix.add(new Num(value));
         return getThis();
     }
 
