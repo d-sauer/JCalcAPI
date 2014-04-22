@@ -223,6 +223,21 @@ public class NumTest {
         assertEquals("3.10", n3b.toString());
     }
     
+    @Test
+    public void testHasFraction() throws Exception {
+        Num f = new Num("20");
+        assertTrue(!f.hasFraction());
+
+        f = new Num("20.2");
+        assertTrue(f.hasFraction());
+
+        f = new Num(20);
+        assertTrue(!f.hasFraction());
+
+        f = new Num(20.2);
+        assertTrue(f.hasFraction());
+        
+    }    
     public static class CustomObject {
         private String no;
 
