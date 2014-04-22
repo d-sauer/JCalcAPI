@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jdice</groupId>
 	<artifactId>jcalc</artifactId>
-	<version>0.2b</version>
+	<version>0.4b</version>
 	<packaging>jar</packaging>
 
 	<name>JCalc API</name>

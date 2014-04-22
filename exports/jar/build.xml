@@ -3,7 +3,7 @@
     <property name="project.title" value="JCalc" />
     <property name="project.name" value="jcalc" />
     <property name="project.v_major" value="0" />
-    <property name="project.v_minor" value="3b" />
+    <property name="project.v_minor" value="4b" />
     <property name="project.version" value="${project.v_major}.${project.v_minor}" />
     <property name="project.author" value="Davor Sauer" />
 
