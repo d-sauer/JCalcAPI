@@ -974,8 +974,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			regex = regex.replace(".", "\\.");
 		String strip = value.replaceAll(regex, "");
 
-		strip = strip.replace(decimalSeparator + "",
-				Properties.DEFAULT_DECIMAL_SEPARATOR + "");
+		strip = strip.replace(decimalSeparator + "", Properties.DEFAULT_DECIMAL_SEPARATOR + "");
 		return strip;
 	}
 

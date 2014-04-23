@@ -31,16 +31,16 @@ import java.util.regex.Pattern;
  */
 class Infix {
 
-    private static String REGEX_VARIABLE_NAMES = "([a-zA-Z]+)\\b(?!\\s*\\()";
-    private static String REGEX_FUNCTIONS = "[a-zA-Z0-9]+\\(((?<=(?:[(]))[^(].*?(?=[)]))"; // e.g. abs(..) <- function | abs <- name, no open brackets
+    private static final String REGEX_VARIABLE_NAMES = "([a-zA-Z]+)\\b(?!\\s*\\()";
+    private static final String REGEX_FUNCTIONS = "[a-zA-Z0-9]+\\(((?<=(?:[(]))[^(].*?(?=[)]))"; // e.g. abs(..) <- function | abs <- name, no open brackets
 
-    private static Pattern pVariableNames;
-    private static Pattern pFunctions;
-    private static Pattern pOperations;
+    private static final Pattern pVariableNames  = Pattern.compile(REGEX_VARIABLE_NAMES);
+    private static final Pattern pFunctions = Pattern.compile(REGEX_FUNCTIONS);;
 
     private CList infixList = new CList();
     private OperationRegister registeredOperations;
     private Properties properties;
+    private Pattern pOperations;
 
     public Infix(Properties properties) {
     	this.properties = properties;
@@ -85,8 +85,6 @@ class Infix {
         infix = infix.replace(" ", "");
         int infixLength = infix.length();
         // separate function and other operation
-        if (pFunctions == null)
-            pFunctions = Pattern.compile(REGEX_FUNCTIONS);
         Matcher mat = pFunctions.matcher(infix);
 
         int gc = mat.groupCount() + 1;
@@ -344,8 +342,7 @@ class Infix {
     private LinkedHashMap<String, Num> mapValues(String infix, Object... values) {
         LinkedHashMap<String, Num> vNames = null;
         int remain = 0;
-        if (pVariableNames == null)
-            pVariableNames = Pattern.compile(REGEX_VARIABLE_NAMES);
+      
         Matcher mat = pVariableNames.matcher(infix);
         while (mat.find()) {
             if (vNames == null)
