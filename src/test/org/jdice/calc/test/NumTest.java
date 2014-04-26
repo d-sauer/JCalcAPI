@@ -183,17 +183,29 @@ public class NumTest {
 
     @Test
     public void testStripString() throws Exception {
-        String strip = Num.stripNumber("44,551.06", '.');
+        String strip = Num.extractNumber("44,551.06", '.');
         // System.out.println(strip);
         assertEquals("Strip number", "44551.06", strip);
 
-        strip = Num.stripNumber("12 558 44,551.06", '.');
+        strip = Num.extractNumber("12 558 44,551.06", '.');
         // System.out.println(strip);
         assertEquals("Strip number", "1255844551.06", strip);
 
-        strip = Num.stripNumber("44,551.06", '.');
+        strip = Num.extractNumber("44,551.06", '.');
         // System.out.println(strip);
         assertEquals("Strip number", "44551.06", strip);
+
+        strip = Num.extractNumber("-44,551.06", '.');
+        // System.out.println(strip);
+        assertEquals("Strip number", "-44551.06", strip);
+        
+        strip = Num.extractNumber("-12 558 44,551.06", '.');
+        // System.out.println(strip);
+        assertEquals("Strip number", "-1255844551.06", strip);
+        
+        strip = Num.extractNumber("-44,551.06", '.');
+        // System.out.println(strip);
+        assertEquals("Strip number", "-44551.06", strip);
     }
     
     @Test
@@ -206,7 +218,7 @@ public class NumTest {
         co2.set("2.5");
         
         Calc calc = Calc.builder().val(co1).mul(co2);
-        Num c = calc.calc();
+        Num c = calc.calculate();
         
         assertEquals("25", c.toString());
         
@@ -226,16 +238,16 @@ public class NumTest {
     @Test
     public void testHasFraction() throws Exception {
         Num f = new Num("20");
-        assertTrue(!f.hasFraction());
+        assertTrue(!f.hasRemainder());
 
         f = new Num("20.2");
-        assertTrue(f.hasFraction());
+        assertTrue(f.hasRemainder());
 
         f = new Num(20);
-        assertTrue(!f.hasFraction());
+        assertTrue(!f.hasRemainder());
 
         f = new Num(20.2);
-        assertTrue(f.hasFraction());
+        assertTrue(f.hasRemainder());
         
     }    
     public static class CustomObject {

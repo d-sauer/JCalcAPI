@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -26,21 +25,13 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementation=ArcTanFunction.class)
+@Implementation(implementation = ArcTanFunction.class)
 public interface ArcTan<CALC> {
-    
-    public CALC atan(AbstractCalculator expression) ;
-    
 
-    // 6
-    public CALC atan(Object value) ;
+    public CALC atan(AbstractCalculator expression);
 
-    // 7
-    public CALC atan(String value) ;
+    public CALC atan(Object value);
 
-    // 7
-    public CALC atan(String value, char decimalSeparator) ;
+    public CALC atan(String value, char decimalSeparator);
 
-    // 8
-    public CALC atan(Num value) ;
 }

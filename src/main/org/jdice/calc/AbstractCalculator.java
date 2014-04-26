@@ -111,31 +111,6 @@ public abstract class AbstractCalculator<CALC> {
     protected abstract CALC getThis();
 
     /**
-     * Constructor
-     * @param value can be any object than {@link Num} can work with
-     */
-    public AbstractCalculator(Object value) {
-        Num cValue = new Num();
-        cValue.set(value);
-        infix.add(cValue);
-    }
-
-    public AbstractCalculator(Num value) {
-        infix.add(value);
-    }
-
-    public AbstractCalculator(String value) {
-        Num cValue = new Num(value);
-        infix.add(cValue);
-    }
-
-    public AbstractCalculator(String value, char decimalSeparator) {
-        Num cValue = new Num(value, decimalSeparator);
-        infix.add(cValue);
-    }
-
-
-    /**
      * Provide custom {@link Operator} or {@link Function} inside scope of this instance, that can be used during expression parsing.
      * With registration of custom operation it's possible to override existing default operation implementation.
      * Because during calculation API first scan scoped (registered) operation and after that default operation implementation inside {@link Cache}
@@ -175,7 +150,13 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      */
     public CALC val(Object value) {
-        infix.add(new Num(value));
+        Num val = null;
+        if (value instanceof Num)
+            val = (Num)value;
+        else
+            val = new Num(value);
+                
+        infix.add(val);
         return getThis();
     }
 
@@ -205,22 +186,10 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Append value to expression
-     * 
-     * @param value
-     * @return
-     */
-    public CALC val(Num value) {
-        infix.add(value);
-        return getThis();
-    }
-
-    /**
      * Copy calculator expression into this expression within brackets
      * 
      * @param expression
      * @return
-     *         @
      */
     public CALC append(AbstractCalculator expression) {
         return append(expression, true);
@@ -241,7 +210,7 @@ public abstract class AbstractCalculator<CALC> {
 
     /**
      * 
-     * Copy infix expression into this expression within or without brackets
+     * Append copy of given infix expression into this expression within or without brackets
      * 
      * @param infix
      * @param withinBrackets
@@ -294,7 +263,15 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      */
     public CALC append(Class<? extends Operator> operator, Object value) {
-        return append(operator, new Num(value));
+        Num tmp = null;
+        if (value instanceof Num)
+            tmp = (Num)value;
+        else
+            tmp = new Num(value);
+        
+        infix.add(Cache.getOperator(operator));
+        infix.add(tmp);
+        return getThis();
     }
 
     /**
@@ -306,18 +283,6 @@ public abstract class AbstractCalculator<CALC> {
      */
     public CALC append(Class<? extends Operator> operator, String value, char decimalSeparator) {
         return append(operator, new Num(value, decimalSeparator));
-    }
-
-    /**
-     * Append operator and number to expression
-     * @param operator
-     * @param value
-     * @return
-     */
-    public CALC append(Class<? extends Operator> operator, Num value) {
-        infix.add(Cache.getOperator(operator));
-        infix.add(value);
-        return getThis();
     }
 
     /**
@@ -348,7 +313,7 @@ public abstract class AbstractCalculator<CALC> {
      */
     public CALC expression(String expression) throws ParseException {
         registerImplmentedOperation();
-        append(Infix.parseInfix(scopeOperationRegister, getProperties(), expression), false);
+        append(InfixParser.parseInfix(scopeOperationRegister, getProperties(), expression), false);
         return getThis();
     }
 
@@ -368,7 +333,7 @@ public abstract class AbstractCalculator<CALC> {
      */
     public CALC expression(String expression, Object... values) throws ParseException {
         registerImplmentedOperation();
-        append(Infix.parseInfix(scopeOperationRegister, getProperties(), expression, values), false);
+        append(InfixParser.parseInfix(scopeOperationRegister, getProperties(), expression, values), false);
         return getThis();
     }
 
@@ -390,39 +355,6 @@ public abstract class AbstractCalculator<CALC> {
      */
     public CALC openBracket() {
         infix.add(Bracket.OPEN);
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(Object value) {
-        infix.add(Bracket.OPEN, new Num(value));
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(String value, char decimalSeparator) {
-        infix.add(Bracket.OPEN, new Num(value, decimalSeparator));
-        return getThis();
-    }
-
-    /**
-     * Open bracket and add value after.
-     * e.g. (5 
-     * @param value
-     * @return
-     */
-    public CALC openBracket(Num value) {
-        infix.add(Bracket.OPEN, value);
         return getThis();
     }
 
@@ -550,43 +482,12 @@ public abstract class AbstractCalculator<CALC> {
         return getThis();
     }
     
-    //
-    // LOGIC
-    //
-
-
     /**
      * Calculate prepared expression
      * 
      * @return
      * @see {@link #calculate()}
-     * @see {@link #calcWithSteps(boolean)}
-     * @see {@link #getResult()}
-     */
-    public Num calc() {
-        return calculate();
-    }
-
-    /**
-     * Calculate prepared expression and convert to object of given class
-     * 
-     * @return
-     * @see {@link #calculate()}
-     * @see {@link #calcWithSteps(boolean)}
-     * @see {@link #getResult()}
-     * @see {@link Num#toObject(Class)}
-     */
-    public <T> T calc(Class<T> toClass) {
-    	Num calc = calculate();
-    	return (T)calc.toObject(toClass);
-    }
-
-    /**
-     * Calculate prepared expression
-     * 
-     * @return
-     * @see {@link #calc()}
-     * @see {@link #calcWithSteps(boolean)}
+     * @see {@link #calculate(boolean)}
      * @see {@link #getResult()}
      */
     public Num calculate() {
@@ -594,25 +495,18 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Calculate expression and track calculation steps accessible with {@link getCalculationSteps()}
+     * Calculate expression and trace calculation steps accessible with {@link getCalculationSteps()}.
+     * For more detailed information of every step, set rememberDetails to true.
      * 
+     * @param traceSteps
+     * @param rememberDetails - more detailed information of every step
      * @return
      */
-    public Num calcWithSteps(boolean showDetails) {
-        return calculate(true, showDetails);
-    }
-
-    /**
-     * Calculate expression
-     * @param trackSteps
-     * @param showDetails
-     * @return
-     */
-    private Num calculate(boolean trackSteps, boolean showDetails) {
+    public Num calculate(boolean traceSteps, boolean rememberDetails) {
         unbind();
         prepareForNewCalculation();
-        Postfix pc = convertToPostfix();
-        Num cv = pc.calculate(this, postfix, trackSteps, showDetails);
+        PostfixCalculator pc = convertToPostfix();
+        Num cv = pc.calculate(this, postfix, traceSteps, rememberDetails);
 
         lastCalculatedValue = cv.clone();
 
@@ -724,7 +618,7 @@ public abstract class AbstractCalculator<CALC> {
     public String getPostfix() {
         unbind();
         convertToPostfix();
-        return Infix.printInfix(this.postfix);
+        return InfixParser.printInfix(this.postfix);
     }
 
     /**
@@ -732,8 +626,8 @@ public abstract class AbstractCalculator<CALC> {
      * Conversion is made only first time or after any change in structure of infix expression
      * @return
      */
-    private Postfix convertToPostfix() {
-        Postfix pc = new Postfix();
+    private PostfixCalculator convertToPostfix() {
+        PostfixCalculator pc = new PostfixCalculator();
         if (postfix == null || postfix.size() == 0 || isInfixChanged) {
             pc.toPostfix(infix);
             postfix = pc.getPostfix();
@@ -827,7 +721,7 @@ public abstract class AbstractCalculator<CALC> {
 
     @Override
     public String toString() {
-        return Infix.printInfix(this.infix);
+        return InfixParser.printInfix(this.infix);
     }
 
 }

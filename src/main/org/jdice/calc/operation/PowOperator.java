@@ -50,7 +50,7 @@ public class PowOperator implements Operator {
     }
 
     public Num calc(AbstractCalculator calc, Num value1, Num exponent, Integer scale, Rounding roundingMode)  {
-        if (exponent.hasFraction()) {
+        if (exponent.hasRemainder()) {
             double result = Math.pow(value1.doubleValue(), exponent.doubleValue());
             return new Num(result);
         } else {

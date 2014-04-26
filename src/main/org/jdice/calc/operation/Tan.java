@@ -18,7 +18,6 @@ package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -33,9 +32,6 @@ public interface Tan<CALC> {
 
 	public CALC tan(Object value);
 
-	public CALC tan(String value);
-
 	public CALC tan(String value, char decimalSeparator);
 
-	public CALC tan(Num value);
 }

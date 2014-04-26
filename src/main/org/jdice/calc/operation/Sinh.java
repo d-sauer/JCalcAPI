@@ -18,7 +18,6 @@ package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -33,9 +32,6 @@ public interface Sinh<CALC> {
 
 	public CALC sinh(Object value);
 
-	public CALC sinh(String value);
-
 	public CALC sinh(String value, char decimalSeparator);
 
-	public CALC sinh(Num value);
 }

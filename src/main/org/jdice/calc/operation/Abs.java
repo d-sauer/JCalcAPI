@@ -33,9 +33,6 @@ public interface Abs<CALC> {
     
     public CALC abs(Object value) ;
 
-    public CALC abs(String value) ;
-
     public CALC abs(String value, char decimalSeparator) ;
 
-    public CALC abs(Num value) ;
 }

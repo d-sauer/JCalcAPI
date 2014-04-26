@@ -69,7 +69,7 @@ public class CustomOperatorFunctionTest {
 
         calc.expression("2 ? 2 + 5 - 1 + sum(1,2,3,4)");
 
-        Num res = calc.calcWithSteps(false);
+        Num res = calc.calculate();
         assertEquals("22", res.toString());
 //        System.out.println(res);
 //

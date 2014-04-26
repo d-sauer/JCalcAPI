@@ -18,7 +18,6 @@ package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -33,9 +32,6 @@ public interface Sin<CALC> {
 
 	public CALC sin(Object value);
 
-	public CALC sin(String value);
-
 	public CALC sin(String value, char decimalSeparator);
 
-	public CALC sin(Num value);
 }

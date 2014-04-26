@@ -17,7 +17,6 @@
 package org.jdice.calc.operation;
 
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -28,13 +27,10 @@ import org.jdice.calc.Num;
 @Implementation(implementation = SubOperator.class)
 public interface Sub<CALC> {
 
-	public CALC subtract();
+	public CALC sub();
 
 	public CALC sub(Object value);
 
-	public CALC sub(String value);
-
 	public CALC sub(String value, char decimalSeparator);
 
-	public CALC sub(Num value);
 }

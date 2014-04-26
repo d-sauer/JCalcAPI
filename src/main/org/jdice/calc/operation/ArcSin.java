@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -26,20 +25,13 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementation=ArcSinFunction.class)
+@Implementation(implementation = ArcSinFunction.class)
 public interface ArcSin<CALC> {
-    
-    public CALC asin(AbstractCalculator expression) ;
-    
-    // 6
-    public CALC asin(Object value) ;
 
-    // 7
-    public CALC asin(String value) ;
+    public CALC asin(AbstractCalculator expression);
 
-    // 7
-    public CALC asin(String value, char decimalSeparator) ;
+    public CALC asin(Object value);
 
-    // 8
-    public CALC asin(Num value) ;
+    public CALC asin(String value, char decimalSeparator);
+
 }

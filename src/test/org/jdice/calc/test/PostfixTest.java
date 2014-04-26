@@ -51,5 +51,15 @@ public class PostfixTest {
         assertEquals("3 2 - 1 +", p);
     }
 
+    @Test
+    public void test2() throws Exception {
+      Calc c1 = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-30 * 12)))");
+      String p = c1.getPostfix();
+      assertEquals("6.5 100 / 12 / 200000 * 1 1 6.5 100 / 12 / + -30 12 * ^ - /", p);
+        
+      Calc c2 = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-360)))");
+      p = c2.getPostfix();
+      assertEquals("6.5 100 / 12 / 200000 * 1 1 6.5 100 / 12 / + -360 ^ - /", p);
+    }
     
 }

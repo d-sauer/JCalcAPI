@@ -30,7 +30,7 @@ import org.jdice.calc.operation.SubOperator;
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
  */
-class Postfix {
+class PostfixCalculator {
 
     private Stack<Object> stack = new Stack<Object>();
     private CList postfix = new CList();
@@ -265,7 +265,8 @@ class Postfix {
                 if (o instanceof Num) {
                     Num d = (Num) o;
                     if (showDetail)
-                        sb.append(d.toStringWithDetail());
+                        sb.append("[" + d.getProperties().toString() + "] " + d.toString());
+//                        sb.append(d.toStringWithDetail());
                     else
                         sb.append(d.toString());
                 }
@@ -310,9 +311,9 @@ class Postfix {
 
     private void missingBracketDetection(CList infix) throws CalculatorException {
         if (bCount > 0) // to many open bracket - need to close some bracket
-            throw new CalculatorException("To many open bracket. " + Infix.printInfix(infix));
+            throw new CalculatorException("To many open bracket. " + InfixParser.printInfix(infix));
         else if (bCount < 0) // to many closed bracket - need to reopen some bracket
-            throw new CalculatorException("To many close bracket. " + Infix.printInfix(infix));
+            throw new CalculatorException("To many close bracket. " + InfixParser.printInfix(infix));
     }
 
 }

@@ -41,7 +41,7 @@ public class CustomFunctionTest {
         public Num calc(AbstractCalculator calc, Num... values) throws Exception {
             Calc c = Calc.builder().val(values[1]).mul(values[0]);
 
-            return c.calc();
+            return c.calculate();
         }
     }
 
@@ -51,14 +51,14 @@ public class CustomFunctionTest {
         Calc c = new Calc();
         c.register(test.class);
         c.expression(e);
-        Num n = c.calc();
+        Num n = c.calculate();
 
         assertEquals("-24", n.toString());
         
         
         Calc calc2 = Calc.builder().val(10).add().append(test.class, 2,3);
         calc2.register(test.class);
-        Num n2 = calc2.calc();
+        Num n2 = calc2.calculate();
         assertEquals("16", n2.toString());
         
     }

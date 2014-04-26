@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
  */
-class Infix {
+class InfixParser {
 
     private static final String REGEX_VARIABLE_NAMES = "([a-zA-Z]+)\\b(?!\\s*\\()";
     private static final String REGEX_FUNCTIONS = "[a-zA-Z0-9]+\\(((?<=(?:[(]))[^(].*?(?=[)]))"; // e.g. abs(..) <- function | abs <- name, no open brackets
@@ -42,11 +42,11 @@ class Infix {
     private Properties properties;
     private Pattern pOperations;
 
-    public Infix(Properties properties) {
+    public InfixParser(Properties properties) {
     	this.properties = properties;
     }
 
-    public Infix(OperationRegister operationRegister, Properties properties) {
+    public InfixParser(OperationRegister operationRegister, Properties properties) {
         this.registeredOperations = operationRegister;
         this.properties = properties;
     }
@@ -61,7 +61,7 @@ class Infix {
      * @throws ParseException
      */
     public static CList parseInfix(OperationRegister operationRegister, Properties properties, String infix, Object... values) throws ParseException {
-        Infix infx = new Infix(operationRegister, properties);
+        InfixParser infx = new InfixParser(operationRegister, properties);
         return infx.parse(infix, values);
     }
 
@@ -138,7 +138,7 @@ class Infix {
                     for (int e = 0; e < expressions.length; e++) {
                         String expression = expressions[e];
 
-                        Infix tmp = new Infix(properties);
+                        InfixParser tmp = new InfixParser(properties);
                         CList fInfix = tmp.parse(expression, vNames);
                         if (fInfix.size() == 1 && fInfix.get(0) instanceof Num) {
                             Num n = (Num) fInfix.get(0);
@@ -250,7 +250,7 @@ class Infix {
     }
 
     public static String printInfix(CList list) {
-        return Infix.printInfix(list, false);
+        return InfixParser.printInfix(list, false);
     }
 
     /**

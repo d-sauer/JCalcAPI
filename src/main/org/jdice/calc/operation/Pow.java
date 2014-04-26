@@ -17,7 +17,6 @@
 package org.jdice.calc.operation;
 
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -28,13 +27,10 @@ import org.jdice.calc.Num;
 @Implementation(implementation = PowOperator.class)
 public interface Pow<CALC> {
 
-	public CALC power();
+	public CALC pow();
 
 	public CALC pow(Object value);
 
-	public CALC pow(String value);
-
 	public CALC pow(String value, char decimalSeparator);
 
-	public CALC pow(Num value);
 }

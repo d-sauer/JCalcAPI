@@ -17,7 +17,6 @@
 package org.jdice.calc.operation;
 
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -28,13 +27,10 @@ import org.jdice.calc.Num;
 @Implementation(implementation = ModOperator.class)
 public interface Mod<CALC> {
 
-	public CALC modulo();
+	public CALC mod();
 
 	public CALC mod(Object value);
 
-	public CALC mod(String value);
-
 	public CALC mod(String value, char decimalSeparator);
 
-	public CALC mod(Num value);
 }

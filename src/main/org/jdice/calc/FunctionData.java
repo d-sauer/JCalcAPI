@@ -44,8 +44,10 @@ public class FunctionData {
             Object o = values[i];
             if (o instanceof AbstractCalculator)
                 this.values[i] = o;
+            else if (o instanceof Num)
+                this.values[i] = o;
             else
-                this.values[i] = Num.toNum(o);
+                this.values[i] = new Num(o);
         }
     }
     
@@ -70,7 +72,7 @@ public class FunctionData {
                 allValues[i] = (Num)o;
             } else if (o instanceof AbstractCalculator) {
                 AbstractCalculator ac = (AbstractCalculator)o;
-                allValues[i] = ac.calc();
+                allValues[i] = ac.calculate();
             }
         }
         
@@ -121,9 +123,11 @@ public class FunctionData {
             if (i > 0)
                 sb.append(", ");
 
-            if (d instanceof Num)
-                sb.append(((Num)d).toStringWithDetail());
-            else if (d instanceof AbstractCalculator)
+            if (d instanceof Num) {
+                Num tmp = (Num)d;
+                sb.append("[" + tmp.getProperties().toString() + "] " + tmp.toString());
+//                sb.append(((Num)d).toStringWithDetail());
+            } else if (d instanceof AbstractCalculator)
                 try {
                     sb.append(((AbstractCalculator)d).getInfix());
                 }

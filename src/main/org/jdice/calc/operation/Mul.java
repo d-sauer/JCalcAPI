@@ -17,7 +17,6 @@
 package org.jdice.calc.operation;
 
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -27,13 +26,10 @@ import org.jdice.calc.Num;
  */
 @Implementation(implementation = MulOperator.class)
 public interface Mul<CALC> {
-	public CALC multiply();
+	public CALC mul();
 
 	public CALC mul(Object value);
 
-	public CALC mul(String value);
-
 	public CALC mul(String value, char decimalSeparator);
 
-	public CALC mul(Num value);
 }

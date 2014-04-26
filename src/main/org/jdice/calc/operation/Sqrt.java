@@ -18,7 +18,6 @@ package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -33,9 +32,6 @@ public interface Sqrt<CALC> {
 
 	public CALC sqrt(Object value);
 
-	public CALC sqrt(String value);
-
 	public CALC sqrt(String value, char decimalSeparator);
 
-	public CALC sqrt(Num value);
 }

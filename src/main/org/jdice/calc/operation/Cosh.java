@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -26,21 +25,13 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementation=CoshFunction.class)
+@Implementation(implementation = CoshFunction.class)
 public interface Cosh<CALC> {
-    
-    public CALC cosh(AbstractCalculator expression) ;
-    
 
-    // 6
-    public CALC cosh(Object value) ;
+    public CALC cosh(AbstractCalculator expression);
 
-    // 7
-    public CALC cosh(String value) ;
+    public CALC cosh(Object value);
 
-    // 7
-    public CALC cosh(String value, char decimalSeparator) ;
+    public CALC cosh(String value, char decimalSeparator);
 
-    // 8
-    public CALC cosh(Num value) ;
 }

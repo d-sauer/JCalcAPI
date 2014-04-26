@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package org.jdice.calc.operation;
 
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -25,21 +24,13 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementation=DivOperator.class)
+@Implementation(implementation = DivOperator.class)
 public interface Div<CALC> {
 
-    public CALC divide() ;
+    public CALC div();
 
+    public CALC div(Object value);
 
-    // 6
-    public CALC div(Object value) ;
+    public CALC div(String value, char decimalSeparator);
 
-    // 7
-    public CALC div(String value) ;
-
-    // 7
-    public CALC div(String value, char decimalSeparator) ;
-
-    // 8
-    public CALC div(Num value) ;
 }

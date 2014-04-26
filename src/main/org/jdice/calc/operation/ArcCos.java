@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -26,20 +25,12 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementation=ArcCosFunction.class)
+@Implementation(implementation = ArcCosFunction.class)
 public interface ArcCos<CALC> {
-    
-    public CALC acos(AbstractCalculator expression) ;
-    
-    // 6
-    public CALC acos(Object value) ;
 
-    // 7
-    public CALC acos(String value) ;
+    public CALC acos(AbstractCalculator expression);
 
-    // 7
-    public CALC acos(String value, char decimalSeparator) ;
+    public CALC acos(Object value);
 
-    // 8
-    public CALC acos(Num value) ;
+    public CALC acos(String value, char decimalSeparator);
 }

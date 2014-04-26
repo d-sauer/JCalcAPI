@@ -45,7 +45,7 @@ public class NumScopeTest {
         
         calc1.val(num1).mul(num2);
         
-        Num cn1 = calc1.calc(); // inherit properties from calc
+        Num cn1 = calc1.calculate(); // inherit properties from calc
         assertEquals("14,73", cn1.toString());
         
         //
@@ -53,7 +53,7 @@ public class NumScopeTest {
         Calc calc2 = new Calc();
         calc2.val(num1).mul(num2);
 
-        Num cn2 = calc2.calc(); // use default scope (maximum)
+        Num cn2 = calc2.calculate(); // use default scope (maximum)
         assertTrue(cn2.toString().startsWith("14.7336454459482156"));
 
         //
@@ -61,7 +61,7 @@ public class NumScopeTest {
         Calc calc3 = new Calc();
         calc3.val(num1.setScale(1)).mul(num2.setScale(1));
         
-        Num cn3 = calc2.calcWithSteps(true); 	// calculate with scaled numbers
+        Num cn3 = calc2.calculate(true, false); 	// calculate with scaled numbers
 //        for(String s : calc2.getCalculationSteps())
 //            System.out.println(s);
         assertEquals("14.79", cn3.setScale(2).toString());

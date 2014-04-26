@@ -15,7 +15,7 @@ public class DevCalcTest {
         
         
         // JCalc way...
-        System.out.println(Calc.builder().val(2.00).sub(1.10).calc());
+        System.out.println(Calc.builder().val(2.00).sub(1.10).calculate());
     }
 
     public static void example_1B() {
@@ -25,7 +25,7 @@ public class DevCalcTest {
         
         Num p = new Num(2.00);
         Num c = new Num(1.10);
-        System.out.println(Calc.builder().val(p).sub(c).calc());
+        System.out.println(Calc.builder().val(p).sub(c).calculate());
     }
 
     public static void example_1C() throws ParseException {
@@ -35,9 +35,9 @@ public class DevCalcTest {
         
         Num p = new Num("2.00");
         Num c = new Num("1.10");
-        System.out.println(Calc.builder().val(p).sub(c).setStripTrailingZeros(false).calc());
+        System.out.println(Calc.builder().val(p).sub(c).setStripTrailingZeros(false).calculate());
 
-        System.out.println(Calc.builder("2.00 - 1.10").setStripTrailingZeros(false).calc());
+        System.out.println(Calc.builder("2.00 - 1.10").setStripTrailingZeros(false).calculate());
     }
     
     public static BigDecimal example_2A() {
@@ -78,20 +78,20 @@ public class DevCalcTest {
         Num P = new Num(200000);
         Num paymentYears = new Num(30);
         
-        Num r = Calc.builder().openBracket().val(interestRate).div(100).closeBracket().div(12).calc();
+        Num r = Calc.builder().openBracket().val(interestRate).div(100).closeBracket().div(12).calculate();
         
-        Num N = Calc.builder().val(paymentYears).mul(12).mul(-1).calc();
+        Num N = Calc.builder().val(paymentYears).mul(12).mul(-1).calculate();
         
         Calc c = new Calc()
                         .openBracket()
                             .val(r).mul(P)
                         .closeBracket()
-                        .divide()
+                        .div()
                         .openBracket()
-                            .val(1).subtract().openBracket(1).add(r).closeBracket().pow(N)
+                            .val(1).sub().openBracket().val(1).add(r).closeBracket().pow(N)
                         .closeBracket();
         
-        Num nc = c.calc().setScale(2);
+        Num nc = c.calculate().setScale(2);
         
         return nc.toBigDecimal();
     }
@@ -101,13 +101,22 @@ public class DevCalcTest {
         Num interestRate = new Num("A", 6.5);
         Num loan = new Num("B", 200000);
         Num paymentYears = new Num("C", 30);
+        Num monthlyPayment = new Num();
         
+        //Radi: C * -12
+//        Calc calcMP = Calc.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * -12)))", interestRate, loan, paymentYears); 
         
-//        Calc calcMP = Calc.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (-C * 12)))", interestRate, loan, paymentYears);
-//        Calc calcMP = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-30 * 12)))");
-        Calc calcMP = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-360)))");
+        // Ne radi: -C * 12
+        Calc calcMP = Calc.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * -12)))", interestRate, loan, paymentYears);
+//        Calc calcMP = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-30 * 12)))"); // 6.5 100 / 12 / 200000 * 1 1 6.5 100 / 12 / + -30 12 * ^ - /
+//        Calc calcMP = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-360)))");  // 6.5 100 / 12 / 200000 * 1 1 6.5 100 / 12 / + -360 ^ - /
+        
+//        Calc calcMP = Calc.builder("-2 * 3");
+        System.out.println(calcMP.getInfix());
+        System.out.println(calcMP.getPostfix());
         calcMP.setScale(5);
-        Num monthlyPayment = calcMP.calc();
+        monthlyPayment = calcMP.calculate();
+        System.out.println(monthlyPayment);
 
         return monthlyPayment.toBigDecimal();
     }
@@ -122,6 +131,8 @@ public class DevCalcTest {
         
     }
     
-    
+    public static void main(String [] args ) throws ParseException {
+        example_2C();
+    }
     
 }

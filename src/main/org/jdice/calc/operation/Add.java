@@ -17,7 +17,6 @@
 package org.jdice.calc.operation;
 
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -31,9 +30,6 @@ public interface Add<CALC> {
 
     public CALC add(Object value) ;
 
-    public CALC add(String value) ;
-
     public CALC add(String value, char decimalSeparator) ;
 
-    public CALC add(Num value) ;
 }

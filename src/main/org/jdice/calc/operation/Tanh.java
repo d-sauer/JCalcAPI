@@ -18,7 +18,6 @@ package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -37,5 +36,4 @@ public interface Tanh<CALC> {
 
 	public CALC tanh(String value, char decimalSeparator);
 
-	public CALC tanh(Num value);
 }

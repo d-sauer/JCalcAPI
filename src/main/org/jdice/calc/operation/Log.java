@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package org.jdice.calc.operation;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Implementation;
-import org.jdice.calc.Num;
 
 /**
  * 
@@ -26,21 +25,13 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementation=LogFunction.class)
+@Implementation(implementation = LogFunction.class)
 public interface Log<CALC> {
-    
-    public CALC log(AbstractCalculator expression) ;
-    
 
-    // 6
-    public CALC log(Object value) ;
+    public CALC log(AbstractCalculator expression);
 
-    // 7
-    public CALC log(String value) ;
+    public CALC log(Object value);
 
-    // 7
-    public CALC log(String value, char decimalSeparator) ;
+    public CALC log(String value, char decimalSeparator);
 
-    // 8
-    public CALC log(Num value) ;
 }

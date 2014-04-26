@@ -207,7 +207,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 
 				String strValue = (String) value;
 
-				strValue = Num.stripNumber(strValue, decimalSeparator);
+				strValue = Num.extractNumber(strValue, decimalSeparator);
 				strValue = strValue.replace(decimalSeparator + "", Properties.DEFAULT_DECIMAL_SEPARATOR + ""); // use default decimal separator
 
 				DecimalFormatSymbols dfs = new DecimalFormatSymbols();
@@ -231,7 +231,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 				AbstractCalculator ac = (AbstractCalculator) value;
 				originalValue = ac;
 
-				Num n = ac.calc();
+				Num n = ac.calculate();
 				in = n.toBigDecimal();
 			} else if (value instanceof Num) {
 				Num tmp = (Num) value;
@@ -380,20 +380,42 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	//
 	
 	/**
-	 * Return BigDecimal, same as {@link get()}
+	 * Get <tt>BigDecimal</tt> without trailing zeros if {@link hasStripTrailingZeros()} is TRUE
+     * And use scale and rounding mode defined by properties 
 	 * 
-	 * @return
-	 * @see #get()
+	 * @return BigDecimal
 	 */
 	public BigDecimal toBigDecimal() {
-		return get();
+	    return toBigDecimal(getProperties().getScale(), getProperties().getRoundingMode(), getProperties().hasStripTrailingZeros());
 	}
 
 	/**
-	 * Return BigDecimal
+	 * Get BigDecimal in defined scale, and use rounding mode and strip trailing zeros from defined properties 
 	 * 
-	 * @return
-	 * @see #get()
+	 * @return BigDecimal
+	 */
+	public BigDecimal toBigDecimal(int scale) {
+	    return toBigDecimal(scale, getProperties().getRoundingMode(), getProperties().hasStripTrailingZeros());
+	}
+	
+	/**
+     * Return BigDecimal in defined scale with specified rounding mode. Use strip trailing zeros from properties
+     * 
+     * @param scale
+     * @param roundingMode
+     * @return BigDecimal
+     */
+    public BigDecimal toBigDecimal(int scale, Rounding roundingMode) {
+        return toBigDecimal(scale, roundingMode, getProperties().hasStripTrailingZeros());
+    }
+
+	/**
+	 * Return BigDecimal with given parameters.
+	 * 
+	 * @param scale
+	 * @param rounding
+	 * @param stripTrailingZeros
+	 * @return BigDecimal
 	 */
 	public BigDecimal toBigDecimal(Integer scale, Rounding rounding, boolean stripTrailingZeros) {
 	    out = this.in;
@@ -409,51 +431,19 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	    return out;
 	}
 
-	//
-    // GET's
-    //
-    
-    /**
-     * Get <tt>BigDecimal</tt> without trailing zeros if {@link hasStripTrailingZeros()} is TRUE
-     * And set scale defined by properties
-     * 
-     * @return
-     * @see #toBigDecimal()
-     * @see #toBigDecimal(Integer, Rounding, boolean)
-     */
-    public BigDecimal get() {
-        return toBigDecimal(getProperties().getScale(), getProperties().getRoundingMode(), getProperties().hasStripTrailingZeros());
-    }
-
-    /**
-	 * Get BigDecimal in defined scale, rounding mode and strip trailing zeros from properties 
-	 * 
-	 * @param scale
-	 * @return
-	 */
-	public BigDecimal get(int scale) {
-	    return toBigDecimal(scale, getProperties().getRoundingMode(), getProperties().hasStripTrailingZeros());
-	}
-
 	/**
-	 * Return BigDecimal in defined scale with specified rounding mode
+	 * Same as BigDecimal.reminder(BigDecimal.ONE)
 	 * 
-	 * @param scale
-	 * @param roundingMode
 	 * @return
 	 */
-	public BigDecimal get(int scale, Rounding roundingMode) {
-	    return toBigDecimal(scale, roundingMode, getProperties().hasStripTrailingZeros());
-	}
-
-	public BigDecimal getFraction() {
+	public BigDecimal remainder() {
 	    BigDecimal out = toBigDecimal();
 		BigDecimal fraction = out.remainder(BigDecimal.ONE);
 		return fraction;
 	}
 
-	public int getFractionSize() {
-	    BigDecimal fraction = getFraction();
+	public int remainderSize() {
+	    BigDecimal fraction = remainder();
 		String tmp = fraction.toString();
 		int n = tmp.indexOf(Properties.DEFAULT_DECIMAL_SEPARATOR);
 		if (n != -1) {
@@ -462,7 +452,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			return 0;
 	}
 
-	public boolean hasFraction() {
+	public boolean hasRemainder() {
 	    String out = toString();
 		if (out.contains("."))
 			return true;
@@ -500,8 +490,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @param customObject
 	 * @return
 	 */
-	public <T> T toObject(Class<T> toClass,
-			Class<? extends NumConverter> converterClass) {
+	public <T> T toObject(Class<T> toClass, Class<? extends NumConverter> converterClass) {
 		return (T) toObject(toClass, null, converterClass);
 	}
 
@@ -536,49 +525,18 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			if (nc != null) {
 				return nc.fromNum(this);
 			} else {
-				throw new CalculatorException(
-						"Unsupported type '"
-								+ toClass
-								+ "'! Supported types are: short, int, long, float, double, Short, Integer, Long, Float, Double, BigInteger, BigDecimal, String");
+				throw new CalculatorException("Unsupported type '" + toClass + "'! Supported types are: short, int, long, float, double, Short, Integer, Long, Float, Double, BigInteger, BigDecimal, String");
 			}
 		} catch (Exception e) {
-			throw new CalculatorException(
-					"Unsupported type '"
-							+ toClass
-							+ "'! Supported types are: short, int, long, float, double, Short, Integer, Long, Float, Double, BigInteger, BigDecimal, String",
-					e);
+			throw new CalculatorException("Unsupported type '" + toClass + "'! Supported types are: short, int, long, float, double, Short, Integer, Long, Float, Double, BigInteger, BigDecimal, String", e);
 		}
 	}
 
-	public String toStringWithDetail() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		if (getScale() != null)
-			sb.append("\t scale:" + getScale());
-		else
-			sb.append("\t scale: none");
-		sb.append("\t" + getRoundingMode());
-		sb.append("\t strip trailing zeros:" + hasStripTrailingZeros());
-
-		sb.append("] : " + toString());
-
-		return sb.toString();
-	}
-
-	/**
-	 * Get formated representation of number defined by {@link setOutputFormat(String)}
-	 * 
-	 * @param format
-	 *            - DecimalFormat e.g. #,###,###,##0.00
-	 * @return String
-	 * @see #toString(Character groupingSeparator, char decimalSeparator)
-	 * @see #toString(Character, char)
-	 */
-	public String getFormated() {
-		return toString(getProperties().getGroupingSeparator(), getProperties().getOutputDecimalSeparator(), getProperties().getOutputFormat());
-	}
 
 	@Override
+	/**
+	 * Get String representation of Number defined by properties
+	 */
 	public String toString() {
 	    return toString(getProperties().getGroupingSeparator(), getProperties().getOutputDecimalSeparator(), getProperties().getOutputFormat());
 	}
@@ -628,7 +586,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		    scale = Properties.DEFAULT_SCALE;
 
 		    if (!hasStripTrailingZeros()) {
-		        int p = getFractionSize();
+		        int p = remainderSize();
 		        decFormat.setMinimumFractionDigits(p);
 		    }
 		}
@@ -669,71 +627,49 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	/**
-	 * Compare if two number are equal regardless scale
-	 * 
-	 * @param value
-	 * @return
-	 * @see #compareTo(Num)
-	 */
-	public boolean isEqual(String value) {
-		return isEqual(new Num(value));
-	}
-
-	/**
-	 * Compare if two number are equal regardless scale
-	 * 
-	 * @param value
-	 * @return
-	 * @see #compareTo(Num)
-	 */
-	public boolean isEqual(String value, char decimalSeparator) {
-		return isEqual(new Num(value, decimalSeparator));
-	}
-
-	/**
-	 * Compare if two number are equal regardless scale
+	 * Convert <tt>value</tt> to {@link Num} then compare values regardless scale
 	 * 
 	 * <pre>
-	 * e.g. 1254.5800 sameAs(1254.58)  = true 
-	 *      1254.58   sameAs(1254.580) = true 
-	 *      1254.5848 sameAs(1254.58)  = false
-	 *     
-	 * </pre>
-	 * @param value
-	 * @return
-	 * @see #compareTo(Num)
-	 */
-	public boolean isEqual(Num value) {
-		if (value == null)
-			return false;
-		else if (this == value)
-			return true;
-		else {
-			Num other = (Num) value;
-			int i = other.toBigDecimal().compareTo(this.toBigDecimal());
-			if (i == 0)
-				return true;
-			else
-				return false;
-		}
-	}
-
-	/**
-	 * Convert <tt>value</tt> to {@link Num} then compare values regardles scale
-	 * 
+     * e.g. 1254.5800 isEqual(1254.58)  = true 
+     *      1254.58   isEqual(1254.580) = true 
+     *      1254.5848 isEqual(1254.58)  = false
+     *     
+     * </pre>
 	 * @param value
 	 * @return
 	 */
 	public boolean isEqual(Object value) {
-		if (!(value instanceof Num)) {
-			Num num = new Num(value);
-			return isEqual(num);
-		} else {
-			return isEqual((Num) value);
-		}
+	    if (value == null)
+	        return false;
+	    else if (this == value)
+	        return true;
+	    else {
+	        Num tmp = null;
+	        if (value instanceof Num)
+	            tmp = (Num)value;
+	        else
+	            tmp = new Num(value);
+	        
+	        int i = tmp.toBigDecimal().compareTo(this.toBigDecimal());
+            if (i == 0)
+                return true;
+            else
+                return false;
+	    }
 	}
 
 	/**
+     * Compare if two number are equal regardless scale
+     * 
+     * @param value
+     * @return
+     * @see #compareTo(Num)
+     */
+    public boolean isEqual(String value, char decimalSeparator) {
+    	return isEqual(new Num(value, decimalSeparator));
+    }
+
+    /**
 	 * Convert <tt>value</tt> to {@link Num}, and scale both value before comparing them.
 	 * 
 	 * @param value
@@ -757,8 +693,8 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		else
 			numB = new Num(value);
 
-		int minScale = numA.getFractionSize();
-		int bScale = numB.getFractionSize();
+		int minScale = numA.remainderSize();
+		int bScale = numB.remainderSize();
 		if (bScale < minScale)
 			minScale = bScale;
 		
@@ -822,22 +758,14 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 */
 	@Override
 	public boolean equals(Object object) {
-		if (this == object)
+	    if (object == null)
+	        return false;
+	    else if (this == object)
 			return true;
-
-		if (object instanceof Num)
+	    else if (object instanceof Num)
 			return toBigDecimal().equals(((Num) object).toBigDecimal());
 
 		return false;
-	}
-
-	public boolean equals(Num obj) {
-		if (obj == null)
-			return false;
-		else if (this == obj)
-			return true;
-		else
-			return toBigDecimal().equals(obj.toBigDecimal());
 	}
 
 	public boolean equals(BigDecimal obj) {
@@ -866,8 +794,8 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 *         to, or greater than <tt>Num</tt>.
 	 * @see #even
 	 */
-	public int compareTo(Num value2) {
-		return toBigDecimal().compareTo(value2.toBigDecimal());
+	public int compareTo(Num value) {
+		return toBigDecimal().compareTo(value.toBigDecimal());
 	}
 
 	public byte byteValue() {
@@ -968,7 +896,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @param decimalSeparator
 	 * @param value
 	 */
-	public static String stripNumber(String value, char decimalSeparator) {
+	public static String extractNumber(String value, char decimalSeparator) {
 		String regex = "[^0-9" + decimalSeparator + "]";
 		if (decimalSeparator == '.')
 			regex = regex.replace(".", "\\.");

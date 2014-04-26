@@ -34,7 +34,7 @@ public class CalcFactory {
         Num _x = new Num(percent);
         Num _y = new Num(ofValue);
         Calc cPercent = Calc.builder().ob().val(_x).div(100).cb().mul(_y);
-        return cPercent.calc();
+        return cPercent.calculate();
     }
 
 }
