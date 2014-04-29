@@ -327,25 +327,13 @@ public abstract class AbstractCalculator<CALC> {
      * e.g. X + 5 - (2 * X - Y)
      * 
      * @param expression
-     * @return
+     * @param values that match unknown variable by name or by order 
+     * @return {@link AbstractCalculator}
      * @throws ParseException
-     *             @
      */
     public CALC expression(String expression, Object... values) throws ParseException {
         registerImplmentedOperation();
         append(InfixParser.parseInfix(scopeOperationRegister, getProperties(), expression, values), false);
-        return getThis();
-    }
-
-    //
-    // BRACKET'S
-    //
-    /**
-     * Open bracket
-     * @return
-     */
-    public CALC ob() {
-        infix.add(Bracket.OPEN);
         return getThis();
     }
 
@@ -355,17 +343,6 @@ public abstract class AbstractCalculator<CALC> {
      */
     public CALC openBracket() {
         infix.add(Bracket.OPEN);
-        return getThis();
-    }
-
-    // ---------------
-    /**
-     * Close bracket
-     * 
-     * @return
-     */
-    public CALC cb() {
-        infix.add(Bracket.CLOSE);
         return getThis();
     }
 
