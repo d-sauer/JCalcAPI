@@ -18,7 +18,7 @@ package org.jdice.calc.test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jdice.calc.Calc;
+import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ public class DevTest {
 
     @Test
     public void test() throws Exception {
-        Calc calc1b = Calc.builder("5+9/6").mul(3).div(2);
+        Calculator calc1b = Calculator.builder("5+9/6").mul(3).div(2);
         Num cvb = calc1b.calculate(true, false);
         // print calculation steps
          for(String step : calc1b.getCalculationSteps())

@@ -145,7 +145,7 @@ class InfixParser {
                             values[e] = n;
                         }
                         else {
-                            Calc calc = new Calc();
+                            Calculator calc = new Calculator();
                             calc.setInfix(fInfix);
 
                             values[e] = calc;

@@ -21,8 +21,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 
-import org.jdice.calc.Calc;
-import org.jdice.calc.CalcTrig;
+import org.jdice.calc.Calculator;
+import org.jdice.calc.TrigCalculator;
 import org.jdice.calc.Num;
 import org.junit.Test;
 
@@ -30,24 +30,24 @@ public class CalcTest {
 
     @Test
     public void testBrackets() throws Exception {
-        Calc calc = new Calc().val(10).add(20).sub(5);
+        Calculator calc = new Calculator().val(10).add(20).sub(5);
         Num cv = calc.calculate();
         assertEquals("10 + 20 - 5 = 25", 25, cv.toBigDecimal().intValue());
 
-        calc = new Calc().val(10).add(20).sub(5).div(2).mul(3).add(8);
+        calc = new Calculator().val(10).add(20).sub(5).div(2).mul(3).add(8);
         cv = calc.calculate();
         assertEquals("10 + 20 - 5 / 2 * 3 + 8 = 30.5", "30.5", calc.getResult().toString());
         assertTrue(cv != calc.getResult()); // check if references are immutable
 
-        calc = new Calc().openBracket().openBracket().val(10).add(5).closeBracket().closeBracket();
+        calc = new Calculator().openBracket().openBracket().val(10).add(5).closeBracket().closeBracket();
         cv = calc.calculate();
         assertEquals("Calculate", 15, cv.toBigDecimal().intValue());
 
-        calc = new Calc().openBracket().val(10).add(5).closeBracket().add().openBracket().openBracket().val(5).add(2).closeBracket().closeBracket().sub(4);
+        calc = new Calculator().openBracket().val(10).add(5).closeBracket().add().openBracket().openBracket().val(5).add(2).closeBracket().closeBracket().sub(4);
         cv = calc.calculate();
         assertEquals("( 10 + 5 ) + ( ( 5 + 2 ) ) - 4  = 18", 18, cv.toBigDecimal().intValue());
 
-        calc = new Calc().openBracket().val(10).add(5).closeBracket().add().openBracket().openBracket().val(5).add(2).closeBracket().closeBracket().sub(4).pow(2);
+        calc = new Calculator().openBracket().val(10).add(5).closeBracket().add().openBracket().openBracket().val(5).add(2).closeBracket().closeBracket().sub(4).pow(2);
         cv = calc.calculate();
         assertEquals("((10+5)+((5+2))-4^2)", 6, cv.toBigDecimal().intValue());
 
@@ -55,52 +55,52 @@ public class CalcTest {
 
     @Test
     public void testExpressions() throws Exception {
-        Calc calc1b = Calc.builder("5+9/6").mul(3).div(2);
+        Calculator calc1b = Calculator.builder("5+9/6").mul(3).div(2);
         Num cvb = calc1b.calculate(true, false);
         assertEquals("5 + 9 / 6 * 3 / 2", 7, cvb.intValue());
         // print calculation steps
         // for(String step : calc1b.getCalculationSteps())
         // System.out.println("   " + step);
 
-        Calc calc1 = Calc.builder("5+9/6").mul(3).div(2);
+        Calculator calc1 = Calculator.builder("5+9/6").mul(3).div(2);
         Num cv = calc1.calculate();
         assertEquals("5 + 9 / 6 * 3 / 2", 7, cv.intValue());
 
         Num x = new Num("x", 10);
         Num y = new Num("y", 3);
-        Calc calc2 = Calc.builder().expression("5 + x - y", x, y).add(2);
+        Calculator calc2 = Calculator.builder().expression("5 + x - y", x, y).add(2);
         Num cv2 = calc2.calculate();
         assertEquals("5 + 10 - 3 + 2", 14, cv2.intValue());
 
-        Calc calc3 = Calc.builder().append(calc1).add().append(calc2);
+        Calculator calc3 = Calculator.builder().append(calc1).add().append(calc2);
         Num cv3 = calc3.calculate();
         assertEquals("5 + 9 / 6 * 3 / 2  +  5 + 10 - 3 + 2", 21, cv3.intValue());
 
-        Calc calc4 = Calc.builder("((1+2) + (5 + 3))");
+        Calculator calc4 = Calculator.builder("((1+2) + (5 + 3))");
         assertEquals(11, calc4.calculate().intValue());
 
-        Calc calc5 = Calc.builder(" 2 % 5");
+        Calculator calc5 = Calculator.builder(" 2 % 5");
         Num cv4 = calc5.calculate();
         assertEquals("2 % 5", 2, cv4.intValue());
     }
     
     @Test
     public void testExpressions2() throws Exception {
-        Calc calc1 = Calc.builder("5 / 9 * 12");
+        Calculator calc1 = Calculator.builder("5 / 9 * 12");
         assertEquals("5 / 9 * 12", calc1.toString());
 
-        Calc calc2 = Calc.builder().val(10).add().expression("5 / 9 * 12");
+        Calculator calc2 = Calculator.builder().val(10).add().expression("5 / 9 * 12");
         assertEquals("10 + 5 / 9 * 12", calc2.toString());
     }
 
     @Test
     public void testResultWithExcelResult() throws Exception {
-        Calc calc1 = Calc.builder("5+9/6").mul(3).div(2);
+        Calculator calc1 = Calculator.builder("5+9/6").mul(3).div(2);
 
         Num x = new Num("x", 10);
         Num y = new Num("y", 3);
-        Calc calc2 = Calc.builder().expression("5 + x - y", x, y);
-        Calc calc3 = Calc.builder().append(calc1).div().append(calc2);
+        Calculator calc2 = Calculator.builder().expression("5 + x - y", x, y);
+        Calculator calc3 = Calculator.builder().append(calc1).div().append(calc2);
         calc3.setScale(9).setDecimalSeparator(',');
 
         HashMap<String, String> excelResult = new HashMap<String, String>();
@@ -144,7 +144,7 @@ public class CalcTest {
 
     @Test
     public void testSteps() throws Exception {
-        Calc calc1 = Calc.builder("(5 + 9 / 6 * 3 / 2) / (5 + 15 - 18)").add().sqrt(4);
+        Calculator calc1 = Calculator.builder("(5 + 9 / 6 * 3 / 2) / (5 + 15 - 18)").add().sqrt(4);
         // System.out.println(calc1.getInfix());
         Num v = calc1.calculate(true, false);
 
@@ -174,17 +174,17 @@ public class CalcTest {
     private static void calculateTest(double cost, double costM2) throws Exception {
         double CONST_III = 2541.956123372554d;
 
-        Calc cSum = new Calc().val(cost).mul(costM2).setDecimalSeparator(',').setGroupingSeparator(' ');
+        Calculator cSum = new Calculator().val(cost).mul(costM2).setDecimalSeparator(',').setGroupingSeparator(' ');
         Num sum = cSum.calculate();
 
-        Calc cI = new Calc().val(sum).mul(0.15);
+        Calculator cI = new Calculator().val(sum).mul(0.15);
 
         Num valueI = cI.calculate();
 
-        Calc cIII = new Calc().val(CONST_III).mul(cost).setDecimalSeparator(',').setGroupingSeparator(' ');
+        Calculator cIII = new Calculator().val(CONST_III).mul(cost).setDecimalSeparator(',').setGroupingSeparator(' ');
         Num valueIII = cIII.calculate();
 
-        Calc cII = new Calc().val(valueIII).sub(valueI).setDecimalSeparator(',').setGroupingSeparator(' ');
+        Calculator cII = new Calculator().val(valueIII).sub(valueI).setDecimalSeparator(',').setGroupingSeparator(' ');
         Num valueII = cII.calculate();
 
         // System.out.println(cSum.getInfix() + "\t=\t" + sum);
@@ -198,25 +198,25 @@ public class CalcTest {
 
     @Test
     public void testBind() throws Exception {
-        Calc calc = new Calc().val(10).add(20).sub(5);
+        Calculator calc = new Calculator().val(10).add(20).sub(5);
         calc.calculate();
         assertEquals("10 + 20 - 5", calc.getInfix());
         assertEquals("25", calc.getResult().toString());
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
-        calc.bind(CalcTrig.class).add().sin(10).add(2);
+        calc.bind(TrigCalculator.class).add().sin(10).add(2);
         calc.calculate();
         assertEquals("10 + 20 - 5 + sin(10) + 2", calc.getInfix());
         assertEquals("26.456", calc.getResult().setScale(3).toString());
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
-        calc.bind(CalcTrig.class).add().sin(5);
+        calc.bind(TrigCalculator.class).add().sin(5);
         calc.calculate();
         assertEquals("10 + 20 - 5 + sin(10) + 2 + sin(5)", calc.getInfix());
         assertTrue(calc.getResult().setScale(3).isEqual("25.497"));
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
-        Calc calc2 = Calc.builder("1+2+ A +abs(-2 - (abs(A-10)))", 5);
+        Calculator calc2 = Calculator.builder("1+2+ A +abs(-2 - (abs(A-10)))", 5);
         Num num = calc2.calculate();
         assertEquals("15", num.toString());
     }

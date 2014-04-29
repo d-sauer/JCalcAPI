@@ -16,7 +16,7 @@
  
 package org.jdice.calc.test;
 
-import org.jdice.calc.Calc;
+import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -27,7 +27,7 @@ public class NumScopeTest {
     
     /**
      * Scopes propagation
-     *   1. properties on Calc/Num instance by set methods 
+     *   1. properties on Calculator/Num instance by set methods 
      *   2. Global - defined in properties file 'jcalc.properties' in [bin/class] root
      *   3. Default properties from Properties class
      *   
@@ -35,7 +35,7 @@ public class NumScopeTest {
      */
 	@Test
     public void testScope1() throws Exception {
-        Calc calc1 = new Calc();
+        Calculator calc1 = new Calculator();
         Num num1 = new Num();
         Num num2 = new Num();
 
@@ -50,7 +50,7 @@ public class NumScopeTest {
         
         //
         //
-        Calc calc2 = new Calc();
+        Calculator calc2 = new Calculator();
         calc2.val(num1).mul(num2);
 
         Num cn2 = calc2.calculate(); // use default scope (maximum)
@@ -58,7 +58,7 @@ public class NumScopeTest {
 
         //
         //
-        Calc calc3 = new Calc();
+        Calculator calc3 = new Calculator();
         calc3.val(num1.setScale(1)).mul(num2.setScale(1));
         
         Num cn3 = calc2.calculate(true, false); 	// calculate with scaled numbers

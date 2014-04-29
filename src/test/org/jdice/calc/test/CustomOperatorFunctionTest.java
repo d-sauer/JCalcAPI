@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 
 import org.jdice.calc.AbstractCalculator;
-import org.jdice.calc.Calc;
+import org.jdice.calc.Calculator;
 import org.jdice.calc.Function;
 import org.jdice.calc.Num;
 import org.jdice.calc.Operator;
@@ -63,7 +63,7 @@ public class CustomOperatorFunctionTest {
 
     @Test
     public void testQuestionOperator() throws ParseException {
-        Calc calc = new Calc();
+        Calculator calc = new Calculator();
         calc.register(QuestionOperator.class);
         calc.register(SumFunction.class);
 

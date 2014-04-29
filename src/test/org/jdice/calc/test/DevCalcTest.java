@@ -3,7 +3,7 @@ package org.jdice.calc.test;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
-import org.jdice.calc.Calc;
+import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -15,7 +15,7 @@ public class DevCalcTest {
         
         
         // JCalc way...
-        System.out.println(Calc.builder().val(2.00).sub(1.10).calculate());
+        System.out.println(Calculator.builder().val(2.00).sub(1.10).calculate());
     }
 
     public static void example_1B() {
@@ -25,7 +25,7 @@ public class DevCalcTest {
         
         Num p = new Num(2.00);
         Num c = new Num(1.10);
-        System.out.println(Calc.builder().val(p).sub(c).calculate());
+        System.out.println(Calculator.builder().val(p).sub(c).calculate());
     }
 
     public static void example_1C() throws ParseException {
@@ -35,9 +35,9 @@ public class DevCalcTest {
         
         Num p = new Num("2.00");
         Num c = new Num("1.10");
-        System.out.println(Calc.builder().val(p).sub(c).setStripTrailingZeros(false).calculate());
+        System.out.println(Calculator.builder().val(p).sub(c).setStripTrailingZeros(false).calculate());
 
-        System.out.println(Calc.builder("2.00 - 1.10").setStripTrailingZeros(false).calculate());
+        System.out.println(Calculator.builder("2.00 - 1.10").setStripTrailingZeros(false).calculate());
     }
     
     public static BigDecimal example_2A() {
@@ -82,13 +82,13 @@ public class DevCalcTest {
         Num paymentYears = new Num(30);
         
         // r = 6.5 / 100 / 12
-        Num r = Calc.builder().val(interestRate).div(100).div(12).calculate();
+        Num r = Calculator.builder().val(interestRate).div(100).div(12).calculate();
         
         // N = 30 * 12 -1
-        Num N = Calc.builder().val(paymentYears).mul(12).mul(-1).calculate();
+        Num N = Calculator.builder().val(paymentYears).mul(12).mul(-1).calculate();
         
         // c = (r * P) / (1 / (1 + r)^N
-        Calc c = new Calc()
+        Calculator c = new Calculator()
                         .openBracket()
                             .val(r).mul(P)
                         .closeBracket()
@@ -109,7 +109,7 @@ public class DevCalcTest {
         Num P = new Num("B", 200000);
         Num paymentYears = new Num("C", -30);
         
-        Calc calcMP = Calc.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * 12)))", interestRate, P, paymentYears);
+        Calculator calcMP = Calculator.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * 12)))", interestRate, P, paymentYears);
         calcMP.setScale(2);
         
         Num monthlyPayment = calcMP.calculate(true, false);
@@ -132,7 +132,7 @@ public class DevCalcTest {
 //        Calc calcMP = Calc.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * -12)))", interestRate, loan, paymentYears); 
         
         // Ne radi: -C * 12
-        Calc calcMP = Calc.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * 12)))", interestRate, loan, paymentYears);
+        Calculator calcMP = Calculator.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * 12)))", interestRate, loan, paymentYears);
 //        Calc calcMP = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-30 * 12)))"); // 6.5 100 / 12 / 200000 * 1 1 6.5 100 / 12 / + -30 12 * ^ - /
 //        Calc calcMP = Calc.builder("((6.5 / 100 / 12) * 200000) / (1 - ((1 + (6.5 / 100 / 12)) ^ (-360)))");  // 6.5 100 / 12 / 200000 * 1 1 6.5 100 / 12 / + -360 ^ - /
         

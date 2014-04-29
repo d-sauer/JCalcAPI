@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 
 import org.jdice.calc.Cache;
-import org.jdice.calc.Calc;
+import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
 import org.jdice.calc.NumConverter;
 import org.jdice.calc.Rounding;
@@ -217,7 +217,7 @@ public class NumTest {
         CustomObject co2 = new CustomObject();
         co2.set("2.5");
         
-        Calc calc = Calc.builder().val(co1).mul(co2);
+        Calculator calc = Calculator.builder().val(co1).mul(co2);
         Num c = calc.calculate();
         
         assertEquals("25", c.toString());

@@ -17,7 +17,7 @@
 package org.jdice.calc.test;
 
 import org.jdice.calc.AbstractCalculator;
-import org.jdice.calc.Calc;
+import org.jdice.calc.Calculator;
 import org.jdice.calc.Function;
 import org.jdice.calc.Num;
 
@@ -39,7 +39,7 @@ public class CustomFunctionTest {
 
         @Override
         public Num calc(AbstractCalculator calc, Num... values) throws Exception {
-            Calc c = Calc.builder().val(values[1]).mul(values[0]);
+            Calculator c = Calculator.builder().val(values[1]).mul(values[0]);
 
             return c.calculate();
         }
@@ -48,7 +48,7 @@ public class CustomFunctionTest {
     @Test
     public void testCustomFunction() throws Exception {
         String e = "test(1-2-5-2, 3)";
-        Calc c = new Calc();
+        Calculator c = new Calculator();
         c.register(test.class);
         c.expression(e);
         Num n = c.calculate();
@@ -56,7 +56,7 @@ public class CustomFunctionTest {
         assertEquals("-24", n.toString());
         
         
-        Calc calc2 = Calc.builder().val(10).add().append(test.class, 2,3);
+        Calculator calc2 = Calculator.builder().val(10).add().append(test.class, 2,3);
         calc2.register(test.class);
         Num n2 = calc2.calculate();
         assertEquals("16", n2.toString());

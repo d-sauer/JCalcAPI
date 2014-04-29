@@ -33,7 +33,7 @@ public class CalcFactory {
     public static Num percentOf(Object percent, Object ofValue) {
         Num _x = new Num(percent);
         Num _y = new Num(ofValue);
-        Calc cPercent = Calc.builder().openBracket().val(_x).div(100).closeBracket().mul(_y);
+        Calculator cPercent = Calculator.builder().openBracket().val(_x).div(100).closeBracket().mul(_y);
         return cPercent.calculate();
     }
 

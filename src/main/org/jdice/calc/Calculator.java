@@ -44,34 +44,34 @@ import org.jdice.calc.operation.SubOperator;
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
  */
-public class Calc extends AbstractCalculator<Calc> implements Add<Calc>,
-        Sub<Calc>, Div<Calc>, Mul<Calc>, Mod<Calc>, Pow<Calc>, Abs<Calc>,
-        Sqrt<Calc>, Log<Calc> {
+public class Calculator extends AbstractCalculator<Calculator> implements Add<Calculator>,
+        Sub<Calculator>, Div<Calculator>, Mul<Calculator>, Mod<Calculator>, Pow<Calculator>, Abs<Calculator>,
+        Sqrt<Calculator>, Log<Calculator> {
 
-    protected Calc getThis() {
+    protected Calculator getThis() {
         return this;
     }
 
-    public Calc() {
+    public Calculator() {
         super();
     }
 
     //
     // Builder
     //
-    public static Calc builder() {
-        Calc calc = new Calc();
+    public static Calculator builder() {
+        Calculator calc = new Calculator();
         return calc;
     }
 
-    public static Calc builder(String expression) throws ParseException {
-        Calc calc = new Calc();
+    public static Calculator builder(String expression) throws ParseException {
+        Calculator calc = new Calculator();
         calc.expression(expression);
         return calc;
     }
 
-    public static Calc builder(String expression, Object... values) throws ParseException {
-        Calc calc = new Calc();
+    public static Calculator builder(String expression, Object... values) throws ParseException {
+        Calculator calc = new Calculator();
         calc.expression(expression, values);
         return calc;
     }
@@ -81,142 +81,142 @@ public class Calc extends AbstractCalculator<Calc> implements Add<Calc>,
     //
     // -----------------
     @Override
-    public Calc add() {
+    public Calculator add() {
         return append(AddOperator.class);
     }
 
     @Override
-    public Calc add(Object value) {
+    public Calculator add(Object value) {
         return append(AddOperator.class, value);
     }
 
     @Override
-    public Calc add(String value, char decimalSeparator) {
+    public Calculator add(String value, char decimalSeparator) {
         return append(AddOperator.class, value, decimalSeparator);
     }
 
     // -----------------
 
     @Override
-    public Calc sub() {
+    public Calculator sub() {
         return append(SubOperator.class);
     }
 
     @Override
-    public Calc sub(Object value) {
+    public Calculator sub(Object value) {
         return append(SubOperator.class, value);
     }
 
     @Override
-    public Calc sub(String value, char decimalSeparator) {
+    public Calculator sub(String value, char decimalSeparator) {
         return append(SubOperator.class, value, decimalSeparator);
     }
 
     // -----------------
     @Override
-    public Calc div() {
+    public Calculator div() {
         return append(DivOperator.class);
     }
 
     @Override
-    public Calc div(Object value) {
+    public Calculator div(Object value) {
         return append(DivOperator.class, value);
     }
 
     @Override
-    public Calc div(String value, char decimalSeparator) {
+    public Calculator div(String value, char decimalSeparator) {
         return append(DivOperator.class, value, decimalSeparator);
     }
 
     // -----------------
     @Override
-    public Calc mul() {
+    public Calculator mul() {
         return append(MulOperator.class);
     }
 
     @Override
-    public Calc mul(Object value) {
+    public Calculator mul(Object value) {
         return append(MulOperator.class, value);
     }
 
     @Override
-    public Calc mul(String value, char decimalSeparator) {
+    public Calculator mul(String value, char decimalSeparator) {
         return append(MulOperator.class, value, decimalSeparator);
     }
 
     // -----------------
     @Override
-    public Calc pow() {
+    public Calculator pow() {
         return append(PowOperator.class);
     }
 
     @Override
-    public Calc pow(Object value) {
+    public Calculator pow(Object value) {
         return append(PowOperator.class, value);
     }
 
     @Override
-    public Calc pow(String value, char decimalSeparator) {
+    public Calculator pow(String value, char decimalSeparator) {
         return append(PowOperator.class, value, decimalSeparator);
     }
 
     @Override
-    public Calc abs(AbstractCalculator expression) {
+    public Calculator abs(AbstractCalculator expression) {
         return append(AbsFunction.class, expression);
     }
 
     @Override
-    public Calc abs(Object value) {
+    public Calculator abs(Object value) {
         return append(AbsFunction.class, new Num(value));
     }
 
     @Override
-    public Calc abs(String value, char decimalSeparator) {
+    public Calculator abs(String value, char decimalSeparator) {
         return append(AbsFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
-    public Calc sqrt(AbstractCalculator expression) {
+    public Calculator sqrt(AbstractCalculator expression) {
         return append(SqrtFunction.class, expression);
     }
 
     @Override
-    public Calc sqrt(Object value) {
+    public Calculator sqrt(Object value) {
         return append(SqrtFunction.class, new Num(value));
     }
 
     @Override
-    public Calc sqrt(String value, char decimalSeparator) {
+    public Calculator sqrt(String value, char decimalSeparator) {
         return append(SqrtFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
-    public Calc mod() {
+    public Calculator mod() {
         return append(ModOperator.class);
     }
 
     @Override
-    public Calc mod(Object value) {
+    public Calculator mod(Object value) {
         return append(ModOperator.class, value);
     }
 
     @Override
-    public Calc mod(String value, char decimalSeparator) {
+    public Calculator mod(String value, char decimalSeparator) {
         return append(ModOperator.class, value, decimalSeparator);
     }
 
     @Override
-    public Calc log(AbstractCalculator expression) {
+    public Calculator log(AbstractCalculator expression) {
         return append(LogFunction.class, expression);
     }
 
     @Override
-    public Calc log(Object value) {
+    public Calculator log(Object value) {
         return append(LogFunction.class, value);
     }
 
     @Override
-    public Calc log(String value, char decimalSeparator) {
+    public Calculator log(String value, char decimalSeparator) {
         return append(LogFunction.class, value, decimalSeparator);
     }
 

@@ -27,7 +27,7 @@ import org.jdice.calc.operation.AddOperator;
  * Link operator or function interface that contains overloaded methods to implements in {@link AbstractCalculator}
  * with concrete class that implement calculation logic for annotated operator or function.
  * <br/>
- * For example it link {@link Add} interface which is implemented in concrete calculator like {@link Calc}, and 
+ * For example it link {@link Add} interface which is implemented in concrete calculator like {@link Calculator}, and 
  * implementation od add operator {@link AddOperator}
  * 
  * @author  Davor Sauer <davor.sauer@gmail.com>
