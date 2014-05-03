@@ -16,7 +16,7 @@
  
 package org.jdice.calc;
 
-import org.jdice.calc.operation.SubOperator;
+import org.jdice.calc.extension.SubOperator;
 
 /**
  * Method for implementing operator.
@@ -24,7 +24,7 @@ import org.jdice.calc.operation.SubOperator;
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
  */
-public interface Operator extends Operation {
+public interface Operator extends Extension {
 
     /**
      * Define operator priority during calculation.

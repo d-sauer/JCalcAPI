@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-package org.jdice.calc.operation;
+package org.jdice.calc.extension;
 
 import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.Function;

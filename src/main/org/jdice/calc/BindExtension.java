@@ -16,35 +16,28 @@
  
 package org.jdice.calc;
 
-import java.util.HashMap;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import org.jdice.calc.extension.Add;
+import org.jdice.calc.extension.AddOperator;
 
 /**
- * Link interfaces of operation methods with concrete class that extends {@link Operator} or {@link Function}  and implement functionality. 
- * e.g. Link interface {@link Add} that concrete calculator implements with {@link AddOperator}
+ * Link operator or function interface that contains overloaded methods to implements in {@link AbstractCalculator}
+ * with concrete class that implement calculation logic for annotated operator or function.
+ * <br/>
+ * For example it link {@link Add} interface which is implemented in concrete calculator like {@link Calculator}, and 
+ * implementation od add operator {@link AddOperator}
  * 
- * @author Davor Sauer <davor.sauer@gmail.com>
+ * @author  Davor Sauer <davor.sauer@gmail.com>
  *
  */
-public class LinkOperation {
-    
-    private static HashMap<Class, Class<? extends Operation>> bind = new HashMap<Class, Class<? extends Operation>>();
-    
-    /**
-     * Bind implemented interface used in {@link AbstractCalculator} instances with concrete implementation of {@link Operator} or {@link Function}
-     * @param clazz
-     * @param implementation
-     */
-    public static void link(Class clazz, Class<? extends Operation> implementation) {
-        bind.put(clazz, implementation);
-    }
-    
-    /**
-     * Get operation ({@link Operator}, {@link Function}) implementation class
-     * @param clazz
-     * @return
-     */
-    public static Class<? extends Operation> getOperation(Class clazz) {
-        return bind.get(clazz);
-    }
 
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface BindExtension {
+
+    Class<? extends Extension> implementation();
+    
 }

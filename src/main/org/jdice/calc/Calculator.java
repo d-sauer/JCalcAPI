@@ -18,24 +18,24 @@ package org.jdice.calc;
 
 import java.text.ParseException;
 
-import org.jdice.calc.operation.Abs;
-import org.jdice.calc.operation.AbsFunction;
-import org.jdice.calc.operation.Add;
-import org.jdice.calc.operation.AddOperator;
-import org.jdice.calc.operation.Div;
-import org.jdice.calc.operation.DivOperator;
-import org.jdice.calc.operation.Log;
-import org.jdice.calc.operation.LogFunction;
-import org.jdice.calc.operation.Mod;
-import org.jdice.calc.operation.ModOperator;
-import org.jdice.calc.operation.Mul;
-import org.jdice.calc.operation.MulOperator;
-import org.jdice.calc.operation.Pow;
-import org.jdice.calc.operation.PowOperator;
-import org.jdice.calc.operation.Sqrt;
-import org.jdice.calc.operation.SqrtFunction;
-import org.jdice.calc.operation.Sub;
-import org.jdice.calc.operation.SubOperator;
+import org.jdice.calc.extension.Abs;
+import org.jdice.calc.extension.AbsFunction;
+import org.jdice.calc.extension.Add;
+import org.jdice.calc.extension.AddOperator;
+import org.jdice.calc.extension.Div;
+import org.jdice.calc.extension.DivOperator;
+import org.jdice.calc.extension.Log;
+import org.jdice.calc.extension.LogFunction;
+import org.jdice.calc.extension.Mod;
+import org.jdice.calc.extension.ModOperator;
+import org.jdice.calc.extension.Mul;
+import org.jdice.calc.extension.MulOperator;
+import org.jdice.calc.extension.Pow;
+import org.jdice.calc.extension.PowOperator;
+import org.jdice.calc.extension.Sqrt;
+import org.jdice.calc.extension.SqrtFunction;
+import org.jdice.calc.extension.Sub;
+import org.jdice.calc.extension.SubOperator;
 
 /**
  * Calculator implementation with basic operations.
@@ -44,16 +44,12 @@ import org.jdice.calc.operation.SubOperator;
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
  */
-public class Calculator extends AbstractCalculator<Calculator> implements Add<Calculator>,
+public final class Calculator extends AbstractCalculator<Calculator> implements Add<Calculator>,
         Sub<Calculator>, Div<Calculator>, Mul<Calculator>, Mod<Calculator>, Pow<Calculator>, Abs<Calculator>,
         Sqrt<Calculator>, Log<Calculator> {
 
     protected Calculator getThis() {
         return this;
-    }
-
-    public Calculator() {
-        super();
     }
 
     //

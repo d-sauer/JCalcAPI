@@ -22,11 +22,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 
 import org.jdice.calc.Calculator;
-import org.jdice.calc.TrigCalculator;
 import org.jdice.calc.Num;
+import org.jdice.calc.TrackedStep;
+import org.jdice.calc.TrigCalculator;
 import org.junit.Test;
 
-public class CalcTest {
+public class CalculatorTest {
 
     @Test
     public void testBrackets() throws Exception {
@@ -36,8 +37,8 @@ public class CalcTest {
 
         calc = new Calculator().val(10).add(20).sub(5).div(2).mul(3).add(8);
         cv = calc.calculate();
-        assertEquals("10 + 20 - 5 / 2 * 3 + 8 = 30.5", "30.5", calc.getResult().toString());
-        assertTrue(cv != calc.getResult()); // check if references are immutable
+        assertEquals("10 + 20 - 5 / 2 * 3 + 8 = 30.5", "30.5", calc.getCalculatedValue().toString());
+        assertTrue(cv != calc.getCalculatedValue()); // check if references are immutable
 
         calc = new Calculator().openBracket().openBracket().val(10).add(5).closeBracket().closeBracket();
         cv = calc.calculate();
@@ -56,7 +57,7 @@ public class CalcTest {
     @Test
     public void testExpressions() throws Exception {
         Calculator calc1b = Calculator.builder("5+9/6").mul(3).div(2);
-        Num cvb = calc1b.calculate(true, false);
+        Num cvb = calc1b.setTrackSteps(true).calculate();
         assertEquals("5 + 9 / 6 * 3 / 2", 7, cvb.intValue());
         // print calculation steps
         // for(String step : calc1b.getCalculationSteps())
@@ -146,10 +147,10 @@ public class CalcTest {
     public void testSteps() throws Exception {
         Calculator calc1 = Calculator.builder("(5 + 9 / 6 * 3 / 2) / (5 + 15 - 18)").add().sqrt(4);
         // System.out.println(calc1.getInfix());
-        Num v = calc1.calculate(true, false);
+        Num v = calc1.setTrackSteps(true).calculate();
 
         StringBuilder sb = new StringBuilder();
-        for (String p : calc1.getCalculationSteps())
+        for (TrackedStep p : calc1.getTrackedSteps())
             sb.append(p);
 
         String test = "9   /  6     = 1.5" +
@@ -201,19 +202,19 @@ public class CalcTest {
         Calculator calc = new Calculator().val(10).add(20).sub(5);
         calc.calculate();
         assertEquals("10 + 20 - 5", calc.getInfix());
-        assertEquals("25", calc.getResult().toString());
+        assertEquals("25", calc.getCalculatedValue().toString());
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
         calc.bind(TrigCalculator.class).add().sin(10).add(2);
         calc.calculate();
         assertEquals("10 + 20 - 5 + sin(10) + 2", calc.getInfix());
-        assertEquals("26.456", calc.getResult().setScale(3).toString());
+        assertEquals("26.456", calc.getCalculatedValue().setScale(3).toString());
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
         calc.bind(TrigCalculator.class).add().sin(5);
         calc.calculate();
         assertEquals("10 + 20 - 5 + sin(10) + 2 + sin(5)", calc.getInfix());
-        assertTrue(calc.getResult().setScale(3).isEqual("25.497"));
+        assertTrue(calc.getCalculatedValue().setScale(3).isEqual("25.497"));
         // System.out.println(calc.getInfix() + " = " + calc.getCalculated());
 
         Calculator calc2 = Calculator.builder("1+2+ A +abs(-2 - (abs(A-10)))", 5);

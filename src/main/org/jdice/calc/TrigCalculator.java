@@ -18,42 +18,42 @@ package org.jdice.calc;
 
 import java.text.ParseException;
 
-import org.jdice.calc.operation.Abs;
-import org.jdice.calc.operation.AbsFunction;
-import org.jdice.calc.operation.Add;
-import org.jdice.calc.operation.AddOperator;
-import org.jdice.calc.operation.ArcCos;
-import org.jdice.calc.operation.ArcCosFunction;
-import org.jdice.calc.operation.ArcSin;
-import org.jdice.calc.operation.ArcSinFunction;
-import org.jdice.calc.operation.ArcTan;
-import org.jdice.calc.operation.ArcTanFunction;
-import org.jdice.calc.operation.Cos;
-import org.jdice.calc.operation.CosFunction;
-import org.jdice.calc.operation.Cosh;
-import org.jdice.calc.operation.CoshFunction;
-import org.jdice.calc.operation.Div;
-import org.jdice.calc.operation.DivOperator;
-import org.jdice.calc.operation.Log;
-import org.jdice.calc.operation.LogFunction;
-import org.jdice.calc.operation.Mod;
-import org.jdice.calc.operation.ModOperator;
-import org.jdice.calc.operation.Mul;
-import org.jdice.calc.operation.MulOperator;
-import org.jdice.calc.operation.Pow;
-import org.jdice.calc.operation.PowOperator;
-import org.jdice.calc.operation.Sin;
-import org.jdice.calc.operation.SinFunction;
-import org.jdice.calc.operation.Sinh;
-import org.jdice.calc.operation.SinhFunction;
-import org.jdice.calc.operation.Sqrt;
-import org.jdice.calc.operation.SqrtFunction;
-import org.jdice.calc.operation.Sub;
-import org.jdice.calc.operation.SubOperator;
-import org.jdice.calc.operation.Tan;
-import org.jdice.calc.operation.TanFunction;
-import org.jdice.calc.operation.Tanh;
-import org.jdice.calc.operation.TanhFunction;
+import org.jdice.calc.extension.Abs;
+import org.jdice.calc.extension.AbsFunction;
+import org.jdice.calc.extension.Add;
+import org.jdice.calc.extension.AddOperator;
+import org.jdice.calc.extension.ArcCos;
+import org.jdice.calc.extension.ArcCosFunction;
+import org.jdice.calc.extension.ArcSin;
+import org.jdice.calc.extension.ArcSinFunction;
+import org.jdice.calc.extension.ArcTan;
+import org.jdice.calc.extension.ArcTanFunction;
+import org.jdice.calc.extension.Cos;
+import org.jdice.calc.extension.CosFunction;
+import org.jdice.calc.extension.Cosh;
+import org.jdice.calc.extension.CoshFunction;
+import org.jdice.calc.extension.Div;
+import org.jdice.calc.extension.DivOperator;
+import org.jdice.calc.extension.Log;
+import org.jdice.calc.extension.LogFunction;
+import org.jdice.calc.extension.Mod;
+import org.jdice.calc.extension.ModOperator;
+import org.jdice.calc.extension.Mul;
+import org.jdice.calc.extension.MulOperator;
+import org.jdice.calc.extension.Pow;
+import org.jdice.calc.extension.PowOperator;
+import org.jdice.calc.extension.Sin;
+import org.jdice.calc.extension.SinFunction;
+import org.jdice.calc.extension.Sinh;
+import org.jdice.calc.extension.SinhFunction;
+import org.jdice.calc.extension.Sqrt;
+import org.jdice.calc.extension.SqrtFunction;
+import org.jdice.calc.extension.Sub;
+import org.jdice.calc.extension.SubOperator;
+import org.jdice.calc.extension.Tan;
+import org.jdice.calc.extension.TanFunction;
+import org.jdice.calc.extension.Tanh;
+import org.jdice.calc.extension.TanhFunction;
 
 /**
  * Calculator implementation with trigonometric functions.
@@ -62,7 +62,7 @@ import org.jdice.calc.operation.TanhFunction;
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
  */
-public class TrigCalculator extends AbstractCalculator<TrigCalculator> implements
+public final class TrigCalculator extends AbstractCalculator<TrigCalculator> implements
         Sin<TrigCalculator>, Cos<TrigCalculator>, Tan<TrigCalculator>, ArcSin<TrigCalculator>,
         ArcCos<TrigCalculator>, ArcTan<TrigCalculator>, Sinh<TrigCalculator>, Cosh<TrigCalculator>,
         Tanh<TrigCalculator>, Add<TrigCalculator>, Sub<TrigCalculator>, Div<TrigCalculator>,
@@ -72,10 +72,6 @@ public class TrigCalculator extends AbstractCalculator<TrigCalculator> implement
     @Override
     protected TrigCalculator getThis() {
         return this;
-    }
-
-    public TrigCalculator() {
-        super();
     }
 
     //

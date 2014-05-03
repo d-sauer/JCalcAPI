@@ -22,7 +22,7 @@ package org.jdice.calc;
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
  */
-public interface Function extends Operation {
+public interface Function extends Extension {
 
     /**
      * Define maximum number of parameters that implemented function can accept.

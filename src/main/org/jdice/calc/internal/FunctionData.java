@@ -14,7 +14,12 @@
  * limitations under the License.
  */
  
-package org.jdice.calc;
+package org.jdice.calc.internal;
+
+import org.jdice.calc.AbstractCalculator;
+import org.jdice.calc.CalculatorException;
+import org.jdice.calc.Function;
+import org.jdice.calc.Num;
 
 /**
  * Data model for data forwarded to concrete function. 
@@ -29,7 +34,7 @@ public class FunctionData {
     private Num result;
 
     public FunctionData(Class<? extends Function> function, Object... values)  {
-        this.function = Cache.getFunction(function);
+        this.function = CacheExtension.getFunction(function);
         setValues(values);
     }
 
@@ -63,7 +68,7 @@ public class FunctionData {
         return result;
     }
 
-    public Num calc(AbstractCalculator calc)  {
+    public Num calculate(AbstractCalculator calc)  {
         Num [] allValues = new Num[this.values.length];
         for(int i = 0; i < this.values.length; i++) {
             Object o = this.values[i];

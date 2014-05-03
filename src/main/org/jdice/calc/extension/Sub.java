@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.jdice.calc.operation;
+package org.jdice.calc.extension;
 
-import org.jdice.calc.Implementation;
+import org.jdice.calc.BindExtension;
 
 /**
  * 
@@ -24,7 +24,7 @@ import org.jdice.calc.Implementation;
  * 
  * @param <CALC>
  */
-@Implementation(implementation = SubOperator.class)
+@BindExtension(implementation = SubOperator.class)
 public interface Sub<CALC> {
 
 	public CALC sub();

@@ -8,12 +8,12 @@ import org.jdice.calc.Calculator;
 import org.jdice.calc.Function;
 import org.jdice.calc.Num;
 import org.jdice.calc.Operator;
-import org.jdice.calc.SingletonComponent;
+import org.jdice.calc.SingletonExtension;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class CustomOperatorFunctionTest {
-    @SingletonComponent
+    @SingletonExtension
     public static class QuestionOperator implements Operator {
 
         @Override
@@ -36,7 +36,7 @@ public class CustomOperatorFunctionTest {
 
     }
 
-    @SingletonComponent
+    @SingletonExtension
     public static class SumFunction implements Function {
 
         @Override
@@ -64,8 +64,8 @@ public class CustomOperatorFunctionTest {
     @Test
     public void testQuestionOperator() throws ParseException {
         Calculator calc = new Calculator();
-        calc.register(QuestionOperator.class);
-        calc.register(SumFunction.class);
+        calc.use(QuestionOperator.class);
+        calc.use(SumFunction.class);
 
         calc.expression("2 ? 2 + 5 - 1 + sum(1,2,3,4)");
 

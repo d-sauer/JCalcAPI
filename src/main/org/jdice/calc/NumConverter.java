@@ -18,12 +18,14 @@ package org.jdice.calc;
 
 import java.math.BigDecimal;
 
+import org.jdice.calc.internal.CacheExtension;
+
 /**
  * Interface that define methods for conversion of custom Object to BigDecimal 
  * with which JCalc API knows to work.
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
- * @see {@link Cache#registerNumConverter(Class, Class)}
+ * @see {@link CacheExtension#registerNumConverter(Class, Class)}
  * @param <T>
  */
 public interface NumConverter<T> {

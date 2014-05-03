@@ -21,9 +21,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
+import org.jdice.calc.internal.CacheExtension;
+import org.jdice.calc.internal.Utils;
 
 /**
  * Properties for {@link AbstractCalculator}, {@link Num}
@@ -48,9 +52,11 @@ import java.util.Map.Entry;
  * </pre>
  * @author Davor Sauer <davor.sauer@gmail.com>
  */
-public class Properties {
+public class Properties implements Serializable {
 	
-	//
+    private static final long serialVersionUID = 1L;
+    
+    //
 	// Defaults
 	//
 	public static final boolean DEFAULT_STRIP_TRAILING_ZEROS = true;
@@ -142,7 +148,7 @@ public class Properties {
                     //
                     // Load custom NumConverters, Operators, Functions
                     //
-                    Cache.loadProperties(prop);
+                    CacheExtension.loadProperties(prop);
 
                 }
                 catch (FileNotFoundException e) {
@@ -277,6 +283,42 @@ public class Properties {
                 + ", outputFormat: "
                 + (outputFormat != null ? outputFormat : "none");
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        else if (obj == this)
+            return true;
+        else if (obj instanceof Properties) {
+            Properties second = (Properties) obj;
+            
+            if(!Utils.equals(this.getGroupingSeparator(), second.getGroupingSeparator()))
+                return false;
+
+            if(!Utils.equals(this.getInputDecimalSeparator(), second.getInputDecimalSeparator()))
+                return false;
+
+            if(!Utils.equals(this.getOutputDecimalSeparator(), second.getOutputDecimalSeparator()))
+                return false;
+
+            if(!Utils.equals(this.getOutputFormat(), second.getOutputFormat()))
+                return false;
+
+            if(!Utils.equals(this.getRoundingMode(), second.getRoundingMode()))
+                return false;
+
+            if(!Utils.equals(this.getScale(), second.getScale()))
+                return false;
+            
+            if(!Utils.equals(this.hasStripTrailingZeros(), second.hasStripTrailingZeros()))
+                return false;
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * File location ..\bin\org.jdice.calc.properties
@@ -317,7 +359,7 @@ public class Properties {
             //
             // Global NumConverter
             //
-            HashMap<Class, NumConverter> cncs = Cache.getAllNumConverter();
+            HashMap<Class, NumConverter> cncs = CacheExtension.getAllNumConverter();
             int count = 0;
             for (Entry<Class, NumConverter> cnc : cncs.entrySet()) {
                 prop.put("numconverter[" + count++ + "]", cnc.getKey().getName() + " > " + cnc.getValue().getClass().getName());
@@ -326,7 +368,7 @@ public class Properties {
             //
             // Global Operator
             //
-            HashMap<Class<? extends Operator>, Operator> cops = Cache.getOperators();
+            HashMap<Class<? extends Operator>, Operator> cops = CacheExtension.getOperators();
             count = 0;
             for (Entry<Class<? extends Operator>, Operator> cop : cops.entrySet()) {
                 prop.put("operator[" + count++ + "]", cop.getKey().getName());
@@ -335,7 +377,7 @@ public class Properties {
             //
             // Global Function
             //
-            HashMap<Class<? extends Function>, Function> cfns = Cache.getFunctions();
+            HashMap<Class<? extends Function>, Function> cfns = CacheExtension.getFunctions();
             count = 0;
             for (Entry<Class<? extends Function>, Function> cfn : cfns.entrySet()) {
                 prop.put("function[" + count++ + "]", cfn.getKey().getName());

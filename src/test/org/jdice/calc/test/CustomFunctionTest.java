@@ -49,7 +49,7 @@ public class CustomFunctionTest {
     public void testCustomFunction() throws Exception {
         String e = "test(1-2-5-2, 3)";
         Calculator c = new Calculator();
-        c.register(test.class);
+        c.use(test.class);
         c.expression(e);
         Num n = c.calculate();
 
@@ -57,7 +57,7 @@ public class CustomFunctionTest {
         
         
         Calculator calc2 = Calculator.builder().val(10).add().append(test.class, 2,3);
-        calc2.register(test.class);
+        calc2.use(test.class);
         Num n2 = calc2.calculate();
         assertEquals("16", n2.toString());
         

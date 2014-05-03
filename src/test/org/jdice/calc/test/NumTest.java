@@ -20,14 +20,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 
-import org.jdice.calc.Cache;
 import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
 import org.jdice.calc.NumConverter;
 import org.jdice.calc.Rounding;
-import org.jdice.calc.SingletonComponent;
+import org.jdice.calc.SingletonExtension;
+import org.jdice.calc.internal.CacheExtension;
 import org.junit.Test;
 
 public class NumTest {
@@ -182,35 +187,29 @@ public class NumTest {
     }
 
     @Test
-    public void testStripString() throws Exception {
-        String strip = Num.extractNumber("44,551.06", '.');
-        // System.out.println(strip);
-        assertEquals("Strip number", "44551.06", strip);
+    public void testParseStringnumber() throws Exception {
+        Num num = new Num("44,551.06", '.');
+        assertEquals("num number", "44551.06", num.toString());
 
-        strip = Num.extractNumber("12 558 44,551.06", '.');
-        // System.out.println(strip);
-        assertEquals("Strip number", "1255844551.06", strip);
+        num = new Num("12 558 44,551.06", '.');
+        assertEquals("num number", "1255844551.06", num.toString());
 
-        strip = Num.extractNumber("44,551.06", '.');
-        // System.out.println(strip);
-        assertEquals("Strip number", "44551.06", strip);
+        num = new Num("+44,551.06");
+        assertEquals("num number", "44551.06", num.toString());
 
-        strip = Num.extractNumber("-44,551.06", '.');
-        // System.out.println(strip);
-        assertEquals("Strip number", "-44551.06", strip);
-        
-        strip = Num.extractNumber("-12 558 44,551.06", '.');
-        // System.out.println(strip);
-        assertEquals("Strip number", "-1255844551.06", strip);
-        
-        strip = Num.extractNumber("-44,551.06", '.');
-        // System.out.println(strip);
-        assertEquals("Strip number", "-44551.06", strip);
+        num = new Num("-44,551.06");
+        assertEquals("num number", "-44551.06", num.toString());
+
+        num = new Num("-12 558 44,551.06", '.');
+        assertEquals("num number", "-1255844551.06", num.toString());
+
+        num = new Num("-44,551.06", '.');
+        assertEquals("Strip number", "-44551.06", num.toString());
     }
     
     @Test
     public void testNumConverter() throws Exception {
-        Cache.registerNumConverter(CustomObject.class, CustomObjectNumConverter.class);
+        CacheExtension.registerNumConverter(CustomObject.class, CustomObjectNumConverter.class);
         
         CustomObject co1 = new CustomObject();
         co1.set("10");
@@ -250,6 +249,41 @@ public class NumTest {
         assertTrue(f.hasRemainder());
         
     }    
+    
+    @Test
+    public void serialization() throws Exception {
+        Num numOut = new Num("60.987654321123456789");
+        
+        //
+        // Write
+        //
+        FileOutputStream fos = new FileOutputStream("numObject.ser");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(numOut);
+        oos.flush();
+        oos.close();
+        
+        //
+        // Read
+        //
+        FileInputStream fis = new FileInputStream("numObject.ser");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Num numIn = (Num) ois.readObject();
+        ois.close();
+        
+//        System.out.println("numOut: " + numOut);
+//        System.out.println("numIn:  " + numIn);
+        
+        assertEquals(numOut, numIn);
+        assertEquals(numOut.toString(), numIn.toString());
+        assertTrue(numOut.equals(numIn));
+        assertTrue(numOut.getProperties().equals(numIn.getProperties()));
+        
+        File toDelet = new File("numObject.ser");
+        toDelet.delete();
+        
+    }
+    
     public static class CustomObject {
         private String no;
 
@@ -262,7 +296,7 @@ public class NumTest {
         }
     }
     
-    @SingletonComponent
+    @SingletonExtension
     public static class CustomObjectNumConverter implements NumConverter<CustomObject> {
 
         @Override

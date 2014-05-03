@@ -14,10 +14,10 @@
  * limitations under the License.
  */
  
-package org.jdice.calc.operation;
+package org.jdice.calc.extension;
 
 import org.jdice.calc.AbstractCalculator;
-import org.jdice.calc.Implementation;
+import org.jdice.calc.BindExtension;
 import org.jdice.calc.Num;
 
 /**
@@ -26,7 +26,7 @@ import org.jdice.calc.Num;
  *
  * @param <CALC>
  */
-@Implementation(implementation=AbsFunction.class)
+@BindExtension(implementation=AbsFunction.class)
 public interface Abs<CALC> {
     
     public CALC abs(AbstractCalculator expression) ;

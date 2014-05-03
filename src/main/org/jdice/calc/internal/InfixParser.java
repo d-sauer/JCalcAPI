@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-package org.jdice.calc;
+package org.jdice.calc.internal;
 
 import java.text.ParseException;
 import java.util.Iterator;
@@ -23,13 +23,23 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jdice.calc.AbstractCalculator;
+import org.jdice.calc.Calculator;
+import org.jdice.calc.CalculatorException;
+import org.jdice.calc.Extension;
+import org.jdice.calc.Function;
+import org.jdice.calc.Num;
+import org.jdice.calc.Operator;
+import org.jdice.calc.Properties;
+import org.jdice.calc.extension.SubOperator;
+
 /**
  * Utility class for infix parsing and manipulation.
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
  */
-class InfixParser {
+public class InfixParser {
 
     private static final String REGEX_VARIABLE_NAMES = "([a-zA-Z]+)\\b(?!\\s*\\()";
     private static final String REGEX_FUNCTIONS = "[a-zA-Z0-9]+\\(((?<=(?:[(]))[^(].*?(?=[)]))"; // e.g. abs(..) <- function | abs <- name, no open brackets
@@ -37,17 +47,21 @@ class InfixParser {
     private static final Pattern pVariableNames  = Pattern.compile(REGEX_VARIABLE_NAMES);
     private static final Pattern pFunctions = Pattern.compile(REGEX_FUNCTIONS);;
 
-    private CList infixList = new CList();
-    private OperationRegister registeredOperations;
+    private CList infixNotation = new CList();
     private Properties properties;
-    private Pattern pOperations;
+    private UseExtension usedExtensions;
+    private Pattern pUsedExtensions;
 
+    public InfixParser() {
+    }
+    
     public InfixParser(Properties properties) {
     	this.properties = properties;
     }
 
-    public InfixParser(OperationRegister operationRegister, Properties properties) {
-        this.registeredOperations = operationRegister;
+    public InfixParser(UseExtension operationRegister, Properties properties) {
+        pUsedExtensions = null;
+        this.usedExtensions = operationRegister;
         this.properties = properties;
     }
 
@@ -55,37 +69,41 @@ class InfixParser {
      * Parse infix string expression with additional properties
      * @param operationRegister
      * @param properties
-     * @param infix
+     * @param infixExpression
      * @param values
      * @return
      * @throws ParseException
      */
-    public static CList parseInfix(OperationRegister operationRegister, Properties properties, String infix, Object... values) throws ParseException {
-        InfixParser infx = new InfixParser(operationRegister, properties);
-        return infx.parse(infix, values);
+    public CList parse(UseExtension operationRegister, Properties properties, String infixExpression, Object... values) throws ParseException {
+        pUsedExtensions = null;
+        this.usedExtensions = operationRegister;
+        this.properties = properties;
+
+        return parse(infixExpression, values);
     }
 
     /**
      * Parse infix string expression
-     * @param infix
+     * @param infixExpression
      * @param values
      * @return
      * @throws ParseException
      */
-    public CList parse(String infix, Object... values) throws ParseException {
+    public CList parse(String infixExpression, Object... values) throws ParseException {
         // get variable names
-        LinkedHashMap<String, Num> vNames = mapValues(infix, values);
+        LinkedHashMap<String, Num> vNames = mapValues(infixExpression, values);
 
-        return parse(infix, vNames);
+        return parse(infixExpression, vNames);
     }
 
-    private CList parse(String infix, LinkedHashMap<String, Num> vNames) throws ParseException {
-
+    private CList parse(String infixExpression, LinkedHashMap<String, Num> vNames) throws ParseException {
+        //
         // Separate formulas and non formula parts
-        infix = infix.replace(" ", "");
-        int infixLength = infix.length();
+        //
+        infixExpression = infixExpression.replace(" ", "");
+        int infixLength = infixExpression.length();
         // separate function and other operation
-        Matcher mat = pFunctions.matcher(infix);
+        Matcher mat = pFunctions.matcher(infixExpression);
 
         int gc = mat.groupCount() + 1;
         int[][] mf = new int[gc + gc + 1][];
@@ -113,22 +131,22 @@ class InfixParser {
         for (int i = 0; i < mf.length; i++) {
             if (mf[i] != null) {
                 int[] section = mf[i];
-                String group = infix.substring(section[0], section[1]);
+                String group = infixExpression.substring(section[0], section[1]);
 
                 if (section[2] == 1) { // function
                     String function = group.substring(0, group.indexOf("("));
 
-                    Operation op = null;
+                    Extension op = null;
                     // local scope
-                    if (registeredOperations != null)
-                        op = registeredOperations.getFunction(function);
+                    if (usedExtensions != null)
+                        op = usedExtensions.getFunction(function);
 
                     // global scope
                     if (op == null)
-                        op = Cache.getFunction(function);
+                        op = CacheExtension.getFunction(function);
 
                     if (op == null)
-                        throw new CalculatorException("Can't find '" + function + "' function implementation class used in expression " + infix);
+                        throw new CalculatorException("Can't find '" + function + "' function implementation class used in expression " + infixExpression);
 
                     Function f = (Function) op;
                     String _expression = group.substring(group.indexOf("(") + 1, group.length() - 1);
@@ -153,27 +171,27 @@ class InfixParser {
                     }
                     FunctionData fd = new FunctionData(f, values);
 
-                    infixList.add(fd);
+                    infixNotation.add(fd);
                 }
                 else {
-                    parseInfixString(group, vNames);
+                    parseInfixGroup(group, vNames);
                 }
             }
         }
 
-        return infixList;
+        return infixNotation;
     }
 
     
-    private CList parseInfixString(String infix, LinkedHashMap<String, Num> vNames) throws ParseException {
+    private CList parseInfixGroup(String infix, LinkedHashMap<String, Num> vNames) throws ParseException {
     	final String REGEX_NUMBER = getRegexNumber();
     	
-    	if (pOperations == null) {
+    	if (pUsedExtensions == null) {
             StringBuilder regex = new StringBuilder();
             regex.append(REGEX_NUMBER);
 
             // OPERATORS
-            for (Entry<String, Class<? extends Operator>> op : Cache.getOperatorSymbols().entrySet()) {
+            for (Entry<String, Class<? extends Operator>> op : CacheExtension.getOperatorSymbols().entrySet()) {
                 String symbol = op.getKey();
                 if (".+-*^$?|()".contains(symbol))
                     regex.append("|(\\" + symbol + ")");
@@ -181,8 +199,8 @@ class InfixParser {
                     regex.append("|(" + symbol + ")");
             }
 
-            if (registeredOperations != null) {
-                for (Entry<String, Class<? extends Operator>> op : registeredOperations.getOperatorSymbols().entrySet()) {
+            if (usedExtensions != null) {
+                for (Entry<String, Class<? extends Operator>> op : usedExtensions.getOperatorSymbols().entrySet()) {
                     String symbol = op.getKey();
                     if (".+-*^$?|()".contains(symbol))
                         regex.append("|(\\" + symbol + ")");
@@ -201,56 +219,87 @@ class InfixParser {
             }
             regex.append("|([a-zA-Z]+)"); // for expression with variable name
 
-            pOperations = Pattern.compile(regex.toString());
+            pUsedExtensions = Pattern.compile(regex.toString());
         }
 
         boolean hasVariableNames = (vNames != null && vNames.size() != 0) ? true : false;
-
-        Matcher mat = pOperations.matcher(infix);
+        Object prev = null;
+        
+        Matcher mat = pUsedExtensions.matcher(infix);
         while (mat.find()) {
             String group = mat.group();
 
             if (group.matches(REGEX_NUMBER)) {
+                // parse negative number from expression 
+                // e.g. 1 + -8 will parse -8. 
+                //      1 - 8 will parse only 8
+                if (prev != null && prev instanceof SubOperator) {
+                    Object prev2 = null;
+                    int size = infixNotation.size();
+                    boolean isNegative = false;
+                    
+                    if (size >= 2) {
+                        prev2 = infixNotation.get(infixNotation.size() - 2);
+                        if (prev2 != null && (prev2 instanceof Operator || prev2 instanceof Bracket))
+                            isNegative = true;
+                    } else if (size == 1) {
+                        isNegative = true;
+                    }
+                    
+                    if (isNegative) {
+                        group = "-" + group;
+                        infixNotation.remove(infixNotation.size() - 1);
+                    }
+                }
+                
                 Num value = new Num(group);
-                infixList.add(value);
+                infixNotation.add(value);
+                
+                prev = value;
             }
             else if (group.matches(Bracket.OPEN.getRegex())) {
-                infixList.add(Bracket.OPEN);
+                infixNotation.add(Bracket.OPEN);
+                prev = Bracket.OPEN;
             }
             else if (group.matches(Bracket.CLOSE.getRegex())) {
-                infixList.add(Bracket.CLOSE);
+                infixNotation.add(Bracket.CLOSE);
+                prev = Bracket.CLOSE;
             }
             else {
                 boolean isExists = false;
-                Operation op = null;
+                Extension op = null;
+                
                 // local scope
-                if (registeredOperations != null)
-                    op = registeredOperations.getOperator(group);
+                if (usedExtensions != null)
+                    op = usedExtensions.getOperator(group);
 
                 // global scope
                 if (op == null)
-                    op = Cache.getOperator(group);
+                    op = CacheExtension.getOperator(group);
 
                 // append...
                 if (op != null && op instanceof Operator) {
-                    infixList.add((Operator) op);
+                    infixNotation.add((Operator) op);
                     isExists = true;
+                    prev = op;
                 }
                 else if (hasVariableNames) { // find variable by name
                     Num variable = vNames.get(group);
-                    infixList.add(variable);
+                    infixNotation.add(variable);
                     isExists = true;
+                    prev = variable;
                 }
 
                 if (!isExists)
                     throw new ParseException("Exception while parsing '" + infix + "'. Can't find operation '" + group + "' or " + Num.class.getName() + " with name '" + group + "'", 0);
             }
         }
-        return infixList;
+        return infixNotation;
     }
 
-    public static String printInfix(CList list) {
-        return InfixParser.printInfix(list, false);
+    
+    public static String toString(CList infixNotation) {
+        return InfixParser.toString(infixNotation, false);
     }
 
     /**
@@ -260,9 +309,9 @@ class InfixParser {
      * @param calc
      * @return
      */
-    public static String printInfix(CList list, boolean showDetails) {
+    public static String toString(CList infixNotation, boolean showDetails) {
         StringBuilder sb = new StringBuilder();
-        Iterator<Object> it = list.iterator();
+        Iterator<Object> it = infixNotation.iterator();
         while (it.hasNext()) {
             Object value = it.next();
             if (value instanceof Operator) {

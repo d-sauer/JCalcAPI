@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.jdice.calc.operation;
+package org.jdice.calc.extension;
 
-import org.jdice.calc.Implementation;
+import org.jdice.calc.BindExtension;
 
 /**
  * 
@@ -24,7 +24,7 @@ import org.jdice.calc.Implementation;
  * 
  * @param <CALC>
  */
-@Implementation(implementation = PowOperator.class)
+@BindExtension(implementation = PowOperator.class)
 public interface Pow<CALC> {
 
 	public CALC pow();

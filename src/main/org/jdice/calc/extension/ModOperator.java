@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-package org.jdice.calc.operation;
+package org.jdice.calc.extension;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

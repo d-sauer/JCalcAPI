@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-package org.jdice.calc;
+package org.jdice.calc.internal;
 
 /**
  * Listener used to detect changes of expression.

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.jdice.calc.operation;
+package org.jdice.calc.extension;
 
 import org.jdice.calc.AbstractCalculator;
-import org.jdice.calc.Implementation;
+import org.jdice.calc.BindExtension;
 
 /**
  * 
@@ -25,7 +25,7 @@ import org.jdice.calc.Implementation;
  * 
  * @param <CALC>
  */
-@Implementation(implementation = SinFunction.class)
+@BindExtension(implementation = SinFunction.class)
 public interface Sin<CALC> {
 
 	public CALC sin(AbstractCalculator expression);

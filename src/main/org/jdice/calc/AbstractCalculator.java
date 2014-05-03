@@ -20,6 +20,16 @@ import java.text.ParseException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.jdice.calc.internal.BindExtensionProvider;
+import org.jdice.calc.internal.Bracket;
+import org.jdice.calc.internal.CList;
+import org.jdice.calc.internal.CListListener;
+import org.jdice.calc.internal.CacheExtension;
+import org.jdice.calc.internal.FunctionData;
+import org.jdice.calc.internal.InfixParser;
+import org.jdice.calc.internal.PostfixCalculator;
+import org.jdice.calc.internal.UseExtension;
+
 /**
  * Abstract class that concrete calculator extends 
  * 
@@ -30,7 +40,7 @@ import java.util.LinkedList;
 public abstract class AbstractCalculator<CALC> {
 
     /**
-     * Detect changes in expression
+     * Detect changes in infix expression
      */
     private CList infix = new CList(new CListListener() {
         @Override
@@ -39,46 +49,46 @@ public abstract class AbstractCalculator<CALC> {
         }
     });
     private boolean isInfixChanged = true;
+    private InfixParser infixParser;
+    
+    private final PostfixCalculator postfixCalculator = new PostfixCalculator();
     private CList postfix = new CList();
     private Num lastCalculatedValue;
-    private LinkedList<String> calculationSteps;
+    private LinkedList<TrackedStep> calculatingSteps;
 
     private Properties properties;
-    private OperationRegister scopeOperationRegister;
-    private static boolean isImplOpRegistered = false;
+    private UseExtension localUseExtensions;
+    private static boolean isImplExtRegistered = false;
 
-    private AbstractCalculator<CALC> parentCalc;
-    private AbstractCalculator<CALC> childCalc;
+    private AbstractCalculator<CALC> parentCalculator;
+    private AbstractCalculator<CALC> childCalculator;
     private boolean isBind = false;
     private boolean isUnbind = false;
+    
+    private boolean trackSteps = false;
 
-    //
-    // Constructor's
-    //
-    public AbstractCalculator() {
-    }
 
     /**
      * Register implemented operation and functions by subclass
      * 
      */
-    private void registerImplmentedOperation() {
-        if (isImplOpRegistered == false) {
+    private void useImplmentedExtension() {
+        if (isImplExtRegistered == false) {
             Object o = getThis();
             Class thisClass = o.getClass();
 
             // superclass interfaces
             Class[] declared = thisClass.getSuperclass().getInterfaces();
             for (Class declare : declared) {
-                registerImplmentedOperation(declare);
+                useImplmentedExtension(declare);
             }
 
             // subclass interfaces
             declared = thisClass.getInterfaces();
             for (Class declare : declared) {
-                registerImplmentedOperation(declare);
+                useImplmentedExtension(declare);
             }
-            isImplOpRegistered = true;
+            isImplExtRegistered = true;
         }
     }
 
@@ -87,20 +97,20 @@ public abstract class AbstractCalculator<CALC> {
      * 
      * @param declare
      */
-    private void registerImplmentedOperation(Class declare) {
-        Class c = LinkOperation.getOperation(declare);
-        if (c == null && declare.isAnnotationPresent(Implementation.class)) {
-            Implementation impl = (Implementation) declare.getAnnotation(Implementation.class);
+    private void useImplmentedExtension(Class declare) {
+        Class c = BindExtensionProvider.getExtension(declare);
+        if (c == null && declare.isAnnotationPresent(BindExtension.class)) {
+            BindExtension impl = (BindExtension) declare.getAnnotation(BindExtension.class);
             if (impl != null)
                 c = impl.implementation();
-            LinkOperation.link(declare, c);
+            BindExtensionProvider.bind(declare, c);
         }
 
         if (c != null) {
             if (Operator.class.isAssignableFrom(c))
-                Cache.registerOperator(c);
+                CacheExtension.registerOperator(c);
             if (Function.class.isAssignableFrom(c))
-                Cache.registerFunction(c);
+                CacheExtension.registerFunction(c);
         }
     }
 
@@ -113,19 +123,19 @@ public abstract class AbstractCalculator<CALC> {
     /**
      * Provide custom {@link Operator} or {@link Function} inside scope of this instance, that can be used during expression parsing.
      * With registration of custom operation it's possible to override existing default operation implementation.
-     * Because during calculation API first scan scoped (registered) operation and after that default operation implementation inside {@link Cache}
+     * Because during calculation API first scan scoped (registered) operation and after that default operation implementation inside {@link CacheExtension}
      * 
      * @param operationClass
      * @return
      */
-    public CALC register(Class<? extends Operation> operationClass) {
-        if (scopeOperationRegister == null)
-            scopeOperationRegister = new OperationRegister();
+    public CALC use(Class<? extends Extension> operationClass) {
+        if (localUseExtensions == null)
+            localUseExtensions = new UseExtension();
 
         if (Operator.class.isAssignableFrom(operationClass))
-            scopeOperationRegister.registerOperator(operationClass.asSubclass(Operator.class));
+            localUseExtensions.registerOperator(operationClass.asSubclass(Operator.class));
         if (Function.class.isAssignableFrom(operationClass))
-            scopeOperationRegister.registerFunction(operationClass.asSubclass(Function.class));
+            localUseExtensions.registerFunction(operationClass.asSubclass(Function.class));
 
         return getThis();
     }
@@ -135,13 +145,9 @@ public abstract class AbstractCalculator<CALC> {
      * 
      * @return
      */
-    public OperationRegister getRegisteredOperations() {
-        return this.scopeOperationRegister;
+    public UseExtension getUsedExtensions() {
+        return this.localUseExtensions;
     }
-
-    //
-    // APPEND VALUE
-    //
 
     /**
      * Append value to expression
@@ -251,7 +257,7 @@ public abstract class AbstractCalculator<CALC> {
      * @param operator
      * @return
      */
-    public CALC append(Class<? extends Operator> operator) {
+    public final CALC append(Class<? extends Operator> operator) {
         infix.add(operator);
         return getThis();
     }
@@ -262,14 +268,14 @@ public abstract class AbstractCalculator<CALC> {
      * @param value
      * @return
      */
-    public CALC append(Class<? extends Operator> operator, Object value) {
+    protected final CALC append(Class<? extends Operator> operator, Object value) {
         Num tmp = null;
         if (value instanceof Num)
             tmp = (Num)value;
         else
             tmp = new Num(value);
         
-        infix.add(Cache.getOperator(operator));
+        infix.add(CacheExtension.getOperator(operator));
         infix.add(tmp);
         return getThis();
     }
@@ -281,7 +287,7 @@ public abstract class AbstractCalculator<CALC> {
      * @param decimalSeparator
      * @return
      */
-    public CALC append(Class<? extends Operator> operator, String value, char decimalSeparator) {
+    protected final CALC append(Class<? extends Operator> operator, String value, char decimalSeparator) {
         return append(operator, new Num(value, decimalSeparator));
     }
 
@@ -296,8 +302,8 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      * @see {@link Function}
      */
-    public CALC append(Class<? extends Function> function, Object... values) {
-        Function fn = Cache.getFunction(function);
+    public final CALC append(Class<? extends Function> function, Object... values) {
+        Function fn = CacheExtension.getFunction(function);
         FunctionData fd = new FunctionData(fn, values);
         this.infix.addFunction(fd);
 
@@ -312,8 +318,13 @@ public abstract class AbstractCalculator<CALC> {
      * @throws ParseException
      */
     public CALC expression(String expression) throws ParseException {
-        registerImplmentedOperation();
-        append(InfixParser.parseInfix(scopeOperationRegister, getProperties(), expression), false);
+        useImplmentedExtension();
+        
+        if (infixParser == null)
+            infixParser = new InfixParser();
+        
+        CList infix = infixParser.parse(localUseExtensions, getProperties(), expression);
+        append(infix, false);
         return getThis();
     }
 
@@ -332,8 +343,13 @@ public abstract class AbstractCalculator<CALC> {
      * @throws ParseException
      */
     public CALC expression(String expression, Object... values) throws ParseException {
-        registerImplmentedOperation();
-        append(InfixParser.parseInfix(scopeOperationRegister, getProperties(), expression, values), false);
+        useImplmentedExtension();
+        
+        if (infixParser == null)
+            infixParser = new InfixParser();
+        
+        CList infix = infixParser.parse(localUseExtensions, getProperties(), expression, values);
+        append(infix, false);
         return getThis();
     }
 
@@ -459,36 +475,46 @@ public abstract class AbstractCalculator<CALC> {
         return getThis();
     }
     
-    /**
-     * Calculate prepared expression
-     * 
-     * @return
-     * @see {@link #calculate()}
-     * @see {@link #calculate(boolean)}
-     * @see {@link #getResult()}
-     */
-    public Num calculate() {
-        return calculate(false, false);
+    public CALC setTrackSteps(boolean trackSteps) {
+        this.trackSteps = trackSteps;
+        return getThis();
+    }
+
+    public boolean hasTrackSteps() {
+        return trackSteps;
     }
 
     /**
-     * Calculate expression and trace calculation steps accessible with {@link getCalculationSteps()}.
-     * For more detailed information of every step, set rememberDetails to true.
+     * Get calculation steps if {@link #hasTrackSteps()} is TRUE
      * 
-     * @param traceSteps
-     * @param rememberDetails - more detailed information of every step
      * @return
+     * @see {@link}
      */
-    public Num calculate(boolean traceSteps, boolean rememberDetails) {
+    public LinkedList<TrackedStep> getTrackedSteps() {
+        return calculatingSteps;
+    }
+
+    /**
+     * Calculate prepared expression.
+     * 
+     * For tracking calculation 
+     * 
+     * @return
+     * @see {@link #calculate()}
+     * @see {@link #getCalculatedValue()}
+     */
+    public Num calculate() {
         unbind();
         prepareForNewCalculation();
+        
         PostfixCalculator pc = convertToPostfix();
-        Num cv = pc.calculate(this, postfix, traceSteps, rememberDetails);
+        Num cv = pc.calculate(this, postfix, trackSteps);
 
         lastCalculatedValue = cv.clone();
 
         return cv;
     }
+
 
     /**
      * Bind another Calculator class functionalities to expression.
@@ -511,46 +537,29 @@ public abstract class AbstractCalculator<CALC> {
             // find last child from root
             AbstractCalculator<CALC> bParent = this;
             while (bParent != null) {
-                if (bParent.childCalc != null)
-                    bParent = bParent.childCalc;
+                if (bParent.childCalculator != null)
+                    bParent = bParent.childCalculator;
                 else
                     break;
             }
 
-            ((AbstractCalculator) childCalc).parentCalc = bParent;
+            ((AbstractCalculator) childCalc).parentCalculator = bParent;
             ((AbstractCalculator) childCalc).isBind = true;
-            bParent.childCalc = childCalc;
+            bParent.childCalculator = childCalc;
         }
         else {
-            throw new CalculatorException("Use only Calculator class subclases", new IllegalArgumentException());
+            throw new CalculatorException("Use calculator which is type of AbstractCalculator", new IllegalArgumentException());
         }
 
         return childCalc;
     }
-
-    // /**
-    // * Return to functionalities provided by original Calculator object
-    // * @return
-    // * @
-    // */
-    // private CALC unbind() {
-    // if (parentCalc != null) {
-    // parentCalc.append(this, false);
-    // this.isUnbind = true;
-    // return (CALC) parentCalc;
-    // }
-    // else if (this.childCalc != null)
-    // return (CALC)unbindAll(this);
-    // else
-    // return (CALC) this;
-    // }
 
     /**
      * Unbind binded calculator
      * @return
      */
     private CALC unbind() {
-        if (childCalc != null)
+        if (childCalculator != null)
             unbindAll(this);
 
         return (CALC) this;
@@ -563,16 +572,16 @@ public abstract class AbstractCalculator<CALC> {
      */
     private CALC unbindAll(AbstractCalculator<CALC> undbindFrom) {
         // find root and first child
-        AbstractCalculator root = undbindFrom.parentCalc != null ? undbindFrom.parentCalc : undbindFrom;
-        AbstractCalculator child = root.childCalc;
+        AbstractCalculator root = undbindFrom.parentCalculator != null ? undbindFrom.parentCalculator : undbindFrom;
+        AbstractCalculator child = root.childCalculator;
         while (root != null) {
-            AbstractCalculator tmpParent = root.parentCalc;
+            AbstractCalculator tmpParent = root.parentCalculator;
             if (tmpParent == null)
                 break;
             else
                 root = tmpParent;
 
-            child = root.childCalc;
+            child = root.childCalculator;
         }
 
         // undbind all from root to last child
@@ -581,7 +590,7 @@ public abstract class AbstractCalculator<CALC> {
                 root.append(child, false);
 
             child.isUnbind = true;
-            child = child.childCalc; // new unbind child
+            child = child.childCalculator; // new unbind child
         }
 
         return (CALC) undbindFrom;
@@ -595,7 +604,7 @@ public abstract class AbstractCalculator<CALC> {
     public String getPostfix() {
         unbind();
         convertToPostfix();
-        return InfixParser.printInfix(this.postfix);
+        return InfixParser.toString(this.postfix);
     }
 
     /**
@@ -604,14 +613,13 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      */
     private PostfixCalculator convertToPostfix() {
-        PostfixCalculator pc = new PostfixCalculator();
         if (postfix == null || postfix.size() == 0 || isInfixChanged) {
-            pc.toPostfix(infix);
-            postfix = pc.getPostfix();
+            postfixCalculator.toPostfix(infix);
+            postfix = postfixCalculator.getPostfix();
             isInfixChanged = false;
         }
 
-        return pc;
+        return postfixCalculator;
     }
 
     /**
@@ -632,7 +640,7 @@ public abstract class AbstractCalculator<CALC> {
      * @param infix
      * @return
      */
-    CALC setInfix(CList infix) {
+    public final CALC setInfix(CList infix) {
         this.infix = infix;
 
         return getThis();
@@ -644,7 +652,7 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      * @see {@link getResult()}
      */
-    public boolean hasResult() {
+    public boolean isCalculated() {
         if (lastCalculatedValue != null)
             return true;
         else
@@ -652,12 +660,12 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Return copy of calculated result
+     * Return calculated value
      * 
      * @return
      * @see {@link hasResult()}
      */
-    public Num getResult() {
+    public Num getCalculatedValue() {
         if (lastCalculatedValue != null)
             return lastCalculatedValue.clone();
         else
@@ -669,36 +677,16 @@ public abstract class AbstractCalculator<CALC> {
      */
     private void prepareForNewCalculation() {
         lastCalculatedValue = null;
-        this.calculationSteps = null;
+        this.calculatingSteps = null;
     }
 
-    final void setSteps(LinkedList<String> calculationSteps) {
-        this.calculationSteps = calculationSteps;
-    }
-
-    /**
-     * Check if calculation steps are remembered during calculation.
-     * 
-     * @return
-     * @see {@link getCalculationSteps()}
-     */
-    public boolean hasCalculationSteps() {
-        return calculationSteps != null ? true : false;
-    }
-
-    /**
-     * Get calculation steps if calculation is initiated with {@link calcWithSteps(boolean)}
-     * 
-     * @return
-     * @see {@link}
-     */
-    public LinkedList<String> getCalculationSteps() {
-        return calculationSteps;
+    public final void setSteps(LinkedList<TrackedStep> calculationSteps) {
+        this.calculatingSteps = calculationSteps;
     }
 
     @Override
     public String toString() {
-        return InfixParser.printInfix(this.infix);
+        return InfixParser.toString(this.infix);
     }
 
 }

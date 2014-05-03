@@ -22,7 +22,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-    CalcTest.class,
+    CalculatorTest.class,
     NumTest.class,
     NumScopeTest.class,
     PostfixTest.class,

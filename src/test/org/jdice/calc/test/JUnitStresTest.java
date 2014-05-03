@@ -69,7 +69,7 @@ public class JUnitStresTest {
         JUnitCore junit = new JUnitCore();
         boolean successful = true;
         for (int l = 0; l < iteration; l++) {
-            Result result = junit.run(CalcTest.class, CalcFactoryTest.class, CustomFunctionTest.class, NumTest.class, PostfixTest.class);
+            Result result = junit.run(CalculatorTest.class, CalcFactoryTest.class, CustomFunctionTest.class, NumTest.class, PostfixTest.class);
             if (iterationSleep > 0)
                 sleep(iterationSleep);
 

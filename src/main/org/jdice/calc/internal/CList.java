@@ -14,12 +14,16 @@
  * limitations under the License.
  */
  
-package org.jdice.calc;
+package org.jdice.calc.internal;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+
+import org.jdice.calc.Function;
+import org.jdice.calc.Num;
+import org.jdice.calc.Operator;
 
 /**
  * List based on LinkedList that can hold object used by JCalc API.
@@ -81,14 +85,14 @@ public class CList {
 
     public boolean add(Class<? extends Operator> operationClass)  {
         change();
-        Operator operationData = Cache.getOperator(operationClass);
+        Operator operationData = CacheExtension.getOperator(operationClass);
         boolean isAdded = list.add(operationData);
         return isAdded;
     }
 
     public boolean addFunction(Class<? extends Function> functionClass, Num ... values)  {
         change();
-        Function function = Cache.getFunction(functionClass);
+        Function function = CacheExtension.getFunction(functionClass);
         boolean isAdded = list.add(new FunctionData(function, values));
         return isAdded;
     }
@@ -101,7 +105,7 @@ public class CList {
 
     public boolean add(Class<? extends Operator> operationClass, Num calcValue)  {
         change();
-        Operator operationData = Cache.getOperator(operationClass);
+        Operator operationData = CacheExtension.getOperator(operationClass);
         boolean isAdded = list.add(operationData);
         if (isAdded)
             isAdded = list.add(calcValue);
@@ -154,6 +158,13 @@ public class CList {
 
     public Object get(int index) {
         return list.get(index);
+    }
+
+    public Object getLast() {
+        if (list.size() > 0)
+            return list.get(list.size() - 1);
+        else
+            return null;
     }
 
     public Object set(int index, Object element) {

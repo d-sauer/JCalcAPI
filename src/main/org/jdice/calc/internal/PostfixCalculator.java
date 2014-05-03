@@ -14,15 +14,20 @@
  * limitations under the License.
  */
  
-package org.jdice.calc;
+package org.jdice.calc.internal;
 
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import org.jdice.calc.operation.AddOperator;
-import org.jdice.calc.operation.SubOperator;
+import org.jdice.calc.AbstractCalculator;
+import org.jdice.calc.CalculatorException;
+import org.jdice.calc.Num;
+import org.jdice.calc.Operator;
+import org.jdice.calc.TrackedStep;
+import org.jdice.calc.extension.AddOperator;
+import org.jdice.calc.extension.SubOperator;
 
 /**
  * Calculation from postfix
@@ -30,13 +35,13 @@ import org.jdice.calc.operation.SubOperator;
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
  */
-class PostfixCalculator {
+public class PostfixCalculator {
 
     private Stack<Object> stack = new Stack<Object>();
     private CList postfix = new CList();
     private int bCount = 0;
     LinkedList<Object> step = null;
-    private LinkedList<String> steps = null;
+    private LinkedList<TrackedStep> steps = null;
 
     public void toPostfix(CList infix) {
         Iterator<Object> it = infix.iterator();
@@ -116,24 +121,24 @@ class PostfixCalculator {
     }
 
     public Num calculate(AbstractCalculator calc, CList postfix)  {
-        return calculate(calc, postfix, false, false);
+        return calculate(calc, postfix, false);
     }
 
-    public Num calculate(AbstractCalculator calc, CList postfix, boolean trackSteps, boolean showDetails)  {
+    public Num calculate(AbstractCalculator calc, CList postfix, boolean trackSteps)  {
         try {
-            return calc(calc, postfix, trackSteps, showDetails);
+            return calculation(calc, postfix, trackSteps);
         }
         catch (Exception e) {
             if (trackSteps == false) { // retrack steps to find problem
                 try {
-                    calc(calc, postfix, true, showDetails);
+                    calculation(calc, postfix, true);
                 } catch(Exception e2) {}
             }
             StringBuilder sb = new StringBuilder();
             if (steps != null) {
                 int count = 0;
                 int sSize = steps.size();
-                for (String s : steps) {
+                for (TrackedStep s : steps) {
                     count++;
                     sb.append(s);
 
@@ -143,7 +148,7 @@ class PostfixCalculator {
                         sb.append("\n");
                 }
 
-                String es = getStep(step, showDetails);
+                TrackedStep es = trackStep(step);
                 sb.append(es + "  <--- Error: " + e.getMessage());
             }
 
@@ -151,9 +156,9 @@ class PostfixCalculator {
         }
     }
 
-    private Num calc(AbstractCalculator calc, CList postfix, boolean trackSteps, boolean showDetails)  {
+    private Num calculation(AbstractCalculator calc, CList postfix, boolean trackSteps)  {
         if (trackSteps)
-            steps = new LinkedList<String>();
+            steps = new LinkedList<TrackedStep>();
 
         Stack<Object> values = new Stack<Object>();
         Iterator<Object> e = postfix.iterator();
@@ -201,7 +206,7 @@ class PostfixCalculator {
                 if (oLeft instanceof FunctionData) {
                     FunctionData fLeft = (FunctionData) oLeft;
                     trackStep(step, fLeft);
-                    left = fLeft.calc(calc);
+                    left = fLeft.calculate(calc);
                     trackStep(step, ":", left, null);
                 }
                 else {
@@ -214,7 +219,7 @@ class PostfixCalculator {
                 if (oRight instanceof FunctionData) {
                     FunctionData fRight = (FunctionData) oRight;
                     trackStep(step, fRight);
-                    right = fRight.calc(calc);
+                    right = fRight.calculate(calc);
                     trackStep(step, ":", right, null);
                 }
                 else {
@@ -237,7 +242,7 @@ class PostfixCalculator {
                 values.push(result);
 
                 if (steps != null)
-                    steps.add(getStep(step, showDetails));
+                    steps.add(trackStep(step));
             }
 
         }
@@ -248,7 +253,7 @@ class PostfixCalculator {
             result = (Num) oResult;
         else if (oResult instanceof FunctionData) {
             FunctionData fd = (FunctionData)oResult;
-            result = fd.calc(calc);
+            result = fd.calculate(calc);
         }
 
         if (trackSteps)
@@ -258,24 +263,21 @@ class PostfixCalculator {
         return result;
     }
 
-    private String getStep(LinkedList<Object> step, boolean showDetail)  {
+    private TrackedStep trackStep(LinkedList<Object> step)  {
         StringBuilder sb = new StringBuilder();
+        StringBuilder sbDetail = new StringBuilder();
+        
         if (step != null)
             for (Object o : step) {
                 if (o instanceof Num) {
                     Num d = (Num) o;
-                    if (showDetail)
-                        sb.append("[" + d.getProperties().toString() + "] " + d.toString());
-//                        sb.append(d.toStringWithDetail());
-                    else
-                        sb.append(d.toString());
+                    sbDetail.append("[" + d.getProperties().toString() + "] " + d.toString());
+                    sb.append(d.toString());
                 }
                 else if (o instanceof FunctionData) {
                     FunctionData fd = (FunctionData) o;
-                    if (showDetail)
-                        sb.append(fd.toStringWithDetail());
-                    else
-                        sb.append(fd.toString());
+                    sbDetail.append(fd.toStringWithDetail());
+                    sb.append(fd.toString());
                 }
                 else if (o instanceof Operator) {
                     Operator op = (Operator) o;
@@ -290,7 +292,7 @@ class PostfixCalculator {
                 }
             }
 
-        return sb.toString();
+        return new TrackedStep(sb.toString(), sbDetail.toString());
     }
 
     private void trackStep(LinkedList<Object> step, Object o) {
@@ -311,9 +313,9 @@ class PostfixCalculator {
 
     private void missingBracketDetection(CList infix) throws CalculatorException {
         if (bCount > 0) // to many open bracket - need to close some bracket
-            throw new CalculatorException("To many open bracket. " + InfixParser.printInfix(infix));
+            throw new CalculatorException("To many open bracket. " + InfixParser.toString(infix));
         else if (bCount < 0) // to many closed bracket - need to reopen some bracket
-            throw new CalculatorException("To many close bracket. " + InfixParser.printInfix(infix));
+            throw new CalculatorException("To many close bracket. " + InfixParser.toString(infix));
     }
 
 }

@@ -23,6 +23,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 
+import org.jdice.calc.internal.CacheExtension;
+
 /**
  * 
  * Mutable wrapper object around BigDecimal object. Supported input type: short,
@@ -48,14 +50,11 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	private BigDecimal in = BigDecimal.ZERO;
 	private BigDecimal out = BigDecimal.ZERO;
 
-	//
-	// Constructors
-	//
-	/**
-	 * Create Num instance with zero default value
-	 */
-	public Num() {
-	}
+    /**
+     * Create Num instance with zero default value
+     */
+    public Num() {
+    }
 
 	/**
 	 * Create Num instance with value of given Object
@@ -66,7 +65,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 *            object which need conversion with {@link NumConverter}
 	 */
 	public Num(Object value) {
-		setValue(value);
+		setValue(value, null, null);
 	}
 
 	/**
@@ -119,15 +118,6 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	/**
-	 * Create Num instance with value from String
-	 * 
-	 * @param value
-	 */
-	public Num(String value) {
-		setValue(value);
-	}
-
-	/**
 	 * Create Num instance with value from String which use defined decimal
 	 * separator
 	 * 
@@ -136,7 +126,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 *            used in String value
 	 */
 	public Num(String value, char decimalSeparator) {
-		setValue(value, decimalSeparator);
+		setValue(value, decimalSeparator, null);
 	}
 
 	/**
@@ -154,30 +144,15 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		this.name = name;
 	}
 
-	//
-	// Setters
-	//
 	public Num set(Object value) {
-		return setValue(value, null);
+		return setValue(value, null, null);
 	}
 
 	public Num set(Object value, Class<? extends NumConverter> converter) {
 		return setValue(value, null, converter);
 	}
 
-	public Num set(String value) {
-		return setValue(value, null);
-	}
-
 	public Num set(String value, char decimalSeparator) {
-		return setValue(value, decimalSeparator);
-	}
-
-	private Num setValue(Object value) {
-		return setValue(value, null);
-	}
-
-	private Num setValue(Object value, Character decimalSeparator) {
 		return setValue(value, decimalSeparator, null);
 	}
 
@@ -246,12 +221,12 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 				if (converterClass != null) {
 					nc = (NumConverter) converterClass.newInstance();
 
-					if (nc != null && converterClass.isAnnotationPresent(SingletonComponent.class))
-						Cache.registerNumConverter(value.getClass(), nc);
+					if (nc != null && converterClass.isAnnotationPresent(SingletonExtension.class))
+						CacheExtension.registerNumConverter(value.getClass(), nc);
 				}
 
 				if (nc == null) {
-					nc = Cache.getNumConverter(value.getClass());
+					nc = CacheExtension.getNumConverter(value.getClass());
 				}
 
 				if (nc != null)
@@ -354,16 +329,16 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		return getProperties().getRoundingMode();
 	}
 
-	public boolean hasStripTrailingZeros() {
-		return getProperties().hasStripTrailingZeros();
-	}
-
 	public Num setStripTrailingZeros(boolean stripTrailingZeros) {
 		getProperties().setStripTrailingZeros(stripTrailingZeros);
 		return this;
 	}
 
-	/**
+	public boolean hasStripTrailingZeros() {
+    	return getProperties().hasStripTrailingZeros();
+    }
+
+    /**
 	 * Set output format for number.
 	 * 
 	 * @param format
@@ -375,9 +350,13 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		return this;
 	}
 
-	//
-	// GET's
-	//
+	/**
+	 * Return number output format
+	 * @return
+	 */
+	public String getOutputFormat() {
+	    return getProperties().getOutputFormat();
+	}
 	
 	/**
 	 * Get <tt>BigDecimal</tt> without trailing zeros if {@link hasStripTrailingZeros()} is TRUE
@@ -442,6 +421,10 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		return fraction;
 	}
 
+	/**
+	 * Return count of number in reminder.
+	 * @return
+	 */
 	public int remainderSize() {
 	    BigDecimal fraction = remainder();
 		String tmp = fraction.toString();
@@ -452,6 +435,10 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			return 0;
 	}
 
+	/**
+	 * Return TRUE if reminder exist.
+	 * @return
+	 */
 	public boolean hasRemainder() {
 	    String out = toString();
 		if (out.contains("."))
@@ -461,13 +448,15 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	}
 
 	public boolean isZero() {
-		if (out.doubleValue() == 0)
+	    BigDecimal out = toBigDecimal();
+	    if (out.doubleValue() == 0)
 			return true;
 		else
 			return false;
 	}
 
 	public boolean isNegative() {
+	    BigDecimal out = toBigDecimal();
 		if (out.doubleValue() < 0)
 			return true;
 		else
@@ -510,16 +499,16 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 
 			if (converter != null) {
 				nc = converter;
-				if (converterClass.isAnnotationPresent(SingletonComponent.class))
-					Cache.registerNumConverter(toClass, nc);
+				if (converterClass.isAnnotationPresent(SingletonExtension.class))
+					CacheExtension.registerNumConverter(toClass, nc);
 			} else if (converterClass != null) {
 				nc = (NumConverter) converterClass.newInstance();
-				if (nc != null && converterClass.isAnnotationPresent(SingletonComponent.class))
-					Cache.registerNumConverter(toClass, nc);
+				if (nc != null && converterClass.isAnnotationPresent(SingletonExtension.class))
+					CacheExtension.registerNumConverter(toClass, nc);
 			}
 
 			if (nc == null) {
-				nc = Cache.getNumConverter(toClass);
+				nc = CacheExtension.getNumConverter(toClass);
 			}
 
 			if (nc != null) {
@@ -605,10 +594,11 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		Num copy = new Num();
 
 		copy.name = this.name;
-		copy.setProperties(this.getProperties());
+		
+		copy.getProperties().load(this.getProperties());
 		copy.originalValue = this.originalValue;
 		copy.in = new BigDecimal(this.in.toString());
-		copy.set(this.toBigDecimal());
+		copy.out = new BigDecimal(this.out.toString());
 		
 		return copy;
 	}
@@ -864,8 +854,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	public Num ceil() {
 		Num ceil = new Num();
 		BigDecimal c = this.toBigDecimal();
-		ceil.setValue(c.setScale(0, BigDecimal.ROUND_CEILING));
-		ceil.setProperties(getProperties());
+		ceil.setValue(c.setScale(0, BigDecimal.ROUND_CEILING), null, null);
 		return ceil;
 	}
 
@@ -875,11 +864,10 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @return
 	 */
 	public Num floor() {
-		Num ceil = new Num();
+		Num floor = new Num();
 		BigDecimal c = this.toBigDecimal();
-		ceil.setValue(c.setScale(0, BigDecimal.ROUND_FLOOR));
-		ceil.setProperties(getProperties());
-		return ceil;
+		floor.setValue(c.setScale(0, BigDecimal.ROUND_FLOOR), null, null);
+		return floor;
 	}
 
 	/**
@@ -897,7 +885,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 	 * @param value
 	 */
 	public static String extractNumber(String value, char decimalSeparator) {
-		String regex = "[^0-9" + decimalSeparator + "]";
+		String regex = "[^0-9-" + decimalSeparator + "]";
 		if (decimalSeparator == '.')
 			regex = regex.replace(".", "\\.");
 		String strip = value.replaceAll(regex, "");
@@ -922,15 +910,6 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			Num n = new Num(object, converter);
 			return n;
 		}
-	}
-
-	public static Num[] toNums(Object... object) {
-		Num[] values = new Num[object.length];
-		for (int i = 0; i < object.length; i++) {
-			values[i] = Num.toNum(object[i]);
-		}
-
-		return values;
 	}
 
 }

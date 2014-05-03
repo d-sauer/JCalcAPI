@@ -61,7 +61,7 @@ public class NumScopeTest {
         Calculator calc3 = new Calculator();
         calc3.val(num1.setScale(1)).mul(num2.setScale(1));
         
-        Num cn3 = calc2.calculate(true, false); 	// calculate with scaled numbers
+        Num cn3 = calc2.setTrackSteps(true).calculate(); 	// calculate with scaled numbers
 //        for(String s : calc2.getCalculationSteps())
 //            System.out.println(s);
         assertEquals("14.79", cn3.setScale(2).toString());

@@ -14,9 +14,13 @@
  * limitations under the License.
  */
  
-package org.jdice.calc;
+package org.jdice.calc.internal;
 
 import java.util.HashMap;
+
+import org.jdice.calc.CalculatorException;
+import org.jdice.calc.Function;
+import org.jdice.calc.Operator;
 
 /**
  * Class used for local scope and global scope (Cache) registered operation methods (operators and functions).
@@ -24,7 +28,7 @@ import java.util.HashMap;
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
  */
-public class OperationRegister {
+public class UseExtension {
 
     /** Operators -> operator class */
     private HashMap<String, Class<? extends Operator>> operatorSymbols = new HashMap<String, Class<? extends Operator>>();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.jdice.calc;
+package org.jdice.calc.internal;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,15 +22,22 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.jdice.calc.CalculatorException;
+import org.jdice.calc.Function;
+import org.jdice.calc.NumConverter;
+import org.jdice.calc.Operator;
+import org.jdice.calc.Properties;
+import org.jdice.calc.SingletonExtension;
+
 /**
  * Global cache for operator, function, NumConverter classes and instances
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
  */
-public class Cache {
+public class CacheExtension {
 
-    private static volatile OperationRegister cacheData = new OperationRegister();
+    private static volatile UseExtension cacheData = new UseExtension();
     private static volatile HashMap<Class, NumConverter> converterCache = new HashMap<Class, NumConverter>();
     private static volatile boolean numConverterPropLoaded = false;
 
@@ -50,7 +57,7 @@ public class Cache {
         return cacheData.getOperator(operator);
     }
 
-    static HashMap<Class<? extends Operator>, Operator> getOperators() {
+    public static HashMap<Class<? extends Operator>, Operator> getOperators() {
         return cacheData.getOperators();
     }
 
@@ -70,7 +77,7 @@ public class Cache {
         return cacheData.getFunction(functionClass);
     }
 
-    static HashMap<Class<? extends Function>, Function> getFunctions() {
+    public static HashMap<Class<? extends Function>, Function> getFunctions() {
         return cacheData.getFunctions();
     }
     /**
@@ -93,7 +100,7 @@ public class Cache {
                     }
                     
                     if (nc != null) {
-                        if (converterClass.isAnnotationPresent(SingletonComponent.class))
+                        if (converterClass.isAnnotationPresent(SingletonExtension.class))
                             converterCache.put(customClass, nc);
                     }
                 }
@@ -127,7 +134,7 @@ public class Cache {
         	try {
         	    synchronized (convertClass) {
     				nc = convertClass.newInstance();
-    				if (convertClass.isAnnotationPresent(SingletonComponent.class))
+    				if (convertClass.isAnnotationPresent(SingletonExtension.class))
     					converterCache.put(customClass, nc);
         	    }
 			} catch (Exception e) {
@@ -171,7 +178,7 @@ public class Cache {
         }
     }
 
-    static void loadProperties(java.util.Properties prop) {
+    public static void loadProperties(java.util.Properties prop) {
         for (Entry<Object, Object> kv : prop.entrySet()) {
             if (kv.getKey() instanceof String) {
                 String key = (String) kv.getKey();
@@ -189,7 +196,7 @@ public class Cache {
                                 Class converterClass = Class.forName(value[1].trim());
 
                                 if (NumConverter.class.isAssignableFrom(converterClass)) {
-                                    Cache.registerNumConverter(customClass, converterClass);
+                                    CacheExtension.registerNumConverter(customClass, converterClass);
                                 }
                             }
                             catch (ClassNotFoundException e) {
@@ -209,7 +216,7 @@ public class Cache {
                                 Class<?> customOperator = Class.forName(((String)oValue).trim());
                                 
                                 if (Operator.class.isAssignableFrom(customOperator)) {
-                                    Cache.registerOperator(customOperator.asSubclass(Operator.class));
+                                    CacheExtension.registerOperator(customOperator.asSubclass(Operator.class));
                                 }
                             }
                             catch (ClassNotFoundException e) {
@@ -228,7 +235,7 @@ public class Cache {
                             Class<?> customFunction = Class.forName(((String)oValue).trim());
                             
                             if (Function.class.isAssignableFrom(customFunction)) {
-                                Cache.registerFunction(customFunction.asSubclass(Function.class));
+                                CacheExtension.registerFunction(customFunction.asSubclass(Function.class));
                             }
                         }
                         catch (ClassNotFoundException e) {
