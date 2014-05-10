@@ -1,11 +1,18 @@
 package org.jdice.calc;
 
-public class TrackedStep {
+/**
+ * Describe individual step of calculation process.
+ * Provided by {@link AbstractCalculator#getTracedSteps()} 
+ * 
+ * @author Davor Sauer <davor.sauer@gmail.com>
+ *
+ */
+public class Step {
 
     private String step;
     private String detailStep;
     
-    public TrackedStep(String step, String detailStep) {
+    public Step(String step, String detailStep) {
         this.step = step;
         this.detailStep = detailStep;
     }
