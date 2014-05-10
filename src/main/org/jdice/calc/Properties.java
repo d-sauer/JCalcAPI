@@ -23,11 +23,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.jdice.calc.internal.CacheExtension;
-import org.jdice.calc.internal.Utils;
+import org.jdice.calc.internal.Objects;
 
 /**
  * Properties for {@link AbstractCalculator}, {@link Num}
@@ -293,25 +294,25 @@ public class Properties implements Serializable {
         else if (obj instanceof Properties) {
             Properties second = (Properties) obj;
             
-            if(!Utils.equals(this.getGroupingSeparator(), second.getGroupingSeparator()))
+            if(!Objects.equals(this.getGroupingSeparator(), second.getGroupingSeparator()))
                 return false;
 
-            if(!Utils.equals(this.getInputDecimalSeparator(), second.getInputDecimalSeparator()))
+            if(!Objects.equals(this.getInputDecimalSeparator(), second.getInputDecimalSeparator()))
                 return false;
 
-            if(!Utils.equals(this.getOutputDecimalSeparator(), second.getOutputDecimalSeparator()))
+            if(!Objects.equals(this.getOutputDecimalSeparator(), second.getOutputDecimalSeparator()))
                 return false;
 
-            if(!Utils.equals(this.getOutputFormat(), second.getOutputFormat()))
+            if(!Objects.equals(this.getOutputFormat(), second.getOutputFormat()))
                 return false;
 
-            if(!Utils.equals(this.getRoundingMode(), second.getRoundingMode()))
+            if(!Objects.equals(this.getRoundingMode(), second.getRoundingMode()))
                 return false;
 
-            if(!Utils.equals(this.getScale(), second.getScale()))
+            if(!Objects.equals(this.getScale(), second.getScale()))
                 return false;
             
-            if(!Utils.equals(this.hasStripTrailingZeros(), second.hasStripTrailingZeros()))
+            if(!Objects.equals(this.hasStripTrailingZeros(), second.hasStripTrailingZeros()))
                 return false;
 
             return true;
@@ -320,6 +321,11 @@ public class Properties implements Serializable {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[] {groupingSeparator, decimalSeparatorIN, decimalSeparatorOUT, outputFormat, roundingMode, scale, stripTrailingZeros});
+    }
+    
     /**
      * File location ..\bin\org.jdice.calc.properties
      * 

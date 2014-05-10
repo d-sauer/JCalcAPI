@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
-import org.jdice.calc.TrackedStep;
+import org.jdice.calc.Step;
 import org.jdice.calc.TrigCalculator;
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class CalculatorTest {
     @Test
     public void testExpressions() throws Exception {
         Calculator calc1b = Calculator.builder("5+9/6").mul(3).div(2);
-        Num cvb = calc1b.setTrackSteps(true).calculate();
+        Num cvb = calc1b.setTracingSteps(true).calculate();
         assertEquals("5 + 9 / 6 * 3 / 2", 7, cvb.intValue());
         // print calculation steps
         // for(String step : calc1b.getCalculationSteps())
@@ -73,7 +73,7 @@ public class CalculatorTest {
         Num cv2 = calc2.calculate();
         assertEquals("5 + 10 - 3 + 2", 14, cv2.intValue());
 
-        Calculator calc3 = Calculator.builder().append(calc1).add().append(calc2);
+        Calculator calc3 = Calculator.builder().expression(calc1, true).add().expression(calc2, true);
         Num cv3 = calc3.calculate();
         assertEquals("5 + 9 / 6 * 3 / 2  +  5 + 10 - 3 + 2", 21, cv3.intValue());
 
@@ -101,7 +101,7 @@ public class CalculatorTest {
         Num x = new Num("x", 10);
         Num y = new Num("y", 3);
         Calculator calc2 = Calculator.builder().expression("5 + x - y", x, y);
-        Calculator calc3 = Calculator.builder().append(calc1).div().append(calc2);
+        Calculator calc3 = Calculator.builder().expression(calc1, true).div().expression(calc2, true);
         calc3.setScale(9).setDecimalSeparator(',');
 
         HashMap<String, String> excelResult = new HashMap<String, String>();
@@ -147,10 +147,10 @@ public class CalculatorTest {
     public void testSteps() throws Exception {
         Calculator calc1 = Calculator.builder("(5 + 9 / 6 * 3 / 2) / (5 + 15 - 18)").add().sqrt(4);
         // System.out.println(calc1.getInfix());
-        Num v = calc1.setTrackSteps(true).calculate();
+        Num v = calc1.setTracingSteps(true).calculate();
 
         StringBuilder sb = new StringBuilder();
-        for (TrackedStep p : calc1.getTrackedSteps())
+        for (Step p : calc1.getTracedSteps())
             sb.append(p);
 
         String test = "9   /  6     = 1.5" +

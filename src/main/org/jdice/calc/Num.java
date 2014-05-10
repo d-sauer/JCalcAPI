@@ -22,6 +22,8 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jdice.calc.internal.CacheExtension;
 
@@ -42,7 +44,7 @@ import org.jdice.calc.internal.CacheExtension;
 public class Num implements Cloneable, Comparable<Num>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private String name;
 	private Properties properties;
 	private Object originalValue;
@@ -181,16 +183,34 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 					getProperties().setInputDecimalSeparator(decimalSeparator);
 
 				String strValue = (String) value;
-
-				strValue = Num.extractNumber(strValue, decimalSeparator);
-				strValue = strValue.replace(decimalSeparator + "", Properties.DEFAULT_DECIMAL_SEPARATOR + ""); // use default decimal separator
-
 				DecimalFormatSymbols dfs = new DecimalFormatSymbols();
 				dfs.setDecimalSeparator(Properties.DEFAULT_DECIMAL_SEPARATOR);
 				DecimalFormat df = new DecimalFormat("#0" + Properties.DEFAULT_DECIMAL_SEPARATOR + "0#", dfs);
-				df.setParseBigDecimal(true);
+                df.setParseBigDecimal(true);
 
-				in = (BigDecimal) df.parse(strValue);
+                String csr = (decimalSeparator == '.') ? "([^-+\\d\\" + decimalSeparator + "]+)" : "([^-+\\d" + decimalSeparator + "]+)";
+
+                Pattern p = Pattern.compile(csr);
+                Matcher m = p.matcher(strValue);
+                boolean isComplexStr = m.find();
+                if (isComplexStr) {
+                    strValue = parseComplexString(strValue, decimalSeparator);
+                    
+                    if (decimalSeparator != '.')
+                        strValue = strValue.replace(decimalSeparator, Properties.DEFAULT_DECIMAL_SEPARATOR);
+                    
+                    in = (BigDecimal) df.parse(strValue);
+                }
+                else {
+                    try {
+                        in = (BigDecimal) df.parse(strValue);
+                    }
+                    catch (ParseException pe) {
+                        // try with parsing complex number
+                        strValue = parseComplexString(strValue, decimalSeparator);
+                        in = (BigDecimal) df.parse(strValue);
+                    }
+                }
 				
 				// set auto scale
 		        String tmp = in.toString();
@@ -870,31 +890,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 		return floor;
 	}
 
-	/**
-	 * Remove from string number representation all character except numbers and
-	 * decimal point. <br>
-	 * And replace given decimalSeparator with '.'
-	 * 
-	 * <pre>
-	 * ("44,551.06", '.')        => 44551.06
-	 * ("1 255 844,551.06", '.') => 1255844551.06
-	 * ("44,551..06", '.')       => 44551.06
-	 * </pre>
-	 * 
-	 * @param decimalSeparator
-	 * @param value
-	 */
-	public static String extractNumber(String value, char decimalSeparator) {
-		String regex = "[^0-9-" + decimalSeparator + "]";
-		if (decimalSeparator == '.')
-			regex = regex.replace(".", "\\.");
-		String strip = value.replaceAll(regex, "");
-
-		strip = strip.replace(decimalSeparator + "", Properties.DEFAULT_DECIMAL_SEPARATOR + "");
-		return strip;
-	}
-
-	public static Num toNum(Object object) {
+	    public static Num toNum(Object object) {
 		if (object instanceof Num)
 			return ((Num) object).clone();
 		else {
@@ -902,14 +898,65 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			return n;
 		}
 	}
+	    
+	    /**
+	     * Remove from string number representation all character except numbers and
+	     * decimal point. <br>
+	     * And replace given decimalSeparator with '.'
+	     * 
+	     * <pre>
+	     * ("44,551.06", '.')        => 44551.06
+	     * ("1 255 844,551.06", '.') => 1255844551.06
+	     * ("44,551..06", '.')       => 44551.06
+	     * </pre>
+	     * 
+	     * @param decimalSeparator
+	     * @param value
+	     */
+	    private static String cleanNumber(String value, char decimalSeparator) {
+	        String regex = "[^0-9-" + decimalSeparator + "]";
+	        if (decimalSeparator == '.')
+	            regex = regex.replace(".", "\\.");
+	        String strip = value.replaceAll(regex, "");
+	    
+	        strip = strip.replace(decimalSeparator + "", Properties.DEFAULT_DECIMAL_SEPARATOR + "");
+	        return strip;
+	    }
 
-	public static Num toNum(Object object, Class<? extends NumConverter> converter) {
-		if (object instanceof Num)
-			return ((Num) object).clone();
-		else {
-			Num n = new Num(object, converter);
-			return n;
-		}
-	}
+	    public static String NUM_REGEX(char ds) {
+        String r = "([-+\\d]\\s?[\\d ,'" + ds + "]+)+";
+	        if (ds == '.')
+	            r = r.replace(".", "\\.");
+	        
+	        return r;
+	    }
+	    
+	    public static String parseComplexString(String value, Character decimalSeparator) throws ParseException {
+	        String strValue = value;
+	        Pattern pat = Pattern.compile(NUM_REGEX(Properties.DEFAULT_DECIMAL_SEPARATOR));
 
+            // extract number from string
+            Matcher m = pat.matcher(strValue);
+            int find = 0;
+            while(m.find()) {
+                if(++find > 1)
+                    throw new ParseException("Detect more than one number in String: " + value, 0);
+                
+                if (m.groupCount() == 1)
+                    strValue = m.group(1);
+                else 
+                    throw new ParseException("Detect more than one number in String: " + value, 0);
+            }
+            
+            if (find == 0)
+                throw new ParseException("Can't parse " + strValue, 0);
+            
+            
+            strValue = cleanNumber(strValue, decimalSeparator);
+            
+            if (decimalSeparator != null && decimalSeparator != Properties.DEFAULT_DECIMAL_SEPARATOR)
+                strValue = strValue.replace(decimalSeparator + "", Properties.DEFAULT_DECIMAL_SEPARATOR + ""); // use default decimal separator
+            
+            return strValue;
+	    }
 }

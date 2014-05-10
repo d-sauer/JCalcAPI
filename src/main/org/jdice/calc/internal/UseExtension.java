@@ -23,7 +23,7 @@ import org.jdice.calc.Function;
 import org.jdice.calc.Operator;
 
 /**
- * Class used for local scope and global scope (Cache) registered operation methods (operators and functions).
+ * Class which hold used extension (operators, functions). In global and local scope.
  *  
  * @author Davor Sauer <davor.sauer@gmail.com>
  *

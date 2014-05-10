@@ -19,13 +19,14 @@ package org.jdice.calc.internal;
 import java.util.HashMap;
 
 import org.jdice.calc.AbstractCalculator;
+import org.jdice.calc.Calculator;
 import org.jdice.calc.Extension;
 import org.jdice.calc.Function;
 import org.jdice.calc.Operator;
 
 /**
- * Link interfaces of operation methods with concrete class that extends {@link Operator} or {@link Function}  and implement functionality. 
- * e.g. Link interface {@link Add} that concrete calculator implements with {@link AddOperator}
+ * Link interfaces of extensions methods implemented in AbstractCalculator with concrete implementation of extension like {@link Operator} or {@link Function}. 
+ * e.g. Link interface {@link Add} which is implemented in {@link Calculator} with concrete implementation {@link AddOperator} of extension.
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
@@ -44,7 +45,7 @@ public class BindExtensionProvider {
     }
     
     /**
-     * Get operation ({@link Operator}, {@link Function}) implementation class
+     * Get extension implementation class ({@link Operator}, {@link Function}).
      * @param clazz
      * @return
      */

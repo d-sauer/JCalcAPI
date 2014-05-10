@@ -31,7 +31,7 @@ import org.jdice.calc.internal.PostfixCalculator;
 import org.jdice.calc.internal.UseExtension;
 
 /**
- * Abstract class that concrete calculator extends 
+ * Abstract class which is extended by concrete calculator (e.g. {@link Calculator}
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
@@ -54,10 +54,13 @@ public abstract class AbstractCalculator<CALC> {
     private final PostfixCalculator postfixCalculator = new PostfixCalculator();
     private CList postfix = new CList();
     private Num lastCalculatedValue;
-    private LinkedList<TrackedStep> calculatingSteps;
+    private LinkedList<Step> calculatingSteps;
 
     private Properties properties;
-    private UseExtension localUseExtensions;
+    /**
+     * User defined extensions in scope of instance
+     */
+    private UseExtension useExtensions;
     private static boolean isImplExtRegistered = false;
 
     private AbstractCalculator<CALC> parentCalculator;
@@ -69,10 +72,10 @@ public abstract class AbstractCalculator<CALC> {
 
 
     /**
-     * Register implemented operation and functions by subclass
+     * Read implemented extensions by subclass
      * 
      */
-    private void useImplmentedExtension() {
+    private void detectImplmentedExtension() {
         if (isImplExtRegistered == false) {
             Object o = getThis();
             Class thisClass = o.getClass();
@@ -80,13 +83,13 @@ public abstract class AbstractCalculator<CALC> {
             // superclass interfaces
             Class[] declared = thisClass.getSuperclass().getInterfaces();
             for (Class declare : declared) {
-                useImplmentedExtension(declare);
+                detectImplmentedExtension(declare);
             }
 
             // subclass interfaces
             declared = thisClass.getInterfaces();
             for (Class declare : declared) {
-                useImplmentedExtension(declare);
+                detectImplmentedExtension(declare);
             }
             isImplExtRegistered = true;
         }
@@ -97,7 +100,7 @@ public abstract class AbstractCalculator<CALC> {
      * 
      * @param declare
      */
-    private void useImplmentedExtension(Class declare) {
+    private void detectImplmentedExtension(Class declare) {
         Class c = BindExtensionProvider.getExtension(declare);
         if (c == null && declare.isAnnotationPresent(BindExtension.class)) {
             BindExtension impl = (BindExtension) declare.getAnnotation(BindExtension.class);
@@ -121,21 +124,21 @@ public abstract class AbstractCalculator<CALC> {
     protected abstract CALC getThis();
 
     /**
-     * Provide custom {@link Operator} or {@link Function} inside scope of this instance, that can be used during expression parsing.
-     * With registration of custom operation it's possible to override existing default operation implementation.
-     * Because during calculation API first scan scoped (registered) operation and after that default operation implementation inside {@link CacheExtension}
+     * Use custom {@link Operator} or {@link Function} inside scope of this calculation, which can be used during parsing expression.
+     * With using custom extension it's possible to override existing extension from global scope.
+     * Because during calculation API first scan scoped (locally used) extensions and after that search in global extension from {@link CacheExtension}
      * 
      * @param operationClass
      * @return
      */
     public CALC use(Class<? extends Extension> operationClass) {
-        if (localUseExtensions == null)
-            localUseExtensions = new UseExtension();
+        if (useExtensions == null)
+            useExtensions = new UseExtension();
 
         if (Operator.class.isAssignableFrom(operationClass))
-            localUseExtensions.registerOperator(operationClass.asSubclass(Operator.class));
+            useExtensions.registerOperator(operationClass.asSubclass(Operator.class));
         if (Function.class.isAssignableFrom(operationClass))
-            localUseExtensions.registerFunction(operationClass.asSubclass(Function.class));
+            useExtensions.registerFunction(operationClass.asSubclass(Function.class));
 
         return getThis();
     }
@@ -146,7 +149,7 @@ public abstract class AbstractCalculator<CALC> {
      * @return
      */
     public UseExtension getUsedExtensions() {
-        return this.localUseExtensions;
+        return this.useExtensions;
     }
 
     /**
@@ -192,13 +195,104 @@ public abstract class AbstractCalculator<CALC> {
     }
 
     /**
-     * Copy calculator expression into this expression within brackets
+     * Append operator to expression
+     * @param operator
+     * @return
+     */
+    public final CALC operator(Class<? extends Operator> operator) {
+        infix.add(operator);
+        return getThis();
+    }
+
+    /**
+     * Append operator and number to expression 
+     * @param operator
+     * @param value
+     * @return
+     */
+    protected final CALC operator(Class<? extends Operator> operator, Object value) {
+        Num tmp = null;
+        if (value instanceof Num)
+            tmp = (Num)value;
+        else
+            tmp = new Num(value);
+        
+        infix.add(CacheExtension.getOperator(operator));
+        infix.add(tmp);
+        return getThis();
+    }
+
+    /**
+     * Append operator and parsed String value with custom decimal separator used in String representation of value 
+     * @param operator
+     * @param value
+     * @param decimalSeparator
+     * @return
+     */
+    protected final CALC operator(Class<? extends Operator> operator, String value, char decimalSeparator) {
+        return operator(operator, new Num(value, decimalSeparator));
+    }
+
+    /**
+     * Append function with value to expression.
+     * 
+     * <br/>
+     * e.g. Abs.class, -5 => abs(-5)
+     * 
+     * @param function
+     * @param values can accept any object that {@link Num} can work with
+     * @return
+     * @see {@link Function}
+     */
+    public final CALC function(Class<? extends Function> function, Object... values) {
+        Function fn = CacheExtension.getFunction(function);
+        FunctionData fd = new FunctionData(fn, values);
+        this.infix.addFunction(fd);
+
+        return getThis();
+    }
+
+    /**
+     * Parse and append given expression to existing expression
      * 
      * @param expression
      * @return
+     * @throws ParseException
      */
-    public CALC append(AbstractCalculator expression) {
-        return append(expression, true);
+    public final CALC expression(String expression) throws ParseException {
+        detectImplmentedExtension();
+        
+        if (infixParser == null)
+            infixParser = new InfixParser();
+        
+        CList infix = infixParser.parse(useExtensions, getProperties(), expression);
+        expression(infix, false);
+        return getThis();
+    }
+
+    /**
+     * Parse and append given expression to existing expression
+     * String representation of expression that will be parsed with unknown variables.
+     * It is possible to define name of <tt>Num</tt> with {@link Num#setName(String)} then name will be matched with name of unknown variable.
+     * Otherwise unknown variable will be matched by declared order.
+     *   
+     * <br/>
+     * e.g. X + 5 - (2 * X - Y)
+     * 
+     * @param expression
+     * @param values that match unknown variable by name or by order 
+     * @return {@link AbstractCalculator}
+     * @throws ParseException
+     */
+    public final CALC expression(String expression, Object... values) throws ParseException {
+        detectImplmentedExtension();
+        
+        if (infixParser == null)
+            infixParser = new InfixParser();
+        
+        CList infix = infixParser.parse(useExtensions, getProperties(), expression, values);
+        expression(infix, false);
+        return getThis();
     }
 
     /**
@@ -209,8 +303,8 @@ public abstract class AbstractCalculator<CALC> {
      * @param withinBrackets
      * @return
      */
-    public CALC append(AbstractCalculator expression, boolean withinBrackets) {
-        append(expression.infix, withinBrackets);
+    public CALC expression(AbstractCalculator expression, boolean withinBrackets) {
+        expression(expression.infix, withinBrackets);
         return getThis();
     }
 
@@ -222,10 +316,10 @@ public abstract class AbstractCalculator<CALC> {
      * @param withinBrackets
      * @return
      */
-    public CALC append(CList infix, boolean withinBrackets) {
+    private final CALC expression(CList infix, boolean withinBrackets) {
         if (withinBrackets)
             this.infix.add(Bracket.OPEN);
-
+    
         Iterator<Object> it = infix.iterator();
         while (it.hasNext()) {
             Object o = it.next();
@@ -245,111 +339,10 @@ public abstract class AbstractCalculator<CALC> {
                 this.infix.add((Bracket) o);
             }
         }
-
+    
         if (withinBrackets)
             this.infix.add(Bracket.CLOSE);
-
-        return getThis();
-    }
-
-    /**
-     * Append operator to expression
-     * @param operator
-     * @return
-     */
-    public final CALC append(Class<? extends Operator> operator) {
-        infix.add(operator);
-        return getThis();
-    }
-
-    /**
-     * Append operator and number to expression 
-     * @param operator
-     * @param value
-     * @return
-     */
-    protected final CALC append(Class<? extends Operator> operator, Object value) {
-        Num tmp = null;
-        if (value instanceof Num)
-            tmp = (Num)value;
-        else
-            tmp = new Num(value);
-        
-        infix.add(CacheExtension.getOperator(operator));
-        infix.add(tmp);
-        return getThis();
-    }
-
-    /**
-     * Append operator and parsed String value with custom decimal separator used in String representation of value 
-     * @param operator
-     * @param value
-     * @param decimalSeparator
-     * @return
-     */
-    protected final CALC append(Class<? extends Operator> operator, String value, char decimalSeparator) {
-        return append(operator, new Num(value, decimalSeparator));
-    }
-
-    /**
-     * Append function with value to expression.
-     * 
-     * <br/>
-     * e.g. Abs.class, -5 => abs(-5)
-     * 
-     * @param function
-     * @param values can accept any object that {@link Num} can work with
-     * @return
-     * @see {@link Function}
-     */
-    public final CALC append(Class<? extends Function> function, Object... values) {
-        Function fn = CacheExtension.getFunction(function);
-        FunctionData fd = new FunctionData(fn, values);
-        this.infix.addFunction(fd);
-
-        return getThis();
-    }
-
-    /**
-     * Parse and append given expression to existing expression
-     * 
-     * @param expression
-     * @return
-     * @throws ParseException
-     */
-    public CALC expression(String expression) throws ParseException {
-        useImplmentedExtension();
-        
-        if (infixParser == null)
-            infixParser = new InfixParser();
-        
-        CList infix = infixParser.parse(localUseExtensions, getProperties(), expression);
-        append(infix, false);
-        return getThis();
-    }
-
-    /**
-     * Parse and append given expression to existing expression
-     * String representation of expression that will be parsed with unknown variables.
-     * It is possible to define name of <tt>Num</tt> with {@link Num#setName(String)} then name will be matched with name of unknown variable.
-     * Otherwise unknown variable will be matched by declared order.
-     *   
-     * <br/>
-     * e.g. X + 5 - (2 * X - Y)
-     * 
-     * @param expression
-     * @param values that match unknown variable by name or by order 
-     * @return {@link AbstractCalculator}
-     * @throws ParseException
-     */
-    public CALC expression(String expression, Object... values) throws ParseException {
-        useImplmentedExtension();
-        
-        if (infixParser == null)
-            infixParser = new InfixParser();
-        
-        CList infix = infixParser.parse(localUseExtensions, getProperties(), expression, values);
-        append(infix, false);
+    
         return getThis();
     }
 
@@ -475,22 +468,34 @@ public abstract class AbstractCalculator<CALC> {
         return getThis();
     }
     
-    public CALC setTrackSteps(boolean trackSteps) {
+    /**
+     * If set to TRUE it will track step of calculation.
+     * And provide those steps by {@link #getTracedSteps()}
+     * @param trackSteps
+     * @return
+     */
+    public CALC setTracingSteps(boolean trackSteps) {
         this.trackSteps = trackSteps;
         return getThis();
     }
 
-    public boolean hasTrackSteps() {
+    /**
+     * Check if is tracking steps enabled or disabled.
+     * 
+     * @return
+     * @see {@link #setTracingSteps(boolean)}
+     */
+    public boolean isTracingSteps() {
         return trackSteps;
     }
 
     /**
-     * Get calculation steps if {@link #hasTrackSteps()} is TRUE
+     * Get calculation steps if {@link #isTracingSteps()} is TRUE
      * 
      * @return
      * @see {@link}
      */
-    public LinkedList<TrackedStep> getTrackedSteps() {
+    public LinkedList<Step> getTracedSteps() {
         return calculatingSteps;
     }
 
@@ -587,7 +592,7 @@ public abstract class AbstractCalculator<CALC> {
         // undbind all from root to last child
         while (child != null) {
             if (child.isUnbind == false)
-                root.append(child, false);
+                root.expression(child, false);
 
             child.isUnbind = true;
             child = child.childCalculator; // new unbind child
@@ -680,7 +685,7 @@ public abstract class AbstractCalculator<CALC> {
         this.calculatingSteps = null;
     }
 
-    public final void setSteps(LinkedList<TrackedStep> calculationSteps) {
+    public final void setSteps(LinkedList<Step> calculationSteps) {
         this.calculatingSteps = calculationSteps;
     }
 

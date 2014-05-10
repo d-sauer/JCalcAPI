@@ -23,7 +23,6 @@ import java.io.ObjectOutputStream;
 
 import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
-import org.jdice.calc.TrackedStep;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -32,15 +31,6 @@ public class DevTest {
 
     @Test
     public void test() throws Exception {
-        Calculator c1 = Calculator.builder("2^-2");
-        c1.setTrackSteps(true);
-        
-        Num r = c1.calculate();
-        
-        for(TrackedStep ts : c1.getTrackedSteps())
-            System.out.println(ts);
-        
-        System.out.println(r);
     }
 
     public static void main(String[] args) throws Exception {

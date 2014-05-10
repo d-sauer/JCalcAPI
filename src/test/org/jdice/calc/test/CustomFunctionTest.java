@@ -56,7 +56,7 @@ public class CustomFunctionTest {
         assertEquals("-24", n.toString());
         
         
-        Calculator calc2 = Calculator.builder().val(10).add().append(test.class, 2,3);
+        Calculator calc2 = Calculator.builder().val(10).add().function(test.class, 2,3);
         calc2.use(test.class);
         Num n2 = calc2.calculate();
         assertEquals("16", n2.toString());

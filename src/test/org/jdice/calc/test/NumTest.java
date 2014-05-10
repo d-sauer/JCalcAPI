@@ -16,9 +16,7 @@
  
 package org.jdice.calc.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +26,7 @@ import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 
 import org.jdice.calc.Calculator;
+import org.jdice.calc.CalculatorException;
 import org.jdice.calc.Num;
 import org.jdice.calc.NumConverter;
 import org.jdice.calc.Rounding;
@@ -70,7 +69,6 @@ public class NumTest {
         A = new Num("5.529500");
         B.set(5.529500d);
         assertTrue(A.isEqual("5.5295"));
-        
         
         A = new Num("5.529500");
         B = new Num("5.52951258");
@@ -189,22 +187,56 @@ public class NumTest {
     @Test
     public void testParseStringnumber() throws Exception {
         Num num = new Num("44,551.06", '.');
-        assertEquals("num number", "44551.06", num.toString());
+        assertEquals("44551.06", num.toString());
 
         num = new Num("12 558 44,551.06", '.');
-        assertEquals("num number", "1255844551.06", num.toString());
+        assertEquals("1255844551.06", num.toString());
 
         num = new Num("+44,551.06");
-        assertEquals("num number", "44551.06", num.toString());
+        assertEquals("44551.06", num.toString());
 
         num = new Num("-44,551.06");
-        assertEquals("num number", "-44551.06", num.toString());
+        assertEquals("-44551.06", num.toString());
 
         num = new Num("-12 558 44,551.06", '.');
-        assertEquals("num number", "-1255844551.06", num.toString());
+        assertEquals("-1255844551.06", num.toString());
 
         num = new Num("-44,551.06", '.');
-        assertEquals("Strip number", "-44551.06", num.toString());
+        assertEquals("-44551.06", num.toString());
+
+        num = new Num("-44,551.06", '.');
+        assertEquals("-44551.06", num.toString());
+        
+        num = new Num("44.551,06", ',');
+        assertEquals("44551.06", num.toString());
+
+        num = new Num("5");
+        assertEquals("5", num.toString());
+
+        num = new Num("Amount of -1 458,123.889874 EUR");
+        assertEquals("-1458123.889874", num.toString());
+
+        num = new Num("Amount of -10 EUR");
+        assertEquals("-10", num.toString());
+
+        num = new Num("Amount of 1.5 EUR");
+        assertEquals("1.5", num.toString());
+
+        num = new Num("Amount of 1 101 547.47 EUR");
+        assertEquals("1101547.47", num.toString());
+
+        num = new Num("Amount of 1'101'547.47 EUR");
+        assertEquals("1101547.47", num.toString());
+
+        num = new Num("Amount of -1 458,123889874 EUR", ',');
+        assertEquals("-1458.123889874", num.toString());
+
+        try {
+            num = new Num("Amount of -1 458,123889.874 EUR and 20 cents");
+            fail("Should have thrown an CalculatorException, because String contains two separated numbers");
+        } catch(CalculatorException e) {
+            assertEquals(CalculatorException.class, e.getClass());
+        }
     }
     
     @Test

@@ -25,7 +25,7 @@ import org.jdice.calc.AbstractCalculator;
 import org.jdice.calc.CalculatorException;
 import org.jdice.calc.Num;
 import org.jdice.calc.Operator;
-import org.jdice.calc.TrackedStep;
+import org.jdice.calc.Step;
 import org.jdice.calc.extension.AddOperator;
 import org.jdice.calc.extension.SubOperator;
 
@@ -41,7 +41,7 @@ public class PostfixCalculator {
     private CList postfix = new CList();
     private int bCount = 0;
     LinkedList<Object> step = null;
-    private LinkedList<TrackedStep> steps = null;
+    private LinkedList<Step> steps = null;
 
     public void toPostfix(CList infix) {
         Iterator<Object> it = infix.iterator();
@@ -138,7 +138,7 @@ public class PostfixCalculator {
             if (steps != null) {
                 int count = 0;
                 int sSize = steps.size();
-                for (TrackedStep s : steps) {
+                for (Step s : steps) {
                     count++;
                     sb.append(s);
 
@@ -148,7 +148,7 @@ public class PostfixCalculator {
                         sb.append("\n");
                 }
 
-                TrackedStep es = trackStep(step);
+                Step es = trackStep(step);
                 sb.append(es + "  <--- Error: " + e.getMessage());
             }
 
@@ -158,7 +158,7 @@ public class PostfixCalculator {
 
     private Num calculation(AbstractCalculator calc, CList postfix, boolean trackSteps)  {
         if (trackSteps)
-            steps = new LinkedList<TrackedStep>();
+            steps = new LinkedList<Step>();
 
         Stack<Object> values = new Stack<Object>();
         Iterator<Object> e = postfix.iterator();
@@ -263,7 +263,7 @@ public class PostfixCalculator {
         return result;
     }
 
-    private TrackedStep trackStep(LinkedList<Object> step)  {
+    private Step trackStep(LinkedList<Object> step)  {
         StringBuilder sb = new StringBuilder();
         StringBuilder sbDetail = new StringBuilder();
         
@@ -292,7 +292,7 @@ public class PostfixCalculator {
                 }
             }
 
-        return new TrackedStep(sb.toString(), sbDetail.toString());
+        return new Step(sb.toString(), sbDetail.toString());
     }
 
     private void trackStep(LinkedList<Object> step, Object o) {

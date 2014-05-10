@@ -57,7 +57,7 @@ import org.jdice.calc.extension.TanhFunction;
 
 /**
  * Calculator implementation with trigonometric functions.
- * Support operation: Sin, Cos, Tan, ArcSin, ArcCos, ArcTan, Sinh, Cosh, Tanh, Add, Sub, Div, Mul, Mod, Pow, Abs, Sqrt, Log
+ * Support extensions: Sin, Cos, Tan, ArcSin, ArcCos, ArcTan, Sinh, Cosh, Tanh, Add, Sub, Div, Mul, Mod, Pow, Abs, Sqrt, Log
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
@@ -100,35 +100,35 @@ public final class TrigCalculator extends AbstractCalculator<TrigCalculator> imp
     // -----------------
     @Override
     public TrigCalculator add() {
-        return append(AddOperator.class);
+        return operator(AddOperator.class);
     }
 
     @Override
     public TrigCalculator add(Object value) {
-        return append(AddOperator.class, value);
+        return operator(AddOperator.class, value);
     }
 
     @Override
     public TrigCalculator add(String value, char decimalSeparator) {
-        return append(AddOperator.class, value, decimalSeparator);
+        return operator(AddOperator.class, value, decimalSeparator);
     }
 
     // -----------------
 
     @Override
     public TrigCalculator sub() {
-        return append(SubOperator.class);
+        return operator(SubOperator.class);
     }
 
     @Override
     public TrigCalculator sub(Object value) {
-        return append(SubOperator.class, value);
+        return operator(SubOperator.class, value);
     }
 
 
     @Override
     public TrigCalculator sub(String value, char decimalSeparator) {
-        return append(SubOperator.class, value, decimalSeparator);
+        return operator(SubOperator.class, value, decimalSeparator);
     }
 
 
@@ -136,97 +136,97 @@ public final class TrigCalculator extends AbstractCalculator<TrigCalculator> imp
 
     @Override
     public TrigCalculator div() {
-        return append(DivOperator.class);
+        return operator(DivOperator.class);
     }
 
     @Override
     public TrigCalculator div(Object value) {
-        return append(DivOperator.class, value);
+        return operator(DivOperator.class, value);
     }
 
     @Override
     public TrigCalculator div(String value, char decimalSeparator) {
-        return append(DivOperator.class, value, decimalSeparator);
+        return operator(DivOperator.class, value, decimalSeparator);
     }
 
     // -----------------
 
     @Override
     public TrigCalculator mul() {
-        return append(MulOperator.class);
+        return operator(MulOperator.class);
     }
 
     @Override
     public TrigCalculator mul(Object value) {
-        return append(MulOperator.class, value);
+        return operator(MulOperator.class, value);
     }
 
     @Override
     public TrigCalculator mul(String value, char decimalSeparator) {
-        return append(MulOperator.class, value, decimalSeparator);
+        return operator(MulOperator.class, value, decimalSeparator);
     }
 
     // -----------------
 
     @Override
     public TrigCalculator pow() {
-        return append(PowOperator.class);
+        return operator(PowOperator.class);
     }
 
     @Override
     public TrigCalculator pow(Object value) {
-        return append(PowOperator.class, value);
+        return operator(PowOperator.class, value);
     }
 
     @Override
     public TrigCalculator pow(String value, char decimalSeparator) {
-        return append(PowOperator.class, value, decimalSeparator);
+        return operator(PowOperator.class, value, decimalSeparator);
     }
 
 
     @Override
     public TrigCalculator abs(AbstractCalculator expression) {
-        return append(AbsFunction.class);
+        return function(AbsFunction.class);
     }
 
     @Override
     public TrigCalculator abs(Object value) {
-        return append(AbsFunction.class, new Num(value));
+        return function(AbsFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator abs(String value, char decimalSeparator) {
-        return append(AbsFunction.class, new Num(value, decimalSeparator));
+        return function(AbsFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator sqrt(AbstractCalculator expression) {
-        return append(SqrtFunction.class, expression);
+        return function(SqrtFunction.class, expression);
     }
 
     @Override
     public TrigCalculator sqrt(Object value) {
-        return append(SqrtFunction.class, new Num(value));
+        return function(SqrtFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator sqrt(String value, char decimalSeparator) {
-        return append(SqrtFunction.class, new Num(value, decimalSeparator));
+        return function(SqrtFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator mod() {
-        return append(ModOperator.class);
+        return operator(ModOperator.class);
     }
 
     @Override
     public TrigCalculator mod(Object value) {
-        return append(ModOperator.class, value);
+        return operator(ModOperator.class, value);
     }
 
     @Override
     public TrigCalculator mod(String value, char decimalSeparator) {
-        return append(ModOperator.class, value, decimalSeparator);
+        return operator(ModOperator.class, value, decimalSeparator);
     }
 
     //
@@ -234,158 +234,158 @@ public final class TrigCalculator extends AbstractCalculator<TrigCalculator> imp
     //
     @Override
     public TrigCalculator sin(AbstractCalculator expression) {
-        return append(SinFunction.class, expression);
+        return function(SinFunction.class, expression);
     }
 
     @Override
     public TrigCalculator sin(Object value) {
-        return append(SinFunction.class, new Num(value));
+        return function(SinFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator sin(String value, char decimalSeparator) {
-        return append(SinFunction.class, new Num(value, decimalSeparator));
+        return function(SinFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator cos(AbstractCalculator expression) {
-        return append(CosFunction.class, expression);
+        return function(CosFunction.class, expression);
     }
 
     @Override
     public TrigCalculator cos(Object value) {
-        return append(CosFunction.class, new Num(value));
+        return function(CosFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator cos(String value, char decimalSeparator) {
-        return append(CosFunction.class, new Num(value, decimalSeparator));
+        return function(CosFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator tan(AbstractCalculator expression) {
-        return append(TanFunction.class, expression);
+        return function(TanFunction.class, expression);
     }
 
     @Override
     public TrigCalculator tan(Object value) {
-        return append(TanFunction.class, new Num(value));
+        return function(TanFunction.class, new Num(value));
     }
 
 
     @Override
     public TrigCalculator tan(String value, char decimalSeparator) {
-        return append(TanFunction.class, new Num(value, decimalSeparator));
+        return function(TanFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator atan(AbstractCalculator expression) {
-        return append(ArcTanFunction.class, expression);
+        return function(ArcTanFunction.class, expression);
     }
 
     @Override
     public TrigCalculator atan(Object value) {
-        return append(ArcTanFunction.class, new Num(value));
+        return function(ArcTanFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator atan(String value, char decimalSeparator) {
-        return append(ArcTanFunction.class, new Num(value, decimalSeparator));
+        return function(ArcTanFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator acos(AbstractCalculator expression) {
-        return append(ArcCosFunction.class, expression);
+        return function(ArcCosFunction.class, expression);
     }
 
     @Override
     public TrigCalculator acos(Object value) {
-        return append(ArcCosFunction.class, new Num(value));
+        return function(ArcCosFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator acos(String value, char decimalSeparator) {
-        return append(ArcCosFunction.class, new Num(value, decimalSeparator));
+        return function(ArcCosFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator asin(AbstractCalculator expression) {
-        return append(ArcSinFunction.class, expression);
+        return function(ArcSinFunction.class, expression);
     }
 
     @Override
     public TrigCalculator asin(Object value) {
-        return append(ArcSinFunction.class, new Num(value));
+        return function(ArcSinFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator asin(String value, char decimalSeparator) {
-        return append(ArcSinFunction.class, new Num(value, decimalSeparator));
+        return function(ArcSinFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator tanh(AbstractCalculator expression) {
-        return append(TanhFunction.class, expression);
+        return function(TanhFunction.class, expression);
     }
 
     @Override
     public TrigCalculator tanh(Object value) {
-        return append(TanhFunction.class, new Num(value));
+        return function(TanhFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator tanh(String value) {
-        return append(TanhFunction.class, new Num(value));
+        return function(TanhFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator tanh(String value, char decimalSeparator) {
-        return append(TanhFunction.class, new Num(value, decimalSeparator));
+        return function(TanhFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator cosh(AbstractCalculator expression) {
-        return append(CoshFunction.class, expression);
+        return function(CoshFunction.class, expression);
     }
 
     @Override
     public TrigCalculator cosh(Object value) {
-        return append(CoshFunction.class, new Num(value));
+        return function(CoshFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator cosh(String value, char decimalSeparator) {
-        return append(CoshFunction.class, new Num(value, decimalSeparator));
+        return function(CoshFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator sinh(AbstractCalculator expression) {
-        return append(SinhFunction.class, expression);
+        return function(SinhFunction.class, expression);
     }
 
     @Override
     public TrigCalculator sinh(Object value) {
-        return append(SinhFunction.class, new Num(value));
+        return function(SinhFunction.class, new Num(value));
     }
 
     @Override
     public TrigCalculator sinh(String value, char decimalSeparator) {
-        return append(SinhFunction.class, new Num(value, decimalSeparator));
+        return function(SinhFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public TrigCalculator log(AbstractCalculator expression) {
-        return append(LogFunction.class, expression);
+        return function(LogFunction.class, expression);
     }
 
     @Override
     public TrigCalculator log(Object value) {
-        return append(LogFunction.class, value);
+        return function(LogFunction.class, value);
     }
 
     @Override
     public TrigCalculator log(String value, char decimalSeparator) {
-        return append(LogFunction.class, value);
+        return function(LogFunction.class, value);
     }
 
 }

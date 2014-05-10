@@ -5,7 +5,7 @@ import java.text.ParseException;
 
 import org.jdice.calc.Calculator;
 import org.jdice.calc.Num;
-import org.jdice.calc.TrackedStep;
+import org.jdice.calc.Step;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -115,9 +115,9 @@ public class DevCalcTest {
         Calculator c = Calculator.builder("((A / 100 / 12) * B) / (1 - ((1 + (A / 100 / 12)) ^ (C * 12)))", interestRate, P, paymentYears);
         c.setScale(10);
         
-        Num result = c.setTrackSteps(true).calculate();
+        Num result = c.setTracingSteps(true).calculate();
         
-        for(TrackedStep step : c.getTrackedSteps())
+        for(Step step : c.getTracedSteps())
             System.out.println(step);
         
         System.out.println("c = " + result.setScale(2));
@@ -160,8 +160,8 @@ public class DevCalcTest {
     }
     
     public static void main(String [] args ) throws ParseException {
-//        example_2A();
-//        example_2B();
+        example_2A();
+        example_2B();
         example_2C();
     }
     

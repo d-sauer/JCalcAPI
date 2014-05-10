@@ -102,7 +102,7 @@ public class InfixParser {
         //
         infixExpression = infixExpression.replace(" ", "");
         int infixLength = infixExpression.length();
-        // separate function and other operation
+        // separate function and reminders in groups
         Matcher mat = pFunctions.matcher(infixExpression);
 
         int gc = mat.groupCount() + 1;
@@ -291,7 +291,7 @@ public class InfixParser {
                 }
 
                 if (!isExists)
-                    throw new ParseException("Exception while parsing '" + infix + "'. Can't find operation '" + group + "' or " + Num.class.getName() + " with name '" + group + "'", 0);
+                    throw new ParseException("Exception while parsing '" + infix + "'. Can't find extension '" + group + "' or " + Num.class.getName() + " with name '" + group + "'", 0);
             }
         }
         return infixNotation;

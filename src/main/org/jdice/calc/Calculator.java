@@ -39,7 +39,7 @@ import org.jdice.calc.extension.SubOperator;
 
 /**
  * Calculator implementation with basic operations.
- * Support operation: Add, Sub, Div, Mul, Mod, Pow, Abs, Sqrt, Log
+ * Support extensions: Add, Sub, Div, Mul, Mod, Pow, Abs, Sqrt, Log
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  * 
@@ -78,142 +78,142 @@ public final class Calculator extends AbstractCalculator<Calculator> implements 
     // -----------------
     @Override
     public Calculator add() {
-        return append(AddOperator.class);
+        return operator(AddOperator.class);
     }
 
     @Override
     public Calculator add(Object value) {
-        return append(AddOperator.class, value);
+        return operator(AddOperator.class, value);
     }
 
     @Override
     public Calculator add(String value, char decimalSeparator) {
-        return append(AddOperator.class, value, decimalSeparator);
+        return operator(AddOperator.class, value, decimalSeparator);
     }
 
     // -----------------
 
     @Override
     public Calculator sub() {
-        return append(SubOperator.class);
+        return operator(SubOperator.class);
     }
 
     @Override
     public Calculator sub(Object value) {
-        return append(SubOperator.class, value);
+        return operator(SubOperator.class, value);
     }
 
     @Override
     public Calculator sub(String value, char decimalSeparator) {
-        return append(SubOperator.class, value, decimalSeparator);
+        return operator(SubOperator.class, value, decimalSeparator);
     }
 
     // -----------------
     @Override
     public Calculator div() {
-        return append(DivOperator.class);
+        return operator(DivOperator.class);
     }
 
     @Override
     public Calculator div(Object value) {
-        return append(DivOperator.class, value);
+        return operator(DivOperator.class, value);
     }
 
     @Override
     public Calculator div(String value, char decimalSeparator) {
-        return append(DivOperator.class, value, decimalSeparator);
+        return operator(DivOperator.class, value, decimalSeparator);
     }
 
     // -----------------
     @Override
     public Calculator mul() {
-        return append(MulOperator.class);
+        return operator(MulOperator.class);
     }
 
     @Override
     public Calculator mul(Object value) {
-        return append(MulOperator.class, value);
+        return operator(MulOperator.class, value);
     }
 
     @Override
     public Calculator mul(String value, char decimalSeparator) {
-        return append(MulOperator.class, value, decimalSeparator);
+        return operator(MulOperator.class, value, decimalSeparator);
     }
 
     // -----------------
     @Override
     public Calculator pow() {
-        return append(PowOperator.class);
+        return operator(PowOperator.class);
     }
 
     @Override
     public Calculator pow(Object value) {
-        return append(PowOperator.class, value);
+        return operator(PowOperator.class, value);
     }
 
     @Override
     public Calculator pow(String value, char decimalSeparator) {
-        return append(PowOperator.class, value, decimalSeparator);
+        return operator(PowOperator.class, value, decimalSeparator);
     }
 
     @Override
     public Calculator abs(AbstractCalculator expression) {
-        return append(AbsFunction.class, expression);
+        return function(AbsFunction.class, expression);
     }
 
     @Override
     public Calculator abs(Object value) {
-        return append(AbsFunction.class, new Num(value));
+        return function(AbsFunction.class, new Num(value));
     }
 
     @Override
     public Calculator abs(String value, char decimalSeparator) {
-        return append(AbsFunction.class, new Num(value, decimalSeparator));
+        return function(AbsFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public Calculator sqrt(AbstractCalculator expression) {
-        return append(SqrtFunction.class, expression);
+        return function(SqrtFunction.class, expression);
     }
 
     @Override
     public Calculator sqrt(Object value) {
-        return append(SqrtFunction.class, new Num(value));
+        return function(SqrtFunction.class, new Num(value));
     }
 
     @Override
     public Calculator sqrt(String value, char decimalSeparator) {
-        return append(SqrtFunction.class, new Num(value, decimalSeparator));
+        return function(SqrtFunction.class, new Num(value, decimalSeparator));
     }
 
     @Override
     public Calculator mod() {
-        return append(ModOperator.class);
+        return operator(ModOperator.class);
     }
 
     @Override
     public Calculator mod(Object value) {
-        return append(ModOperator.class, value);
+        return operator(ModOperator.class, value);
     }
 
     @Override
     public Calculator mod(String value, char decimalSeparator) {
-        return append(ModOperator.class, value, decimalSeparator);
+        return operator(ModOperator.class, value, decimalSeparator);
     }
 
     @Override
     public Calculator log(AbstractCalculator expression) {
-        return append(LogFunction.class, expression);
+        return function(LogFunction.class, expression);
     }
 
     @Override
     public Calculator log(Object value) {
-        return append(LogFunction.class, value);
+        return function(LogFunction.class, value);
     }
 
     @Override
     public Calculator log(String value, char decimalSeparator) {
-        return append(LogFunction.class, value, decimalSeparator);
+        return function(LogFunction.class, value, decimalSeparator);
     }
 
 }
