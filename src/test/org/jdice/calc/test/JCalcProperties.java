@@ -10,9 +10,9 @@ import org.jdice.calc.test.NumTest.CustomObjectNumConverter;
 public class JCalcProperties {
 
     public void writeProperties() throws Exception {
-         CacheExtension.registerOperator(QuestionOperator.class);
-         CacheExtension.registerFunction(SumFunction.class);
-         CacheExtension.registerNumConverter(CustomObject.class, CustomObjectNumConverter.class);
+         CacheExtension.setOperator(QuestionOperator.class);
+         CacheExtension.setFunction(SumFunction.class);
+         CacheExtension.setNumConverter(CustomObject.class, CustomObjectNumConverter.class);
 
          Properties p = new Properties();
          p.saveGlobalProperties();

@@ -25,7 +25,7 @@ import org.jdice.calc.internal.CacheExtension;
  * with which JCalc API knows to work.
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
- * @see {@link CacheExtension#registerNumConverter(Class, Class)}
+ * @see {@link CacheExtension#setNumConverter(Class, Class)}
  * @param <T>
  */
 public interface NumConverter<T> {

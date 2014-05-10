@@ -111,9 +111,9 @@ public abstract class AbstractCalculator<CALC> {
 
         if (c != null) {
             if (Operator.class.isAssignableFrom(c))
-                CacheExtension.registerOperator(c);
+                CacheExtension.setOperator(c);
             if (Function.class.isAssignableFrom(c))
-                CacheExtension.registerFunction(c);
+                CacheExtension.setFunction(c);
         }
     }
 

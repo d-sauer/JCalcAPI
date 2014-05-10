@@ -41,7 +41,7 @@ public class CacheExtension {
     private static volatile HashMap<Class, NumConverter> converterCache = new HashMap<Class, NumConverter>();
     private static volatile boolean numConverterPropLoaded = false;
 
-    public static void registerOperator(Class<? extends Operator> operatorClass) {
+    public static void setOperator(Class<? extends Operator> operatorClass) {
         cacheData.registerOperator(operatorClass);
     }
 
@@ -61,7 +61,7 @@ public class CacheExtension {
         return cacheData.getOperators();
     }
 
-    public static void registerFunction(Class<? extends Function> functionClass) {
+    public static void setFunction(Class<? extends Function> functionClass) {
         cacheData.registerFunction(functionClass);
     }
 
@@ -86,7 +86,7 @@ public class CacheExtension {
      * @param customClass define class type for conversion
      * @param converterClass define class which knows how to convert <tt>customClass</tt>
      */
-    public static void registerNumConverter(Class customClass, Class<? extends NumConverter> converterClass) {
+    public static void setNumConverter(Class customClass, Class<? extends NumConverter> converterClass) {
         NumConverter nc = converterCache.get(customClass);
         if (nc == null) {
             synchronized (converterClass) {
@@ -114,7 +114,7 @@ public class CacheExtension {
      * @param customClass define class type for conversion
      * @param converter define instance which knows how to convert <tt>customClass</tt>
      */
-    public static NumConverter registerNumConverter(Class customClass, NumConverter converter) {
+    public static NumConverter setNumConverter(Class customClass, NumConverter converter) {
 		converterCache.put(customClass, converter);
 		return converter;
     }
@@ -196,7 +196,7 @@ public class CacheExtension {
                                 Class converterClass = Class.forName(value[1].trim());
 
                                 if (NumConverter.class.isAssignableFrom(converterClass)) {
-                                    CacheExtension.registerNumConverter(customClass, converterClass);
+                                    CacheExtension.setNumConverter(customClass, converterClass);
                                 }
                             }
                             catch (ClassNotFoundException e) {
@@ -216,7 +216,7 @@ public class CacheExtension {
                                 Class<?> customOperator = Class.forName(((String)oValue).trim());
                                 
                                 if (Operator.class.isAssignableFrom(customOperator)) {
-                                    CacheExtension.registerOperator(customOperator.asSubclass(Operator.class));
+                                    CacheExtension.setOperator(customOperator.asSubclass(Operator.class));
                                 }
                             }
                             catch (ClassNotFoundException e) {
@@ -235,7 +235,7 @@ public class CacheExtension {
                             Class<?> customFunction = Class.forName(((String)oValue).trim());
                             
                             if (Function.class.isAssignableFrom(customFunction)) {
-                                CacheExtension.registerFunction(customFunction.asSubclass(Function.class));
+                                CacheExtension.setFunction(customFunction.asSubclass(Function.class));
                             }
                         }
                         catch (ClassNotFoundException e) {

@@ -242,7 +242,7 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 					nc = (NumConverter) converterClass.newInstance();
 
 					if (nc != null && converterClass.isAnnotationPresent(SingletonExtension.class))
-						CacheExtension.registerNumConverter(value.getClass(), nc);
+						CacheExtension.setNumConverter(value.getClass(), nc);
 				}
 
 				if (nc == null) {
@@ -520,11 +520,11 @@ public class Num implements Cloneable, Comparable<Num>, Serializable {
 			if (converter != null) {
 				nc = converter;
 				if (converterClass.isAnnotationPresent(SingletonExtension.class))
-					CacheExtension.registerNumConverter(toClass, nc);
+					CacheExtension.setNumConverter(toClass, nc);
 			} else if (converterClass != null) {
 				nc = (NumConverter) converterClass.newInstance();
 				if (nc != null && converterClass.isAnnotationPresent(SingletonExtension.class))
-					CacheExtension.registerNumConverter(toClass, nc);
+					CacheExtension.setNumConverter(toClass, nc);
 			}
 
 			if (nc == null) {

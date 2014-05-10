@@ -241,7 +241,7 @@ public class NumTest {
     
     @Test
     public void testNumConverter() throws Exception {
-        CacheExtension.registerNumConverter(CustomObject.class, CustomObjectNumConverter.class);
+        CacheExtension.setNumConverter(CustomObject.class, CustomObjectNumConverter.class);
         
         CustomObject co1 = new CustomObject();
         co1.set("10");
