@@ -20,12 +20,15 @@ For more detail, features, documentation and examples visit project [homepage](h
     * Easiest exception handling with equation overview
     * Java 1.6 compatible
     * Apache 2.0 License
-    * More detail overview on project [homepage](http://www.jdice.org "JCalc Homepage")
+    * Basic calculator impelemtations: 
+        * Calculator - basic arithmetic operations
+        * CalculatorTrig - basic arithmetic and trigonometric calculations
+    
 
 ## Example
 If we want to calculate fixed monthly payment for a fixed rate mortgage in Java, <br/>using equation  c = (r * P) / (1 - (1 + r)^(-N))
 
-In **plain Java** we would write those *15 LoC*:
+In **plain Java** we would write this (*15 LoC*)
 ```java
 BigDecimal interestRate = new BigDecimal("6.5");    // fixed yearly interest rate in %
 BigDecimal P = new BigDecimal(200000);
@@ -73,7 +76,7 @@ Num r = Calculator.builder().openBracket().val(interestRate).div(100).closeBrack
 // N = 30 * 12 * -1
 Num N = Calculator.builder().val(paymentYears).mul(12).mul(-1).calculate();
 
-// c = (r * P) / (1 / (1 + r)^N
+// c = (r * P) / (1 - (1 + r)^N
 Calculator c = new Calculator()     
                 .openBracket()
                     .val(r).mul(P)
