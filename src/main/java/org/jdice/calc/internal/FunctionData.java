@@ -22,7 +22,7 @@ import org.jdice.calc.Function;
 import org.jdice.calc.Num;
 
 /**
- * Data model for data forwarded to concrete function. 
+ * Holding data for given function. 
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *

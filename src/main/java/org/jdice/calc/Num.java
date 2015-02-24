@@ -31,9 +31,8 @@ import org.jdice.calc.internal.CacheExtension;
  * 
  * Mutable wrapper object around BigDecimal object. Supported input type: short,
  * int, long, float, double, Short, Integer, Long, Float, Double, BigInteger,
- * BigDecimal, String <br/>
- * AbstractCalculator, Num
- * 
+ * BigDecimal, String, AbstractCalculator, Num
+ * <br/>
  * To support custom type objects, you can use {@link NumConverter} to implement
  * conversion logic from specific type to <tt>Num</tt>.
  * 

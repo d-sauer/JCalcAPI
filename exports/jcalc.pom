@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 
 	<name>JCalc API</name>
-	<description>Fluent Java API for easier work with numbers, writing formula and calculations in Java.</description>
+	<description>Fluent Java API for easier writing formula and calculations in Java</description>
 	<url>http://www.jdice.org</url>
 
 	<licenses>

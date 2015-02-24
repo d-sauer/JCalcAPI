@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+
+group = 'org.jdice'
+version = '0.4b'
+description = "Fluent Java API for easier writing formula and calculations in Java"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+
+
+repositories {        
+     mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'4.11'
+}
+
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+        	groupId = group
+            artifactId = 'jcalc'
+            version = version
+
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}

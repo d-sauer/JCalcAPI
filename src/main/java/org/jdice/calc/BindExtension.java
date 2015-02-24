@@ -28,7 +28,7 @@ import org.jdice.calc.extension.AddOperator;
  * with concrete class that implement calculation logic for annotated operator or function.
  * <br/>
  * For example it link {@link Add} interface which is implemented in concrete calculator like {@link Calculator}, and 
- * implementation od add operator {@link AddOperator}
+ * implementation of add operator {@link AddOperator}
  * 
  * @author  Davor Sauer <davor.sauer@gmail.com>
  *

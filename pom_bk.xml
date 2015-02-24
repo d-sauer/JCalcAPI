@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 
 	<name>JCalc API</name>
-	<description>Fluent Java API for easier work with numbers, writing formula and calculations in Java.</description>
+	<description>Fluent Java API for easier writing formula and calculations in Java</description>
 	<url>http://www.jdice.org</url>
 
 	<licenses>
@@ -18,7 +18,9 @@
 	</licenses>
 
 	<properties>
+		<java.version>6</java.version>
 		<jdk.version>1.6</jdk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
     <scm>
@@ -50,22 +52,23 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.2</version>
 				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerVersion>${jdk.version}</compilerVersion>
 					<verbose>true</verbose>
 					<fork>true</fork>
-					<compilerVersion>${jdk.version}</compilerVersion>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
+		        <artifactId>maven-eclipse-plugin</artifactId>
+		        <version>2.9</version>
+		        <configuration>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
-				</configuration>
+	            </configuration>
 			</plugin>
 		</plugins>
 	</build>

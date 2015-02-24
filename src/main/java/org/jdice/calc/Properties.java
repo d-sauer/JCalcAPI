@@ -56,6 +56,7 @@ import org.jdice.calc.internal.Objects;
 public class Properties implements Serializable {
 	
     private static final long serialVersionUID = 1L;
+    private static final String CONFIG_FILE = "jcalc.properties";
     
     //
 	// Defaults
@@ -443,18 +444,13 @@ public class Properties implements Serializable {
     }
 
     public static String getGlobalPropertiesFile() {
-        final String CONF_PROPERTIES = "jcalc.properties";
-
         String path = null;
         try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader(); 
-            URL res = classLoader.getResource(".");
-            String abspath = res.getFile();
+            ClassLoader classLoader = Properties.class.getClassLoader();
+            URL res = classLoader.getResource(CONFIG_FILE);
 
-            if (abspath.endsWith(File.separator))
-                path = abspath + CONF_PROPERTIES;
-            else
-                path = abspath + File.separatorChar + CONF_PROPERTIES;
+            if (res != null)
+                path = res.getPath();
         }
         catch (Exception e) {
 

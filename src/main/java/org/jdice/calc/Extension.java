@@ -19,9 +19,10 @@ package org.jdice.calc;
 import org.jdice.calc.internal.CacheExtension;
 
 /**
- * This interface is extended by {@link Operator} or {@link Function} 
  * During execution every class that implement this interface will have only one instance stored into cache {@link CacheExtension}.
- * They with will act like Singleton classes unless they are instantiated outside scope of calculation engine.
+ * They will act like Singleton classes unless they are instantiated outside scope of calculation engine.
+ * <br/>
+ * This interface is extended by {@link Operator} or {@link Function} 
  * 
  * @author Davor Sauer <davor.sauer@gmail.com>
  *
