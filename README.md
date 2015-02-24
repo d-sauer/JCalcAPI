@@ -1,7 +1,8 @@
-# [JCalc](http://www.jdice.org "JCalc")
+# JCalc API
 
 Fluent Java API for easier writing formula and calculations in Java.
-
+<br/>
+For more detail, features, documentation and examples visit project [homepage](http://www.jdice.org "JCalc homepage").
 
 ## Feature:
     * Simplify calculation by reducing code size and provide beter readability
@@ -22,9 +23,9 @@ Fluent Java API for easier writing formula and calculations in Java.
     * More detail overview on project [homepage](http://www.jdice.org "JCalc Homepage")
 
 ## Example
-If we want to calculate fixed monthly payment for a fixed rate mortgage in Java, by equation  c = (r * P) / (1 - (1 + r)^(-N))
+If we want to calculate fixed monthly payment for a fixed rate mortgage in Java, <br/>using equation  c = (r * P) / (1 - (1 + r)^(-N))
 
-In plain Java we would write this code (15 LoC):
+In **plain Java** we would write those *15 LoC*:
 ```java
 BigDecimal interestRate = new BigDecimal("6.5");    // fixed yearly interest rate in %
 BigDecimal P = new BigDecimal(200000);
@@ -58,7 +59,9 @@ c = c.setScale(2, BigDecimal.ROUND_HALF_UP);
 System.out.println("c = " + c);
 ```
 
-If we write same equation with JCalc, code look more readable and shorter (8 LoC)
+
+<br/>
+If we write *same* equation **with JCalc**, code look more readable and shorter (*8 LoC*)
 ```java
 Num interestRate = new Num(6.5);    // fixed yearly interest rate in %
 Num P = new Num(200000);
@@ -85,7 +88,7 @@ Num result = c.calculate().setScale(2);
 System.out.println("c = " + result);
 ```
 
-or even shorter (6 LoC):
+or even shorter (*6 LoC*):
 ```java
 Num interestRate = new Num("A", 6.5);
 Num P = new Num("B", 200000);
