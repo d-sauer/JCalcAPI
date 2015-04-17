@@ -1,4 +1,4 @@
-# JCalc API
+# JCalc API ![Build status](https://travis-ci.org/d-sauer/JCalcAPI.svg)
 
 Fluent Java API for easier writing formula and calculations in Java.
 <br/>
@@ -20,9 +20,9 @@ For more detail, features, documentation and examples visit project [homepage](h
     * Easiest exception handling with equation overview
     * Java 1.6 compatible
     * Apache 2.0 License
-    * Basic calculator impelemtations: 
-        * Calculator - basic arithmetic operations
-        * CalculatorTrig - basic arithmetic and trigonometric calculations
+    * Basic calculator implementations: 
+        - Calculator - basic arithmetic operations
+        - CalculatorTrig - basic arithmetic and trigonometric calculations
     
 
 ## Example
@@ -111,5 +111,6 @@ System.out.println("c = " + result.setScale(2));
     * 2014.03.24 - First beta release
 
 ## Roadmap:
-    * Support for Java 8
+    * Support for Java 8 (lambda functions)
+    * Optimizations
     * Add new functions (like sum, avg, min, max)
